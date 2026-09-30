@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>房市大亨：北中高</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbf7ef; --card:#ffffff; --ink:#1f2a44; --muted:#6f6a60; --line:#e6ddcc;
+  --red:#d7263d; --yellow:#ffd23f; --green:#17805a; --blue:#2f5bd3; --soft:#f3ecdf;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --paper:#15171c; --card:#1e2128; --ink:#eef0f5; --muted:#a3a19a; --line:#2f333c; --soft:#262a32; --green:#3fbf8c; --blue:#7a9cff; } }
+:root[data-theme="dark"]{ --paper:#15171c; --card:#1e2128; --ink:#eef0f5; --muted:#a3a19a; --line:#2f333c; --soft:#262a32; --green:#3fbf8c; --blue:#7a9cff; }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;font-size:15px;line-height:1.55}
+button{font-family:inherit;font-size:inherit;cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.n{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+a{color:var(--blue)}
+
+header{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) header{background:#0c0e12} }
+.brand{display:flex;align-items:center;gap:10px}
+.sale{width:44px;height:44px;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:900;font-size:26px;border-radius:4px;transform:rotate(-4deg);box-shadow:3px 3px 0 var(--yellow)}
+.brand b{font-size:20px;font-weight:900;display:block;line-height:1.1}
+.brand small{font-size:12px;color:#c9cbd3}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-left:auto;align-items:center}
+.stat{display:flex;flex-direction:column;line-height:1.1}
+.stat span{font-size:11px;color:#b8bcc8}
+.stat b{font-size:22px}
+.stat b.pos{color:#7fe0b0} .stat b.neg{color:#ff8a95}
+#nextBtn{background:var(--yellow);color:#1f2a44;border:0;font-weight:900;padding:10px 16px;border-radius:6px;font-size:15px;box-shadow:0 3px 0 #b8910b}
+#nextBtn:active{transform:translateY(2px);box-shadow:0 1px 0 #b8910b}
+
+nav{display:flex;gap:4px;padding:10px 16px 0;max-width:1280px;margin:0 auto;border-bottom:2px solid var(--line);flex-wrap:wrap;align-items:flex-end}
+nav button{background:none;border:0;padding:8px 14px 10px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
+nav .ai{margin-left:auto;font-size:12px;padding:4px 10px;border-radius:999px;background:var(--soft);color:var(--muted);margin-bottom:8px}
+nav .ai.on{background:#e6f5ee;color:#17805a}
+main{max-width:1280px;margin:0 auto;padding:16px}
+
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.seg button{border:2px solid var(--ink);background:var(--card);padding:6px 16px;border-radius:999px;font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:var(--card);padding:6px 10px;border-radius:8px;text-align:left;line-height:1.2}
+.chip b{display:block;font-size:14px}
+.chip span{font-size:12px;color:var(--muted)}
+.chip[aria-pressed="true"]{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.up{color:var(--red)} .down{color:var(--green)}
+
+.mk{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:16px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.panel h3{margin:0 0 8px;font-size:17px;font-weight:900}
+.mapbox{border-radius:10px;overflow:hidden;background:var(--soft);border:1px solid var(--line)}
+.mapbox iframe{display:block;width:100%;height:260px;border:0}
+.mapfb{padding:22px 16px;text-align:center}
+.mapfb .pin{font-size:34px}
+.mapfb p{margin:6px 0 12px;color:var(--muted);font-size:13px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;margin-top:10px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-weight:700;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn.yel{background:var(--yellow);border-color:var(--yellow);color:#1f2a44}
+.btn.sm{padding:5px 10px;font-size:13px;border-width:1.5px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.lc{display:grid;grid-template-columns:96px 1fr;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:left;position:relative}
+.lc:hover{border-color:var(--ink)}
+.lc svg{width:96px;height:96px;border-radius:8px;display:block}
+.lc h4{margin:0;font-size:14px;font-weight:700;line-height:1.35}
+.price{font-size:30px;line-height:1;margin:4px 0 2px}
+.price small{font-size:14px;font-family:"Noto Sans TC",sans-serif;font-weight:700;margin-left:2px}
+.meta{font-size:12px;color:var(--muted)}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.tag{font-size:11px;padding:1px 7px;border-radius:4px;background:var(--soft);color:var(--muted);font-weight:700}
+.tag.red{background:var(--red);color:#fff} .tag.yel{background:var(--yellow);color:#1f2a44} .tag.grn{background:var(--green);color:#fff}
+.stamp{position:absolute;top:8px;right:10px;border:2px solid var(--red);color:var(--red);font-weight:900;font-size:12px;padding:0 5px;border-radius:3px;transform:rotate(6deg)}
+
+.props{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.pc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.pc .top{display:flex;gap:12px}
+.pc svg{width:72px;height:72px;border-radius:8px;flex:none}
+.pc .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;font-size:12px;color:var(--muted)}
+.pc .grid b{display:block;font-size:19px;color:var(--ink)}
+.pc .acts{display:flex;gap:6px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.summary div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--muted)}
+.summary b{display:block;font-size:24px;color:var(--ink)}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.feed{display:flex;flex-direction:column;gap:8px}
+.feed .it{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--ink);border-radius:8px;padding:8px 12px;font-size:14px}
+.feed .it.news{border-left-color:var(--red)}
+.feed .it.good{border-left-color:var(--green)}
+.feed time{font-size:12px;color:var(--muted);margin-right:8px}
+
+/* modal */
+#mw{position:fixed;inset:0;background:rgba(15,18,25,.6);display:none;align-items:flex-start;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 12px 16px;z-index:20;overflow-y:auto}
+#mw.open{display:flex}
+#md{background:var(--card);color:var(--ink);width:min(760px,100%);border-radius:14px;padding:20px;margin:auto 0;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+#md.wide{width:min(1060px,100%)}
+#md h2{margin:0 0 4px;font-size:22px;font-weight:900;padding-right:36px}
+#md .sub{color:var(--muted);font-size:13px;margin:0 0 12px}
+.x{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:0;background:var(--soft);font-size:18px}
+.foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--muted);line-height:1.6}
+.note b{color:var(--ink)}
+.warn{background:#fff1f2;color:#9f1239;border-radius:8px;padding:10px 12px;font-size:13px}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .warn{background:#3a1c22;color:#ffb3bd} }
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t td{padding:5px 0;border-bottom:1px dashed var(--line)}
+table.t td:last-child{text-align:right;font-weight:700}
+table.t tr.total td{border-top:2px solid var(--ink);border-bottom:0;font-size:16px;padding-top:8px}
+
+/* chat */
+.nego{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px}
+.side{display:flex;flex-direction:column;gap:10px}
+.avatar{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:22px;color:#fff;background:var(--ink);flex:none}
+.who{display:flex;gap:10px;align-items:center}
+.who b{font-size:17px}
+.meter{height:10px;border-radius:5px;background:var(--soft);overflow:hidden}
+.meter i{display:block;height:100%;transition:width .4s,background .4s}
+.bigprice{font-size:34px;line-height:1}
+.chat{height:340px;overflow-y:auto;background:var(--soft);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:85%;padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.55;white-space:pre-wrap}
+.msg.them{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px}
+.msg.me{background:var(--ink);color:var(--paper);align-self:flex-end;border-bottom-right-radius:3px}
+.msg.sys{align-self:center;background:transparent;color:var(--muted);font-size:12px;padding:2px}
+.msg .off{display:inline-block;margin-top:4px;background:var(--yellow);color:#1f2a44;border-radius:4px;padding:0 6px;font-weight:700;font-size:12px}
+.tact{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.tact button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 11px;font-size:13px}
+.tact button:hover{border-color:var(--ink)}
+.tact button.used{opacity:.45}
+.inrow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.inrow textarea{flex:1 1 260px;min-height:62px;resize:vertical;border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink)}
+.offer{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.offer input{width:130px;font-size:20px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.terms{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.terms div{background:var(--soft);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.terms b{display:block;font-size:20px;color:var(--ink)}
+.banks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.bank{border:2px solid var(--line);border-radius:12px;padding:12px;text-align:left;background:var(--card)}
+.bank:hover{border-color:var(--ink)}
+.bank b{font-size:17px;display:block}
+.bank .k{font-size:12px;color:var(--red);font-weight:700}
+.bank p{font-size:13px;color:var(--muted);margin:6px 0 0}
+.opt{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;cursor:pointer}
+.opt:hover{border-color:var(--ink)}
+.opt small{display:block;color:var(--muted);font-size:12px}
+.opt .n{font-size:18px}
+.opt.dis{opacity:.45;cursor:not-allowed}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.mode{border:2px solid var(--line);border-radius:10px;padding:10px;text-align:left;background:var(--card)}
+.mode[aria-pressed="true"]{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.mode b{display:block}
+.mode small{color:var(--muted);font-size:12px;display:block;line-height:1.45;margin-top:3px}
+.field{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);margin:10px 0}
+.field input[type=range]{accent-color:var(--red)}
+.field input[type=number]{font-size:18px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;width:160px;background:var(--card);color:var(--ink)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:10px;font-weight:700;opacity:0;transition:all .3s;z-index:30;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%)}
+.spark{width:100%;height:90px}
+@media (max-width:860px){
+  .mk,.two,.nego{grid-template-columns:1fr}
+  .stats{gap:12px;margin-left:0;width:100%}
+  .stat b{font-size:18px}
+  .chat{height:300px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="sale">售</div><div><b>房市大亨</b><small>台北・台中・高雄</small></div></div>
+  <div class="stats">
+    <div class="stat"><span>日期</span><b class="n" id="sDate"></b></div>
+    <div class="stat"><span>現金</span><b class="n" id="sCash"></b></div>
+    <div class="stat"><span>資產淨值</span><b class="n" id="sNet"></b></div>
+    <div class="stat"><span>每月現金流</span><b class="n" id="sFlow"></b></div>
+    <button id="nextBtn">下個月 ▶</button>
+  </div>
+</header>
+<nav role="tablist">
+  <button role="tab" data-tab="market">看房市場</button>
+  <button role="tab" data-tab="props">我的房產</button>
+  <button role="tab" data-tab="news">房市動態</button>
+  <span class="ai" id="aiBadge">經典對談模式</span>
+  <button id="restart" class="btn sm ghost" style="margin-bottom:6px">重新開始</button>
+</nav>
+<main id="main"></main>
+<div id="mw" role="dialog" aria-modal="true"><div id="md"></div></div>
+<div id="toast"></div>
+
+<script>
+(() => {
+// ======================= DATA =======================
+const CITIES = {
+  tp:{name:'台北市', drift:-0.0006, park:250, yield:0.017, high:7000, dists:[
+    ['大安區',108,['敦化南路二段','復興南路一段','和平東路二段','安和路一段','師大路'],'蛋黃區，學區與捷運密集'],
+    ['信義區',98,['松仁路','吳興街','虎林街','忠孝東路五段'],'信義計畫區，百貨商辦林立'],
+    ['松山區',92,['八德路四段','民生東路四段','南京東路五段','健康路'],'民生社區，生活機能成熟'],
+    ['中山區',82,['林森北路','民生東路二段','長安東路一段','松江路'],'商業核心，捷運交會'],
+    ['內湖區',72,['成功路四段','康寧路三段','內湖路一段','東湖路'],'科技園區就業人口多'],
+    ['北投區',62,['石牌路二段','中和街','大業路','光明路'],'榮總生活圈，環境清幽'],
+    ['文山區',60,['木柵路三段','興隆路二段','景美街','萬芳路'],'綠意多，首購族熱區'],
+    ['萬華區',58,['西園路二段','萬大路','環河南路二段','康定路'],'老城區，萬大線與都更題材']]},
+  tc:{name:'台中市', drift:0.0004, park:150, yield:0.021, high:4000, dists:[
+    ['西屯區',48,['市政路','河南路三段','福星路','西屯路二段'],'七期重劃區，科技業進駐'],
+    ['南屯區',45,['文心南五路','大墩十一街','永春東路','公益路二段'],'單元二、豐樂公園生活圈'],
+    ['北屯區',40,['崇德路三段','敦富路','太原路三段','松竹路'],'捷運綠線沿線，新案多'],
+    ['西區',36,['公益路','精誠路','忠明南路','美村路一段'],'草悟道商圈，生活機能佳'],
+    ['北區',30,['學士路','中清路一段','太平路','雙十路二段'],'中友一中商圈，老屋比例高'],
+    ['太平區',27,['中山路三段','太平路','樹孝路','永平路'],'總價親民，自住首購']]},
+  ks:{name:'高雄市', drift:0.0010, park:120, yield:0.024, high:4000, dists:[
+    ['鼓山區',45,['美術東二路','大順一路','明誠四路','裕誠路'],'美術館、農16豪宅聚落'],
+    ['前鎮區',40,['成功二路','中華五路','復興四路','擴建路'],'亞洲新灣區，輕軌環狀線'],
+    ['左營區',38,['博愛三路','曾子路','自由三路','翠華路'],'高鐵站生活圈'],
+    ['楠梓區',34,['德民路','藍昌路','楠梓新路','惠豐街'],'台積電設廠題材發酵'],
+    ['苓雅區',33,['四維三路','光華一路','青年二路','三多二路'],'市中心，商圈成熟'],
+    ['三民區',30,['九如一路','建工路','民族一路','大昌二路'],'人口密集，租屋需求穩'],
+    ['鳳山區',28,['中山西路','光遠路','青年路二段','文化路'],'捷運橘線，總價親民']]}
+};
+const DIST_DRIFT = {'楠梓區':0.0012,'前鎮區':0.0005,'西屯區':0.0005,'萬華區':0.0003};
+const TYPES = {
+  '公寓':{f:0.84,ping:[22,34],pub:0.08,age:[35,52],floors:[4,5]},
+  '華廈':{f:0.92,ping:[26,40],pub:0.22,age:[22,40],floors:[7,10]},
+  '電梯大樓':{f:1.0,ping:[24,48],pub:0.33,age:[2,28],floors:[12,27]},
+  '透天':{f:0.95,ping:[40,68],pub:0,age:[8,40],floors:[3,4]}
+};
+const PERS = {
+  rush:{label:'急售',desc:'資金周轉需要，想盡快脫手',concede:0.55,res:[0.90,0.95],mood:75,likes:['cash','deposit','deadline','patience'],dislikes:[]},
+  stubborn:{label:'固執老屋主',desc:'住了幾十年很有感情，覺得自己房子最好',concede:0.18,res:[0.98,1.03],mood:60,likes:['praise'],dislikes:['flaws','lowball','deadline']},
+  investor:{label:'投資客',desc:'精打細算，只看數字與效率',concede:0.3,res:[0.95,1.0],mood:70,likes:['data','cash','market'],dislikes:['praise','lowball']},
+  emotional:{label:'情緒化',desc:'心情好什麼都好談，心情差就翻臉',concede:0.35,res:[0.94,0.99],mood:65,likes:['praise'],dislikes:['flaws','lowball','deadline','compare']},
+  heir:{label:'繼承出售',desc:'兄弟姊妹共同繼承，想早點賣掉分錢',concede:0.42,res:[0.92,0.97],mood:70,likes:['issue','data','cash','patience'],dislikes:['lowball']}
+};
+const REASONS = {rush:['生意周轉需要現金','要移民了，想盡快處理','投資失利要還款'],stubborn:['年紀大了要搬去跟兒子住','想換有電梯的房子','小孩都搬出去了'],investor:['資金要轉到其他案子','這間已經持有好幾年，想獲利了結','手上物件太多要調整'],emotional:['跟另一半要分開，不想再住這裡','換工作要搬到外縣市','想換大一點的房子'],heir:['父母留下來的，兄弟姊妹要分','繼承後一直空著，大家決定賣掉']};
+const NAMES = ['陳先生','林太太','王媽媽','張大哥','李老師','黃小姐','吳伯伯','劉先生','蔡太太','楊先生','許阿姨','鄭先生','謝小姐','郭先生','洪太太'];
+const ISSUES = ['漏水','壁癌','管線老舊','採光不佳','鄰居嘈雜','頂樓加蓋（違建）'];
+const BANKS = [
+  {id:'gov',name:'臺灣國民銀行',kind:'公股行庫',base:2.28,floor:2.12,style:'作風保守、重視財力證明與負債比，利率低但成數給得保守',ltvD:{0:0.75,1:0.65},fee:5000,appr:0.95},
+  {id:'priv',name:'信和商業銀行',kind:'民營銀行',base:2.42,floor:2.22,style:'業績導向、願意多給成數，喜歡搭配保險、信用卡與薪轉往來',ltvD:{0:0.78,1:0.68},fee:9000,appr:0.975},
+  {id:'ins',name:'宏泰人壽',kind:'壽險公司房貸',base:2.55,floor:2.35,style:'成數與年限彈性（首購可到40年），利率較高，通常要求投保房貸壽險',ltvD:{0:0.8,1:0.7},fee:6000,appr:0.97}
+];
+const SELLER_T = [
+  {id:'data',label:'引用實價登錄'},{id:'issue',label:'指出屋況問題'},{id:'cash',label:'資金到位快速交屋'},{id:'deposit',label:'付斡旋金表誠意'},
+  {id:'budget',label:'悲情牌：預算封頂'},{id:'compare',label:'分散焦點：還在看別的社區'},{id:'market',label:'理性定錨：景氣差＋實價'},{id:'praise',label:'稱讚房子打感情牌'},
+  {id:'flaws',label:'嫌貨才是買貨人'},{id:'patience',label:'以時間為籌碼：不急'},{id:'callbluff',label:'要求出示斡旋書'},{id:'deadline',label:'限時決定'},{id:'lowball',label:'直接砍三成'}
+];
+const PRESSURE = {
+  rival:{label:'製造競爭焦慮',why:'測試你的出價底線與喜愛程度，可能是真的也可能是話術。'},
+  emigrate:{label:'合理化售屋動機',why:'強調不得已才賣，可能在掩飾鄰居、噪音等缺點。'},
+  scarce:{label:'限時限量',why:'逼猶豫的買方當場決定，後面可能還有保留戶。'},
+  notneedy:{label:'定錨效應',why:'暗示屋主姿態高，擋掉大幅砍價。'},
+  future:{label:'畫大餅',why:'用未來的增值預期合理化偏高的開價。'}
+};
+const BANK_T = [
+  {id:'stable',label:'強調工作穩定',text:'我在科技業工作八年，另一半也是正職，雙薪收入很穩定。'},
+  {id:'assets',label:'提供財力證明',text:'我可以提供存款和投資的財力證明，自備款完全沒問題。'},
+  {id:'payroll',label:'薪轉＋信用卡往來',text:'如果條件好一點，我們夫妻的薪轉和信用卡都可以轉到貴行。'},
+  {id:'compare',label:'拿他行比價',text:'其他銀行開給我的條件比較好，貴行能不能再調整一下？'},
+  {id:'insurance',label:'願意搭配保險',text:'如果成數可以再拉高一點，我可以考慮搭配房貸壽險。'},
+  {id:'grace',label:'申請寬限期',text:'前幾年想先只繳利息，有機會申請寬限期嗎？'},
+  {id:'longer',label:'延長年限',text:'年限可以拉長到 40 年嗎？月付壓力會小一點。'},
+  {id:'guarantor',label:'父母當保證人',text:'我父母可以當保證人，他們名下也有不動產。'},
+  {id:'exaggerate',label:'誇大收入',text:'其實我還有不少兼職收入，一年大概多 100 萬。'}
+];
+const KW_SELLER = {data:['實價','行情','成交','登錄','附近'],issue:['漏水','壁癌','管線','整修','修繕','屋況','違建'],cash:['現金','付現','預審','自備','快速','交屋'],deposit:['斡旋','訂金','誠意'],budget:['預算','極限','負擔'],compare:['別間','另一間','比較','其他物件'],praise:['喜歡','照顧','溫馨','漂亮','感情','家人','用心'],flaws:['老舊','公設','缺點','採光','吵','屋齡'],deadline:['今天','馬上','限時','現在就'],lowball:['七折','六折','打折','砍一半','砍三成'],market:['景氣','不好','不考慮','封頂','高於'],patience:['不急','慢慢等','等下一間','隨緣','可以等'],callbluff:['斡旋書','要約書','證明','真的有人','拿出來'],insult:['爛','垃圾','鬼屋','騙','坑人','白痴','凶宅']};
+const KW_BANK = {stable:['穩定','年資','工作','雙薪','公務員','正職'],assets:['存款','財力','資產','股票','投資'],payroll:['薪轉','信用卡','往來','存在'],compare:['其他銀行','別家','他行','比較好','比價'],insurance:['保險','壽險','基金'],grace:['寬限','只繳利息','繳息'],longer:['40年','四十年','拉長','延長'],guarantor:['保證人','父母','爸媽'],exaggerate:['兼職','年收','其實我還有','年薪','業外']};
+
+// ======================= HELPERS =======================
+const $ = s => document.querySelector(s);
+const R = (a,b) => a + Math.random()*(b-a);
+const RI = (a,b) => Math.floor(R(a,b+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const W = v => Math.round(v/10000).toLocaleString();          // 元 -> 萬 (整數)
+const W1 = v => (v/10000).toLocaleString(undefined,{maximumFractionDigits:1});
+const NT = v => Math.round(v).toLocaleString();
+const START = {y:2026,m:10};
+const dateOf = t => { const m0 = START.m-1+t; return {y:START.y+Math.floor(m0/12), m:m0%12+1}; };
+const dateStr = t => { const d=dateOf(t); return `${d.y}/${String(d.m).padStart(2,'0')}`; };
+let uid = 1; const nid = () => 'x'+(Date.now().toString(36))+(uid++);
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2600); }
+function pmt(P,ratePct,years){ const r=ratePct/100/12, n=years*12; if(n<=0) return P; return r ? P*r/(1-Math.pow(1+r,-n)) : P/n; }
+const inClaude = !!(window.claude && typeof window.claude.use === 'function');
+
+// ======================= STATE =======================
+const SAVE_KEY = 'fangshi-save-v1';
+let S;
+function newGame(startCash=10000000){
+  S = {t:0, cash:startCash, startCash, income:150000, living:40000, rentHome:25000, idx:{tp:1,tc:1,ks:1}, rateAdj:0, listings:[], props:[], log:[], jcic:[], blocked:{}, negCash:0, hist:[], tab:'market', city:'tp', dist:0, seen:{}};
+  for (const ck in CITIES) CITIES[ck].dists.forEach((d,i)=>{ const n = RI(2,4); for (let k=0;k<n;k++) S.listings.push(genListing(ck,i)); });
+  news('央行9月理監事會：政策利率維持2%「連10凍」，並將自然人第二戶房貸成數上限由6成放寬至7成。','news');
+  news('新青安2.0末班車效應後，房市進入秋冬淡季，市場觀望氣氛濃厚。','news');
+  addLog(`你帶著 ${W(startCash)} 萬自備資金進入房市。目前在外租屋，每月房租 2.5 萬。`,'good');
+  S.hist.push(netWorth());
+}
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
+function load(){ try{ const s=localStorage.getItem(SAVE_KEY); if(s){ S=JSON.parse(s); return true; } }catch(e){} return false; }
+function addLog(msg,cls=''){ S.log.unshift({t:S.t,msg,cls}); S.log.length = Math.min(S.log.length,200); }
+function news(msg){ S.log.unshift({t:S.t,msg,cls:'news'}); }
+
+// ======================= LISTINGS & VALUE =======================
+function genListing(ck, di){
+  const city = CITIES[ck], d = city.dists[di];
+  const type = pick(ck==='tp' ? ['公寓','公寓','華廈','電梯大樓','電梯大樓'] : ['公寓','華廈','電梯大樓','電梯大樓','透天','透天']);
+  const T = TYPES[type];
+  const ping = Math.round(R(T.ping[0],T.ping[1])*10)/10;
+  const age = RI(T.age[0],T.age[1]);
+  const total = RI(T.floors[0],T.floors[1]);
+  const floor = type==='透天' ? total : RI(1,total);
+  const parking = type!=='公寓' && type!=='透天' && Math.random()<0.55;
+  const cond = clamp(Math.round(90 - age*1.1 + R(-15,12)),15,95);
+  const issues = [];
+  if (age>20 && Math.random()<0.45) issues.push('漏水');
+  if (age>25 && Math.random()<0.4) issues.push('壁癌');
+  if (age>30 && Math.random()<0.55) issues.push('管線老舊');
+  if (Math.random()<0.15) issues.push(pick(['採光不佳','鄰居嘈雜']));
+  if (type==='公寓' && floor===total && Math.random()<0.35) issues.push('頂樓加蓋（違建）');
+  const rooms = ping<26?'2房1廳1衛':ping<36?'3房2廳1衛':ping<50?'3房2廳2衛':'4房2廳3衛';
+  const persKey = pick(Object.keys(PERS)), P = PERS[persKey];
+  const L = {id:nid(), ck, di, type, ping, age, floor, total, parking, cond, issues, rooms, road:pick(d[2]), layout:0, staging:false,
+    agent: Math.random()<0.6, listedAt:S?S.t:0};
+  const v = valueOf(L);
+  L.ask = Math.round(v*R(1.06,1.16)/10000)*10000;
+  L.seller = {name:pick(NAMES), age:RI(38,78), pers:persKey, reason:pick(REASONS[persKey]), resF:R(P.res[0],P.res[1]), mood:P.mood};
+  return L;
+}
+function unitNow(ck,di){ return CITIES[ck].dists[di][1]*S.idx[ck]*(S.didx?.[ck+di]||1); }
+function ageF(age,type){ let f = age<5?1.1:age<15?1.02:age<30?0.93:0.84; if (type==='公寓' && age>40) f+=0.03; return f; }
+function floorF(L){ if (L.type==='公寓'){ if (L.floor===1) return 1.06; if (L.floor>=4) return 0.92; } if (L.type==='電梯大樓' && L.floor>L.total*0.7) return 1.04; return 1; }
+function condF(c){ return 0.86 + c*0.0022; }
+function valueOf(L){
+  const unit = unitNow(L.ck,L.di)*10000;
+  let v = unit*L.ping*TYPES[L.type].f*ageF(L.age,L.type)*floorF(L)*condF(L.cond)*(1+(L.layout||0));
+  if (L.parking) v += CITIES[L.ck].park*10000*S.idx[L.ck];
+  if (L.issues.includes('頂樓加蓋（違建）')) v *= 0.97;
+  return Math.round(v);
+}
+const inPing = L => Math.round(L.ping*(1-TYPES[L.type].pub)*10)/10;
+const cityName = L => CITIES[L.ck].name + CITIES[L.ck].dists[L.di][0];
+const titleOf = L => `${cityName(L)} ${L.road}${L.type==='透天'?'':'巷內'} ${L.type}`;
+function houseSVG(type, seed){
+  const colors = ['#e8b04b','#6aa38a','#c9704f','#6f86c7','#b58ac9','#d6a36b'];
+  const c = colors[(seed.charCodeAt(seed.length-1)+seed.length)%colors.length];
+  const sky = '#dfeaf2';
+  let b = '';
+  if (type==='電梯大樓'){ b = `<rect x="28" y="12" width="40" height="80" fill="${c}"/>`; for(let y=18;y<86;y+=10) for(const x of [33,45,57]) b+=`<rect x="${x}" y="${y}" width="7" height="6" fill="#fff" opacity=".85"/>`; }
+  else if (type==='華廈'){ b = `<rect x="22" y="30" width="52" height="62" fill="${c}"/>`; for(let y=36;y<86;y+=11) for(const x of [27,39,51,63]) b+=`<rect x="${x}" y="${y}" width="7" height="6" fill="#fff" opacity=".85"/>`; }
+  else if (type==='公寓'){ b = `<rect x="18" y="44" width="60" height="48" fill="${c}"/><rect x="18" y="40" width="60" height="5" fill="#555"/>`; for(let y=50;y<88;y+=10) for(const x of [24,38,52,66]) b+=`<rect x="${x}" y="${y}" width="7" height="6" fill="#fff" opacity=".85"/>`; }
+  else { b = `<polygon points="26,40 48,22 70,40" fill="#8b4a3c"/><rect x="28" y="40" width="40" height="52" fill="${c}"/><rect x="43" y="74" width="10" height="18" fill="#5b3a2e"/>`; for(const y of [46,60]) for(const x of [33,55]) b+=`<rect x="${x}" y="${y}" width="8" height="8" fill="#fff" opacity=".85"/>`; }
+  return `<svg viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" fill="${sky}"/><circle cx="78" cy="18" r="8" fill="#ffd23f"/>${b}<rect y="90" width="96" height="6" fill="#9aa596"/></svg>`;
+}
+function mapHTML(q){
+  const link = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+  if (!inClaude) return `<div class="mapbox"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=15&output=embed" title="Google 地圖：${esc(q)}"></iframe></div><p class="meta" style="margin:6px 0 0"><a href="${link}" target="_blank" rel="noopener">在 Google 地圖開啟 ↗</a></p>`;
+  return `<div class="mapbox mapfb"><div class="pin">📍</div><b>${esc(q)}</b><p>預覽環境無法內嵌地圖，發布到 GitHub Pages 後會直接顯示 Google 地圖。</p><a class="btn sm" href="${link}" target="_blank" rel="noopener">在 Google 地圖開啟 ↗</a></div>`;
+}
+
+// ======================= FINANCE =======================
+function monthlyLoan(p){ const l=p.loan; if(!l||l.balance<=0) return 0; const m=S.t-l.start; const r=l.rate/100/12; if (m < l.grace*12) return l.balance*r; const left = l.years*12 - m; return left>0 ? pmt(l.balance,l.rate,left/12) : l.balance; }
+function existingPayments(){ return S.props.reduce((s,p)=>s+monthlyLoan(p),0); }
+function rentIncome(){ return S.props.reduce((s,p)=>s+(p.status==='出租'?p.rent:0),0); }
+function mgmtFee(p){ return (p.L.type==='電梯大樓'||p.L.type==='華廈') ? Math.round(p.L.ping*(p.L.ck==='tp'?90:65)) : 0; }
+function selfUse(){ return S.props.some(p=>p.status==='自住'); }
+function monthlyFlow(){
+  let f = S.income - S.living - (selfUse()?0:S.rentHome);
+  for (const p of S.props){ f -= monthlyLoan(p) + mgmtFee(p); if (p.status==='出租') f += p.rent; }
+  return Math.round(f);
+}
+function netWorth(){ return S.cash + S.props.reduce((s,p)=>s+valueOf(p.L)-(p.loan?p.loan.balance:0),0); }
+function jcicCount(){ return S.jcic.filter(t=>S.t-t<3).length; }
+function loanCase(price, L){
+  const n = S.props.length;
+  const high = price >= CITIES[L.ck].high*10000;
+  if (high) return {label:`高價住宅（${CITIES[L.ck].name}總價 ${CITIES[L.ck].high} 萬以上）`, cap:0.3, grace:false, maxY:30};
+  if (n===0) return {label:'首購自住（名下無房）', cap:0.8, grace:true, maxY:40};
+  if (n===1) return {label:'自然人第二戶', cap:0.7, grace:false, maxY:30};
+  return {label:`自然人第${n+1}戶（第三戶以上）`, cap:0.3, grace:false, maxY:30};
+}
+
+// ======================= RENDER =======================
+function render(){
+  const d = dateOf(S.t);
+  $('#sDate').textContent = `${d.y}年${d.m}月`;
+  $('#sCash').textContent = W(S.cash)+'萬';
+  $('#sNet').textContent = W(netWorth())+'萬';
+  const f = monthlyFlow(); const fe=$('#sFlow'); fe.textContent = (f>=0?'+':'')+W1(f)+'萬'; fe.className='n '+(f>=0?'pos':'neg');
+  document.querySelectorAll('nav [data-tab]').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.tab===S.tab)));
+  const main = $('#main');
+  if (S.tab==='market') main.innerHTML = marketHTML();
+  else if (S.tab==='props') main.innerHTML = propsHTML();
+  else main.innerHTML = newsHTML();
+  bindMain();
+}
+function marketHTML(){
+  const city = CITIES[S.city], d = city.dists[S.dist];
+  const q = city.name + d[0];
+  const unit = unitNow(S.city,S.dist);
+  const ls = S.listings.filter(l=>l.ck===S.city && l.di===S.dist);
+  const yoy = ((S.idx[S.city]-1)*100);
+  return `<div class="seg" role="group" aria-label="城市">${Object.entries(CITIES).map(([k,c])=>`<button data-city="${k}" aria-pressed="${k===S.city}">${c.name}</button>`).join('')}</div>
+  <div class="chips">${city.dists.map((x,i)=>{ const u=unitNow(S.city,i); const tr=(S.idx[S.city]*(S.didx?.[S.city+i]||1)-1)*100; return `<button class="chip" data-dist="${i}" aria-pressed="${i===S.dist}"><b>${x[0]}</b><span class="n">${u.toFixed(1)} 萬/坪 <span class="${tr>=0?'up':'down'}">${tr>=0?'▲':'▼'}${Math.abs(tr).toFixed(1)}%</span></span></button>`; }).join('')}</div>
+  <div class="mk">
+    <div class="panel"><h3>${q}</h3>${mapHTML(q)}
+      <dl class="kv"><dt>實價登錄均價</dt><dd class="n">${unit.toFixed(1)} 萬／坪</dd><dt>區域特色</dt><dd>${d[3]}</dd><dt>車位行情</dt><dd class="n">約 ${Math.round(city.park*S.idx[S.city])} 萬／位</dd><dt>租金投報率</dt><dd class="n">約 ${(city.yield*100).toFixed(1)}%</dd><dt>自開局漲跌</dt><dd class="n ${yoy>=0?'up':'down'}">${yoy>=0?'+':''}${yoy.toFixed(1)}%</dd></dl>
+      <p class="note" style="margin-top:10px">均價為遊戲內模擬的參考行情。實際房價請查詢內政部實價登錄。</p></div>
+    <div><div class="list">${ls.length?ls.map(listCard).join(''):'<div class="empty">這個區域目前沒有待售物件，下個月再來看看。</div>'}</div></div>
+  </div>`;
+}
+function listCard(L){
+  const unit = L.ask/10000/L.ping; const blocked = S.blocked[L.id] && S.blocked[L.id]>S.t;
+  return `<button class="lc" data-listing="${L.id}">${houseSVG(L.type,L.id)}<div>
+    <h4>${esc(L.road)} ${L.type}</h4>
+    <div class="price n">${W(L.ask)}<small>萬</small></div>
+    <div class="meta"><span class="n">${unit.toFixed(1)}</span> 萬/坪・${L.ping} 坪・屋齡 ${L.age} 年・${L.type==='透天'?L.total+'層':L.floor+'/'+L.total+'樓'}</div>
+    <div class="tags"><span class="tag">${L.rooms}</span>${L.parking?'<span class="tag">含車位</span>':''}<span class="tag ${L.agent?'':'yel'}">${L.agent?'仲介代銷':'屋主自售'}</span>${S.seen[L.id]?'<span class="tag grn">已看屋</span>':''}${blocked?'<span class="tag red">屋主拒絕往來</span>':''}</div></div>
+    <span class="stamp">售</span></button>`;
+}
+function propsHTML(){
+  if (!S.props.length) return `<div class="empty"><p style="font-size:40px;margin:0">🏠</p><p>你還沒有任何房產。到「看房市場」挑一間，跟屋主議價、找銀行談貸款吧！</p><button class="btn" data-go="market">去看房</button></div>`;
+  const tv = S.props.reduce((s,p)=>s+valueOf(p.L),0), tl = S.props.reduce((s,p)=>s+(p.loan?p.loan.balance:0),0);
+  return `<div class="summary"><div>房產總市值<b class="n">${W(tv)} 萬</b></div><div>貸款餘額<b class="n">${W(tl)} 萬</b></div><div>每月房貸支出<b class="n">${W1(existingPayments())} 萬</b></div><div>每月租金收入<b class="n">${W1(rentIncome())} 萬</b></div></div>
+  <div class="props">${S.props.map(p=>{
+    const v=valueOf(p.L), gain=v-p.cost-p.reno;
+    const st = p.status + (p.status==='裝修中'?`（剩 ${p.renoUntil-S.t} 個月）`:'') + (p.status==='出租'?`・月租 ${W1(p.rent)} 萬`:'') + (p.sale?`・${p.sale.label} 開價 ${W(p.sale.ask)} 萬`:'');
+    return `<div class="pc"><div class="top">${houseSVG(p.L.type,p.L.id)}<div><b>${esc(titleOf(p.L))}</b><div class="meta">${p.L.ping} 坪・屋齡 ${p.L.age} 年・屋況 ${p.L.cond}/100・${dateStr(p.boughtAt)} 購入</div><div class="tags"><span class="tag ${p.status==='出租'?'grn':p.status==='裝修中'?'yel':''}">${st}</span></div></div></div>
+      <div class="grid"><div>目前估值<b class="n">${W(v)}萬</b></div><div>總成本<b class="n">${W(p.cost+p.reno)}萬</b></div><div>帳面損益<b class="n ${gain>=0?'up':'down'}">${gain>=0?'+':''}${W(gain)}萬</b></div>
+      <div>貸款餘額<b class="n">${p.loan?W(p.loan.balance)+'萬':'—'}</b></div><div>月付金<b class="n">${p.loan?W1(monthlyLoan(p))+'萬':'—'}</b></div><div>利率<b class="n">${p.loan?p.loan.rate.toFixed(2)+'%':'—'}</b></div></div>
+      ${p.loan?`<p class="meta" style="margin:-4px 0 10px">${p.loan.bank}・${p.loan.years}年${p.loan.grace?`・寬限期 ${p.loan.grace} 年${S.t-p.loan.start<p.loan.grace*12?'（繳息中）':''}`:''}</p>`:''}
+      <div class="acts">
+        <button class="btn sm" data-reno="${p.id}" ${p.status==='裝修中'||p.status==='出租'||p.sale?'disabled':''}>裝修改造</button>
+        ${p.status==='出租'?`<button class="btn sm ghost" data-unrent="${p.id}">收回</button>`:p.status==='招租中'?`<button class="btn sm ghost" data-unrent="${p.id}">停止招租</button>`:`<button class="btn sm ghost" data-rent="${p.id}" ${p.status==='裝修中'||p.sale?'disabled':''}>出租</button>`}
+        ${p.status==='自住'?`<button class="btn sm ghost" data-unself="${p.id}">搬出</button>`:`<button class="btn sm ghost" data-self="${p.id}" ${selfUse()||p.status!=='空置'||p.sale?'disabled':''}>自住</button>`}
+        ${p.sale?`<button class="btn sm red" data-sell="${p.id}">調整委售</button>`:`<button class="btn sm red" data-sell="${p.id}" ${p.status==='裝修中'?'disabled':''}>出售</button>`}
+      </div></div>`;}).join('')}</div>`;
+}
+function newsHTML(){
+  const h = S.hist; const max=Math.max(...h), min=Math.min(...h); const span=Math.max(1,max-min);
+  const pts = h.map((v,i)=>`${h.length>1?i/(h.length-1)*300:0},${80-(v-min)/span*70}`).join(' ');
+  const goal = Math.max(50000000, (S.startCash||10000000)*3);
+  return `<div class="two"><div class="panel"><h3>資產淨值走勢</h3><svg class="spark" viewBox="0 0 300 90" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--red)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>
+    <p class="meta">目前 <b class="n" style="font-size:18px;color:var(--ink)">${W(netWorth())} 萬</b>　目標：10 年內淨資產突破 ${W(goal)} 萬（進度 ${Math.min(100,Math.round(netWorth()/goal*100))}%）</p></div>
+    <div class="panel"><h3>三都房價指數</h3>${Object.entries(CITIES).map(([k,c])=>`<p style="margin:6px 0">${c.name}　<b class="n ${S.idx[k]>=1?'up':'down'}" style="font-size:20px">${(S.idx[k]*100).toFixed(1)}</b> <span class="meta">（開局 = 100）</span></p>`).join('')}
+    <p class="meta">房貸利率加減碼：${S.rateAdj>=0?'+':''}${S.rateAdj.toFixed(3)}%</p></div></div>
+    <h3 style="margin:18px 0 8px">動態與紀錄</h3><div class="feed">${S.log.slice(0,80).map(l=>`<div class="it ${l.cls}"><time class="n">${dateStr(l.t)}</time>${esc(l.msg)}</div>`).join('')}</div>`;
+}
+function bindMain(){
+  const m = $('#main');
+  m.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{S.city=b.dataset.city;S.dist=0;render();});
+  m.querySelectorAll('[data-dist]').forEach(b=>b.onclick=()=>{S.dist=+b.dataset.dist;render();});
+  m.querySelectorAll('[data-listing]').forEach(b=>b.onclick=()=>openListing(b.dataset.listing));
+  m.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.go;render();});
+  m.querySelectorAll('[data-reno]').forEach(b=>b.onclick=()=>openReno(b.dataset.reno));
+  m.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>openSell(b.dataset.sell));
+  m.querySelectorAll('[data-rent]').forEach(b=>b.onclick=()=>{ const p=prop(b.dataset.rent); p.status='招租中'; addLog(`${titleOf(p.L)} 開始招租。`); save(); render(); toast('已開始招租，通常一兩個月內會有租客'); });
+  m.querySelectorAll('[data-unrent]').forEach(b=>b.onclick=()=>{ const p=prop(b.dataset.unrent); p.status='空置'; p.rent=0; save(); render(); });
+  m.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{ const p=prop(b.dataset.self); p.status='自住'; p.selfSince=S.t; addLog(`搬進 ${titleOf(p.L)} 自住，不用再付房租了。`,'good'); save(); render(); });
+  m.querySelectorAll('[data-unself]').forEach(b=>b.onclick=()=>{ const p=prop(b.dataset.unself); p.status='空置'; addLog('搬出自住房屋，回到租屋生活。'); save(); render(); });
+}
+const prop = id => S.props.find(p=>p.id===id);
+const listing = id => S.listings.find(l=>l.id===id);
+
+// ======================= MODAL =======================
+function modal(html, wide){ const md=$('#md'); delete md.dataset.lock; md.className = wide?'wide':''; md.innerHTML = `<button class="x" aria-label="關閉">✕</button>`+html; $('#mw').classList.add('open'); md.querySelector('.x').onclick=closeModal; md.scrollTop=0; $('#mw').scrollTop=0; return md; }
+function closeModal(){ $('#mw').classList.remove('open'); render(); if (queue.length) setTimeout(queue.shift(), 150); }
+const queue = [];
+$('#mw').addEventListener('mousedown', e=>{ if (e.target.id==='mw' && !$('#md').dataset.lock) closeModal(); });
+document.addEventListener('keydown', e=>{ if (e.key==='Escape' && $('#mw').classList.contains('open') && !$('#md').dataset.lock) closeModal(); });
+
+// ======================= LISTING DETAIL =======================
+function openListing(id){
+  const L = listing(id); if (!L) return;
+  const seen = S.seen[id], v = valueOf(L), unit = unitNow(L.ck,L.di);
+  const blocked = S.blocked[id] && S.blocked[id]>S.t;
+  const P = PERS[L.seller.pers];
+  const md = modal(`<h2>${esc(titleOf(L))}</h2><p class="sub">${L.agent?'仲介代銷（買方服務費 1%）':'屋主自售（免仲介費）'}・刊登於 ${dateStr(L.listedAt)}</p>
+    <div class="two"><div>${mapHTML(`${cityName(L)}${L.road}`)}</div>
+    <div><div class="price n" style="font-size:40px">${W(L.ask)}<small>萬</small></div>
+      <table class="t"><tr><td>權狀坪數</td><td>${L.ping} 坪（室內約 ${inPing(L)} 坪）</td></tr><tr><td>開價單價</td><td>${(L.ask/10000/L.ping).toFixed(1)} 萬/坪</td></tr><tr><td>類型／屋齡</td><td>${L.type}・${L.age} 年</td></tr><tr><td>樓層</td><td>${L.type==='透天'?`${L.total} 層透天`:`${L.floor} 樓／共 ${L.total} 樓`}</td></tr><tr><td>格局</td><td>${L.rooms}</td></tr><tr><td>車位</td><td>${L.parking?'坡道平面車位':'無'}</td></tr>
+      <tr><td>區域均價</td><td>${unit.toFixed(1)} 萬/坪</td></tr><tr><td>實價登錄參考區間</td><td>${W(v*0.95)}～${W(v*1.04)} 萬</td></tr></table></div></div>
+    <h3 style="margin:16px 0 6px">看屋紀錄</h3>
+    ${seen?`<div class="note"><b>屋主：${L.seller.name}（${L.seller.age}歲）</b>・個性印象：<b>${P.label}</b>，${P.desc}。<br>賣屋原因：${L.seller.reason}。<br>屋況：${L.cond}/100　${L.issues.length?`發現問題：<b style="color:var(--red)">${L.issues.join('、')}</b>`:'沒有發現明顯問題。'}</div>`
+          :`<div class="note">還沒去看過這間房子。實地看屋可以了解屋況、發現隱藏問題，也能跟屋主聊聊，摸清對方的個性與賣屋原因。</div>`}
+    ${blocked?`<p class="warn" style="margin-top:10px">上次議價讓屋主很不愉快，他說 ${S.blocked[id]-S.t} 個月內不想再跟你談。</p>`:''}
+    <div class="foot">${seen?'':'<button class="btn ghost" id="viewBtn">預約看屋</button>'}<button class="btn red" id="negoBtn" ${blocked?'disabled':''}>開始議價</button></div>`);
+  const vb = md.querySelector('#viewBtn'); vb && (vb.onclick=()=>{ S.seen[id]=true; addLog(`到 ${titleOf(L)} 看屋。`); save(); openListing(id); toast('看屋完成，屋況與屋主資訊已記錄'); });
+  md.querySelector('#negoBtn').onclick=()=>openNego(id);
+}
+
+// ======================= SELLER NEGOTIATION =======================
+let SAMPLE = null, aiOn = false;
+function setAI(on){ aiOn = on && !!SAMPLE; const b=$('#aiBadge'); b.textContent = aiOn?'AI 對談模式：自由話術':'經典對談模式'; b.classList.toggle('on',aiOn); }
+if (inClaude){ window.claude.use('sample').then(s=>{ if (s){ SAMPLE=s; setAI(true); } }).catch(()=>{}); }
+async function ai(prompt){
+  try { return await SAMPLE.json(prompt,{modelTier:'quick',cache:false}); }
+  catch(e){ if (e && (e.code==='not_granted')) { SAMPLE=null; setAI(false); toast('未授權 AI，已切換為經典對談模式'); } return null; }
+}
+function detect(text, KW){ const hits=[]; for (const k in KW) if (KW[k].some(w=>text.includes(w))) hits.push(k); return hits; }
+function tacticText(id, L){
+  const unit = (unitNow(L.ck,L.di)*TYPES[L.type].f*ageF(L.age,L.type)).toFixed(1);
+  return {data:`我查過實價登錄，這附近同類型最近成交大概一坪 ${unit} 萬左右，您的開價偏高了。`,
+    issue: L.issues.length && S.seen[L.id] ? `看屋時發現有${L.issues.slice(0,2).join('和')}的問題，之後整修至少要花好幾十萬。` : '我覺得屋況有些地方要整修，會花不少錢。',
+    cash:'我的貸款已經預審過，自備款也準備好了，可以很快完成交屋。', deposit:'我願意先付 10 萬斡旋金，表示我的誠意。',
+    budget:'我是真的有誠意要買，但預算就只有這樣，再多家人不會答應。', compare:'我同時還在看附近另一個社區，那邊單坪開價更低。',
+    market:`現在房市景氣不好，實價登錄我都看過了，高於 ${W(Math.min(L.nego?.lastAsk||L.ask, valueOf(L))*0.97)} 萬我就不考慮了。`,
+    patience:'我不急，這間沒談成也沒關係，我可以慢慢等下一個適合的。',
+    callbluff:'您說已經有人下斡旋，方便讓我看一下斡旋書或要約書嗎？',
+    praise:'這房子您真的照顧得很好，我們一家人都很喜歡這裡的感覺。', flaws:'這間格局我不太喜歡，採光也有點差，買了還要花大錢裝潢。',
+    deadline:'如果今天這個價格可以，我馬上就簽，過了今天我就去看別間了。', lowball:'我直接講，這個價格打七折我就買。'}[id];
+}
+function openNego(id){
+  const L = listing(id); const P = PERS[L.seller.pers];
+  const N = L.nego || (L.nego = {mood:L.seller.mood, lastAsk:L.ask, lastOffer:0, persuade:0, used:{}, hist:[], round:0, done:false});
+  const md = modal(`<h2>議價：${esc(L.road)} ${L.type}</h2><p class="sub">${L.agent?'由仲介居中斡旋，屋主會親自到場談':'屋主自售，直接和屋主面對面談'}　${aiOn?'・<b>AI 對談模式</b>：可以輸入任何話術':'・經典模式：依關鍵字判斷話術'}</p>
+  <div class="nego"><div class="side">
+    <div class="who"><div class="avatar" style="background:${['#d7263d','#2f5bd3','#17805a','#8a5cc7','#c9704f'][L.seller.name.length%5]}">${L.seller.name[0]}</div><div><b>${L.seller.name}</b><div class="meta">${S.seen[id]?`${P.label}・${L.seller.age}歲`:'個性未知（看屋可得知）'}</div></div></div>
+    <div><div class="meta">屋主情緒</div><div class="meter"><i id="moodBar"></i></div></div>
+    <div><div class="meta">屋主目前開價</div><div class="bigprice n" id="askNow"></div></div>
+    <div><div class="meta">你上次出價</div><div class="n" style="font-size:22px" id="offNow"></div></div>
+    <div class="note">參考行情：${W(valueOf(L)*0.95)}～${W(valueOf(L)*1.04)} 萬<br>你的現金：${W(S.cash)} 萬${S.seen[id]&&L.issues.length?`<br>看屋發現：${L.issues.join('、')}`:''}</div>
+    <div class="warn" id="rivalBox" style="display:none"></div>
+    ${SAMPLE?`<label class="meta" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="aiTog" ${aiOn?'checked':''}> 使用 AI 對談</label>`:''}
+    <details class="note"><summary><b>話術小抄</b></summary>
+      <p style="margin:6px 0 4px"><b>賣方／仲介常用</b></p>
+      「已經有人下斡旋」→ 製造競爭焦慮，可要求看斡旋書<br>「忍痛割愛才賣」→ 可能在掩飾缺點<br>「好戶只剩這間」→ 限時限量逼你決定<br>「屋主不缺錢」→ 定錨，擋掉大砍價<br>「未來有重大建設」→ 畫大餅合理化高價<br>「我用服務費拜託屋主」→ 博取信任，要你加價
+      <p style="margin:8px 0 4px"><b>買方常用</b></p>
+      嫌貨才是買貨人、悲情牌預算封頂、同時在看別的社區、以景氣與實價登錄定錨、表現不急
+      <p style="margin:8px 0 4px"><b>專家建議</b></p>
+      以實價登錄為骨幹、以時間為籌碼；守住自己的預算底線；看到喜歡的物件別顯露過度興奮。
+    </details>
+  </div>
+  <div><div class="chat" id="chat" aria-live="polite"></div>
+    <div class="tact" id="tact">${SELLER_T.map(t=>`<button data-t="${t.id}" class="${N.used[t.id]?'used':''}">${t.label}</button>`).join('')}</div>
+    <div class="inrow"><textarea id="say" placeholder="輸入你想對屋主說的話……（可以用上面的話術，也可以自由發揮）"></textarea>
+      <div class="offer">出價（萬，可留空）<input id="off" type="number" inputmode="numeric" min="0" step="10"></div></div>
+    <div class="foot" style="margin-top:10px"><button class="btn ghost" id="quit">放棄</button><button class="btn yel" id="acceptAsk">接受屋主開價</button><button class="btn red" id="send">送出</button></div>
+  </div></div>`, true);
+  const chat = md.querySelector('#chat');
+  const upd = () => {
+    const mb = md.querySelector('#moodBar'); mb.style.width = clamp(N.mood,0,100)+'%'; mb.style.background = N.mood>55?'var(--green)':N.mood>30?'#e0a31a':'var(--red)';
+    md.querySelector('#askNow').textContent = W(N.lastAsk)+' 萬';
+    md.querySelector('#offNow').textContent = N.lastOffer ? W(N.lastOffer)+' 萬' : '—';
+    const rb = md.querySelector('#rivalBox'); rb.style.display = N.rival&&!N.done ? '' : 'none';
+    if (N.rival) rb.textContent = `⚠️ 對方聲稱已有其他買方下斡旋（真假未知），剩 ${N.rival.turns} 回合。可以加價、要求看斡旋書，或賭它是話術。`;
+  };
+  const bubble = (who, text, off) => { const d=document.createElement('div'); d.className='msg '+who; d.textContent=text; if (off){ const o=document.createElement('div'); o.className='off'; o.textContent=`出價 ${W(off)} 萬`; d.appendChild(document.createElement('br')); d.appendChild(o);} chat.appendChild(d); chat.scrollTop=chat.scrollHeight; };
+  if (!N.hist.length){
+    const open = {rush:'你好你好，房子你也看過了，價格好談，誠意夠就可以。',stubborn:'這房子我住了幾十年，每個角落都顧得很好，價格我是很實在的。',investor:'你好，開價是參考行情訂的，有誠意的話我們就看數字談。',emotional:'你好～房子我很喜歡，要不是不得已也不想賣。你覺得怎麼樣？',heir:'你好，這間是家裡長輩留下來的，我們幾個兄弟姊妹都想早點處理。'}[L.seller.pers];
+    N.hist.push({who:'them',text:open});
+  }
+  N.hist.forEach(h=>bubble(h.who,h.text,h.off));
+  upd();
+  md.querySelectorAll('#tact button').forEach(b=>b.onclick=()=>{ const ta=md.querySelector('#say'); ta.value = (ta.value?ta.value+'\n':'')+tacticText(b.dataset.t,L); ta.focus(); });
+  const tog = md.querySelector('#aiTog'); tog && (tog.onchange=()=>{ setAI(tog.checked); });
+  md.querySelector('#quit').onclick = ()=>{ delete md.dataset.lock; closeModal(); };
+  md.querySelector('#acceptAsk').onclick = ()=>{ if (N.done) return; N.done=true; bubble('me','好，就照您的價格。',N.lastAsk); bubble('them','爽快！那我們就這樣說定了。'); dealAgreed(L, N.lastAsk); };
+  const send = async () => {
+    if (N.done) return;
+    const text = md.querySelector('#say').value.trim();
+    const offW = parseFloat(md.querySelector('#off').value);
+    const offer = offW>0 ? Math.round(offW*10000) : 0;
+    if (!text && !offer){ toast('先說點什麼或出個價吧'); return; }
+    if (offer && offer >= N.lastAsk){ bubble('me',text||'好，就這個價格。',offer); N.hist.push({who:'me',text:text||'',off:offer}); N.done=true; bubble('them','沒問題！那就這樣成交。'); dealAgreed(L, N.lastAsk); return; }
+    bubble('me', text||'（直接出價）', offer); N.hist.push({who:'me',text,off:offer});
+    md.querySelector('#say').value=''; md.querySelector('#off').value='';
+    const sendBtn = md.querySelector('#send'); sendBtn.disabled=true;
+    const thinking = document.createElement('div'); thinking.className='msg sys'; thinking.textContent = `${L.seller.name}正在思考……`; chat.appendChild(thinking); chat.scrollTop=chat.scrollHeight;
+    N.round++;
+    const bluffNote = KW_SELLER.callbluff.some(w=>text.includes(w)) ? resolveBluff(L,N,bubble) : '';
+    let res = null;
+    if (aiOn && SAMPLE) res = await sellerAI(L,N,text,offer,bluffNote);
+    if (!res) res = sellerLocal(L,N,text,offer);
+    thinking.remove(); sendBtn.disabled=false;
+    applySeller(L,N,res,offer,bubble);
+    upd(); save();
+  };
+  md.querySelector('#send').onclick = send;
+  md.querySelector('#say').addEventListener('keydown', e=>{ if (e.key==='Enter' && (e.ctrlKey||e.metaKey)) send(); });
+  if (N.agreed) showAgreed(L, N.agreed);
+}
+function effReserve(L,N){ return Math.round(valueOf(L)*L.seller.resF*(1-Math.min(0.06,N.persuade*0.008))); }
+function resolveBluff(L,N,bubble){
+  const who = L.agent?'仲介':'屋主';
+  if (N.rival){
+    if (!N.rival.real){ N.persuade=Math.min(8,N.persuade+2); N.mood-=3; N.rival=null; bubble('sys',`${who}支支吾吾拿不出斡旋書，「有人下斡旋」看來只是話術，屋主氣勢弱了下來。`); return '買方要求看斡旋書，你們拿不出來，「有人下斡旋」的話術被識破了，你有點心虛尷尬。'; }
+    bubble('sys',`${who}拿出斡旋書影本（金額遮住），確實有另一組買方出價。`); return '買方要求看斡旋書，你們拿出來了，確實有另一組買方，你的立場更硬了。';
+  }
+  N.mood-=4; bubble('sys','根本沒人提過有其他買方，對方覺得被懷疑。'); return '買方莫名懷疑你們說謊，你有點不高興。';
+}
+function pressureLine(L,code){
+  const pre = L.agent?'【仲介】':'';
+  return pre + ({rival:'這間已經有人下斡旋了，你要不要加一點直接攔截？',
+    emigrate:`屋主是因為${L.seller.reason}才忍痛割愛，不然根本捨不得賣。`,
+    scarce: L.type==='透天'?'這一排透天就剩這一戶在賣，再不決定就沒了。':'這個社區這種好戶別只剩這一間，再不決定就沒了。',
+    notneedy:'屋主其實不缺錢，他在等一個有緣人，價格太低他寧願放著。',
+    future:'這邊未來有捷運跟重大建設，現在買以後一定增值。'})[code];
+}
+async function sellerAI(L,N,text,offer,bluffNote){
+  const P = PERS[L.seller.pers], res = effReserve(L,N);
+  const hist = N.hist.slice(-10).map(h=>`${h.who==='me'?'買方':'屋主'}：${h.text||''}${h.off?`（出價 ${W(h.off)} 萬）`:''}`).join('\n');
+  const prompt = `你正在一款台灣房地產模擬遊戲中扮演「賣方屋主」NPC，請完全以角色身分回應。
+【屋主】${L.seller.name}，${L.seller.age}歲，個性：${P.label}（${P.desc}）。賣屋原因：${L.seller.reason}。
+【物件】${titleOf(L)}，權狀 ${L.ping} 坪，屋齡 ${L.age} 年，${L.type==='透天'?L.total+'層透天':L.floor+'/'+L.total+'樓'}，${L.rooms}${L.parking?'，含車位':''}。
+【你目前的開價】${W(N.lastAsk)} 萬
+【你心中的底價】${W(res)} 萬（絕對不可說出或暗示這個數字）
+【行情】區域實價登錄均價每坪約 ${unitNow(L.ck,L.di).toFixed(1)} 萬，本物件合理成交行情約 ${W(valueOf(L))} 萬。
+【實際存在的屋況問題】${L.issues.length?L.issues.join('、'):'無'}（${S.seen[L.id]?'買方有來看過屋':'買方沒有來看過屋'}；若買方提到不在清單上的問題，代表他在亂講）
+【目前情緒】${N.mood}/100（越低越不耐煩，0 代表不想賣給他）
+【已談回合】${N.round}
+【對話紀錄】
+${hist}
+${bluffNote?`【剛剛發生】${bluffNote}\n`:''}${N.rival?`【你們先前說過有其他買方下斡旋】${N.rival.real?'這是真的':'其實是話術'}\n`:''}
+買方常用話術與其用意（用來判斷真假）：嫌貨才是買貨人（挑缺點當籌碼）、悲情牌預算封頂、同時在看別的社區、以景氣與實價登錄理性定錨、表現不急以時間為籌碼。
+你或居中的仲介也可以適時使用賣方話術：已經有人下斡旋（rival）、因故忍痛割愛（emigrate）、好戶只剩這間（scarce）、屋主不缺錢寧願放著（notneedy）、未來有重大建設一定增值（future）。${L.agent?'有仲介在場，這類話可以由仲介來說，在 reply 裡用「【仲介】」開頭標示。':''}
+
+依照你的個性評估買方最新這句話的說服力：有根據的理由（實價登錄、真實存在的屋況問題、付款誠意、快速交屋）能讓你稍微鬆動；無理砍價、羞辱、說謊、施壓會讓你不高興。
+規則：
+1. 出價 ≥ 底價才可以 accept。
+2. 出價低於底價用 counter，counter_price（單位：萬）必須介於底價與目前開價之間，依個性決定讓步幅度，不要一次讓太多。
+3. 這次沒有出價時 decision 用 "talk"（可以反問、試探）。
+4. 情緒很差或買方太過分時可以 walkaway 結束談判。
+5. reply 用台灣口語繁體中文，1 到 3 句，貼合個性，不要提到遊戲、AI 或底價數字。
+只輸出 JSON：{"reply":"...","mood_change":-30到15的整數,"persuaded":0到2的整數,"decision":"accept或counter或talk或walkaway","counter_price":數字或null,"pressure":"rival或emigrate或scarce或notneedy或future或none"}`;
+  const r = await ai(prompt);
+  if (!r || typeof r.reply!=='string') return null;
+  return {reply:r.reply, mood:clamp(parseInt(r.mood_change)||0,-30,15), persuade:clamp(parseInt(r.persuaded)||0,0,2), decision:r.decision, counter: r.counter_price? Math.round(parseFloat(r.counter_price)*10000):0, pressure: PRESSURE[r.pressure]?r.pressure:null, pressureInReply:true};
+}
+function sellerLocal(L,N,text,offer){
+  const P = PERS[L.seller.pers];
+  const hits = detect(text, KW_SELLER);
+  let mood=0, pers=0; const lines=[];
+  const base = {data:[1.2,-2],issue:[1.5,-2],cash:[0.8,3],deposit:[0.9,5],budget:[0.5,-1],compare:[0.7,-4],market:[1.0,-3],patience:[0.9,-2],praise:[0.3,7],flaws:[0.8,-7],deadline:[0.6,-6],lowball:[0,-22],insult:[0,-28]};
+  for (const h of hits){
+    if (h==='callbluff') continue;
+    let [p,m] = base[h];
+    if (h==='issue' && !(S.seen[L.id] && L.issues.length)){ p=0; m=-10; lines.push('liar'); }
+    if (P.likes.includes(h)){ p*=1.8; m+=5; }
+    if (P.dislikes.includes(h)){ p*=0.3; m-=10; }
+    if (N.used[h]){ p=0; m=Math.min(m,-4); }
+    N.used[h]=true; pers+=p; mood+=m;
+  }
+  if (!hits.length && text.length>6) mood+=1;
+  if (N.round>8) mood -= 4;
+  let decision='talk', counter=0;
+  const P2 = {...N, persuade:N.persuade+pers/1.2};
+  const res = effReserve(L,P2);
+  if (offer){
+    const ratio = offer/res;
+    if (ratio>=1) decision='accept';
+    else { if (ratio<0.85) mood-=12; else if (ratio<0.92) mood-=5; decision='counter'; counter = Math.max(res, N.lastAsk - (N.lastAsk-Math.max(offer,res))*P.concede); }
+  }
+  if (N.mood+mood<=0) decision='walkaway';
+  const tone = L.seller.pers;
+  const say = {
+    accept:{rush:'好啦好啦，就這個價，我們趕快簽一簽。',stubborn:'唉，看你們是真心喜歡，就這樣吧。',investor:'這個數字我可以接受，成交。',emotional:'你這個人講話實在，好！賣你！',heir:'我跟兄弟姊妹講一下……好，大家同意，成交。'},
+    counter:{rush:'這個價真的有點低，我最多再讓一點，你看看。',stubborn:'這價錢差太多了，我這房子不是這個行情。',investor:'你的出價跟我的成本差距還有點大，我們各退一步。',emotional:'嗯……你這樣出我有點難過耶，我只能再降一點點。',heir:'這個價我們家裡不會同意，我先回報一個數字給你。'},
+    talk:{rush:'那你打算出多少？有誠意我們就快點談。',stubborn:'你要知道，這附近像我保養這麼好的房子不多了。',investor:'理由我聽到了，給我一個具體的數字吧。',emotional:'你說的我有在聽啦，那你想出多少？',heir:'我們主要是想快點處理，價格合理就好，你出個價吧。'},
+    walkaway:{rush:'算了算了，我找別的買方。',stubborn:'你這樣講我不想賣你了，請回吧。',investor:'我們認知差太多，不用再浪費彼此時間。',emotional:'你太過分了！我不賣了！',heir:'這樣談不下去，我們找其他買家。'}
+  }[decision][tone];
+  let reply = say;
+  if (lines.includes('liar')) reply = '你講的那些問題我怎麼不知道？你有來看過屋嗎？' + (decision==='walkaway'?'':' '+say);
+  else if (hits.includes('insult')) reply = '你講話客氣一點！' + (decision==='walkaway'?'':' '+say);
+  else if (hits.includes('lowball') && decision!=='walkaway') reply = '打七折？你在開玩笑吧。'+say;
+  else if (hits.includes('praise') && P.likes.includes('praise') && decision==='talk') reply = '哈哈，被你這樣講我心情很好。'+say;
+  return {reply, mood, persuade:pers/1.2, decision, counter};
+}
+function applySeller(L,N,r,offer,bubble){
+  N.mood = clamp(N.mood + r.mood, -10, 100);
+  N.persuade = Math.min(8, N.persuade + (r.persuade||0));
+  const res = effReserve(L,N);
+  if (offer) N.lastOffer = offer;
+  let d = r.decision;
+  if (d==='accept' && (!offer || offer < res)) d = offer ? 'counter' : 'talk';
+  if (N.mood<=0) d = 'walkaway';
+  if (offer && offer>=res && d==='counter' && N.mood>40 && Math.random()<0.5) d='accept';
+  N.hist.push({who:'them',text:r.reply});
+  bubble('them', r.reply);
+  if (d==='accept'){ N.done=true; dealAgreed(L, offer); return; }
+  if (d==='counter'){
+    let c = r.counter || Math.max(res, N.lastAsk - (N.lastAsk-Math.max(offer||0,res))*PERS[L.seller.pers].concede);
+    c = clamp(c, Math.max(res, offer||0), N.lastAsk);
+    c = Math.round(c/10000)*10000;
+    const drop = N.lastAsk - c;
+    if (c < N.lastAsk){ N.lastAsk = c; bubble('sys', `屋主把價格降到 ${W(c)} 萬`);
+      if (L.agent && drop>=200000 && Math.random()<0.45) bubble('them', `【仲介】屋主本來踩得很硬，我是用我的服務費去拜託他，他才願意降這 ${W(drop)} 萬的，你真的要把握。`); }
+    else bubble('sys','屋主堅持原價');
+  }
+  if ((d==='counter'||d==='talk') && !N.done){
+    N.usedP = N.usedP || {};
+    let code = r.pressure && !N.usedP[r.pressure] ? r.pressure : null;
+    if (!code && !r.pressureInReply && Math.random()<0.3){ const left = Object.keys(PRESSURE).filter(k=>!N.usedP[k] && !(k==='rival'&&N.rival)); if (left.length) code = pick(left); }
+    if (code){
+      N.usedP[code]=true;
+      if (!r.pressureInReply) bubble('them', pressureLine(L,code));
+      bubble('sys', `💡 話術識別：${PRESSURE[code].label}，${PRESSURE[code].why}`);
+      if (code==='rival' && !N.rival) N.rival = {real:Math.random()<0.35, turns:2, fresh:true};
+    }
+  }
+  if (N.rival && !N.done && d!=='walkaway'){
+    if (N.rival.fresh) N.rival.fresh=false;
+    else if (--N.rival.turns<=0){
+      if (N.rival.real){ N.done=true; S.listings=S.listings.filter(x=>x.id!==L.id); bubble('sys','另一組買方已經先簽約，這間房子賣掉了。'); addLog(`${titleOf(L)} 被其他買方搶先簽約。`);
+        const md=$('#md'); md.querySelector('#send').disabled=true; md.querySelector('#acceptAsk').disabled=true; md.querySelector('#quit').textContent='離開'; return; }
+      N.rival=null; bubble('sys','「另一組買方」後來就沒了下文。');
+    }
+  }
+  if (d==='walkaway'){
+    N.done=true; S.blocked[L.id] = S.t+6; L.nego=null;
+    bubble('sys','屋主生氣離席，交易破局。這位屋主 6 個月內不會再跟你談。');
+    addLog(`與 ${L.seller.name} 議價破局：${titleOf(L)}。`);
+    const md=$('#md'); delete md.dataset.lock; md.querySelector('#send').disabled=true; md.querySelector('#acceptAsk').disabled=true;
+    md.querySelector('#quit').textContent='離開';
+  }
+}
+function dealAgreed(L, price){
+  if (!L.nego.agreed) addLog(`與 ${L.seller.name} 談妥 ${titleOf(L)}，成交價 ${W(price)} 萬（開價 ${W(L.ask)} 萬）。`,'good');
+  L.nego.agreed = price; L.nego.done = true;
+  showAgreed(L, price); save();
+}
+function showAgreed(L, price){
+  const md=$('#md');
+  const f = document.createElement('div'); f.className='note'; f.style.marginTop='12px';
+  f.innerHTML = `<b>價格談妥：${W(price)} 萬</b>（比開價少 ${W(L.ask-price)} 萬，${((1-price/L.ask)*100).toFixed(1)}%）。接下來要安排資金：找銀行談房貸，或全額付現。<div class="foot"><button class="btn red" id="toBank">安排房貸 ▶</button></div>`;
+  md.querySelector('.nego').after(f);
+  md.querySelector('#send').disabled=true; md.querySelector('#acceptAsk').disabled=true;
+  f.querySelector('#toBank').onclick=()=>openBanks(DEALS[L.id] && DEALS[L.id].price===price ? DEALS[L.id] : (DEALS[L.id]={L, price, offers:{}}));
+}
+
+const DEALS = {}; // runtime only (not saved)
+// ======================= BANK =======================
+function buyCosts(price, loanAmt, L, extra=0){
+  const items = [
+    ['契稅（依房屋評定現值×6%，估）', Math.round(price*0.0012)],
+    ['印花稅（契價×0.1%，估）', Math.round(price*0.0004)],
+    ['所有權移轉登記規費', Math.round(price*0.0004)],
+    ['代書費', loanAmt?21000:18000],
+    ['履約保證費（買方負擔一半）', Math.round(price*0.0003)]
+  ];
+  if (L.agent) items.push(['買方仲介服務費（1%）', Math.round(price*0.01)]);
+  if (loanAmt){ items.push(['抵押權設定規費（設定金額×0.1%）', Math.round(loanAmt*1.2*0.001)]); items.push(['住宅火險＋地震險（首年）', 4200]); }
+  if (extra) items.push(['銀行開辦費與附加條件', extra]);
+  return items;
+}
+function openBanks(deal){
+  const {L, price} = deal;
+  const C = loanCase(price, L);
+  const md = modal(`<h2>安排房貸</h2><p class="sub">${esc(titleOf(L))}・成交價 ${W(price)} 萬</p>
+    <div class="note"><b>本案適用：${C.label}</b><br>依央行選擇性信用管制（2026年9月最新調整）與銀行實務：本案成數上限 <b>${Math.round(C.cap*100)}%</b>、${C.grace?'可申請寬限期（最長 3 年）':'<b>不得</b>給寬限期'}、年限最長 ${C.maxY} 年。銀行會以「成交價與鑑價取低者」計算貸款，並檢視負債比（月付約不超過家庭月收入 6 成）。<br>每諮詢一家銀行就會查一次聯徵，近 3 個月查詢太多次會被加碼利率。目前近 3 個月查詢：<b>${jcicCount()} 次</b>。</div>
+    <h3 style="margin:14px 0 8px">選擇銀行</h3>
+    <div class="banks">${BANKS.map(b=>`<button class="bank" data-bank="${b.id}"><span class="k">${b.kind}</span><b>${b.name}</b><p>${b.style}</p>${deal.offers[b.id]?`<p style="color:var(--ink)">已開條件：${deal.offers[b.id].ltv}%・${deal.offers[b.id].rate.toFixed(2)}%</p>`:''}</button>`).join('')}</div>
+    <div class="foot"><button class="btn ghost" id="cashBuy">不貸款，全額付現</button></div>`);
+  md.querySelectorAll('[data-bank]').forEach(b=>b.onclick=()=>openBankChat(deal, BANKS.find(x=>x.id===b.dataset.bank)));
+  md.querySelector('#cashBuy').onclick=()=>openClosing(deal, null);
+}
+function maxLoanDBR(years, rate, guarantor){
+  const cap = S.income*(guarantor?0.7:0.6) + rentIncome()*0.7 - existingPayments();
+  if (cap<=0) return 0;
+  const r=rate/100/12, n=years*12; return Math.max(0, Math.round(cap*(1-Math.pow(1+r,-n))/r));
+}
+function openBankChat(deal, bank){
+  const {L, price} = deal; const C = loanCase(price, L);
+  let B = deal.bankState?.[bank.id];
+  if (!B){
+    if (!deal.jc?.[bank.id]){ S.jcic.push(S.t); deal.jc = {...(deal.jc||{}), [bank.id]:true}; }
+    const n = S.props.length;
+    const appraisal = Math.round(valueOf(L)*bank.appr*R(0.97,1.02)/10000)*10000;
+    let ltv = n===0 ? bank.ltvD[0] : n===1 ? Math.min(C.cap, bank.ltvD[1]) : C.cap;
+    ltv = Math.min(ltv, C.cap);
+    if (L.type==='公寓' && L.age>40) ltv -= 0.1;
+    const jc = Math.max(0, jcicCount()-2)*0.05;
+    const rate = +(bank.base + S.rateAdj + n*0.12 + jc + (L.age>35?0.08:0)).toFixed(3);
+    B = {ltv:Math.round(ltv*100), rate, years:30, grace:0, fee:bank.fee, conds:[], trust:55, hist:[], used:{}, appraisal, guarantor:false};
+    B.ltv = Math.max(0, Math.min(B.ltv, Math.floor(maxLoanDBR(30, rate, false)/Math.min(price,appraisal)*100)));
+    deal.bankState = {...(deal.bankState||{}), [bank.id]:B};
+  }
+  const base = () => Math.min(price, B.appraisal);
+  const md = modal(`<h2>${bank.name}・房貸面談</h2><p class="sub">${bank.kind}・${esc(C.label)}・${aiOn?'AI 對談模式':'經典對談模式'}</p>
+  <div class="nego"><div class="side">
+    <div class="terms">
+      <div>銀行鑑價<b class="n" id="tAppr"></b></div><div>核貸成數<b class="n" id="tLtv"></b></div>
+      <div>貸款金額<b class="n" id="tAmt"></b></div><div>利率（機動）<b class="n" id="tRate"></b></div>
+      <div>年限<b class="n" id="tYears"></b></div><div>寬限期<b class="n" id="tGrace"></b></div>
+      <div>每月還款<b class="n" id="tPay"></b></div><div>信任度<b class="n" id="tTrust"></b></div>
+    </div>
+    <div class="note" id="tConds"></div>
+    <div class="note" id="tNeed"></div>
+  </div>
+  <div><div class="chat" id="chat" aria-live="polite"></div>
+    <div class="tact">${BANK_T.map(t=>`<button data-t="${t.id}">${t.label}</button>`).join('')}</div>
+    <div class="inrow"><textarea id="say" placeholder="跟行員說明你的條件、提出要求……"></textarea></div>
+    <div class="foot" style="margin-top:10px"><button class="btn ghost" id="back">換一家銀行</button><button class="btn yel" id="acceptLoan">接受此方案</button><button class="btn red" id="send">送出</button></div>
+  </div></div>`, true);
+  const chat = md.querySelector('#chat');
+  const bubble = (who,text)=>{ const d=document.createElement('div'); d.className='msg '+who; d.textContent=text; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; };
+  const upd = () => {
+    const amt = Math.round(base()*B.ltv/100/10000)*10000;
+    const pay = pmt(amt,B.rate,B.years-B.grace);
+    md.querySelector('#tAppr').textContent = W(B.appraisal)+'萬';
+    md.querySelector('#tLtv').textContent = B.ltv+'%';
+    md.querySelector('#tAmt').textContent = W(amt)+'萬';
+    md.querySelector('#tRate').textContent = B.rate.toFixed(2)+'%';
+    md.querySelector('#tYears').textContent = B.years+'年';
+    md.querySelector('#tGrace').textContent = B.grace? B.grace+'年':'無';
+    md.querySelector('#tPay').textContent = B.grace ? `${W1(amt*B.rate/100/12)}→${W1(pay)}萬` : W1(pay)+'萬';
+    md.querySelector('#tTrust').textContent = B.trust;
+    const condCost = B.conds.reduce((s,c)=>s+(c.cost||0),0);
+    md.querySelector('#tConds').innerHTML = `開辦費 ${NT(B.fee)} 元${B.conds.length?'<br>附加條件：'+B.conds.map(c=>`${esc(c.text)}${c.cost?`（${NT(c.cost)} 元）`:''}`).join('；'):''}`;
+    const costs = buyCosts(price, amt, L, B.fee+condCost).reduce((s,x)=>s+x[1],0);
+    const need = price - amt + costs;
+    md.querySelector('#tNeed').innerHTML = `自備款＋稅費約 <b>${W(need)} 萬</b>　你的現金 ${W(S.cash)} 萬 ${need>S.cash?'<br><b style="color:var(--red)">現金不足！需要更高成數或更便宜的物件。</b>':''}`;
+    deal.offers[bank.id] = {ltv:B.ltv, rate:B.rate, amt};
+  };
+  if (!B.hist.length){
+    const open = `您好，我是${bank.name}的房貸專員。這件${L.type}我們鑑價是 ${W(B.appraisal)} 萬${B.appraisal<price?'，比成交價低一些，貸款會以鑑價計算':''}。以您的狀況，目前可以先給到 ${B.ltv}%，利率 ${B.rate.toFixed(2)}%，30 年期${jcicCount()>2?'。另外您近期聯徵查詢次數偏多，利率有稍微加碼':''}。您有什麼想談的嗎？`;
+    B.hist.push({who:'them',text:open});
+  }
+  B.hist.forEach(h=>bubble(h.who,h.text));
+  upd();
+  md.querySelectorAll('.tact button').forEach(b=>b.onclick=()=>{ const ta=md.querySelector('#say'); const t=BANK_T.find(x=>x.id===b.dataset.t); ta.value=(ta.value?ta.value+'\n':'')+t.text; ta.focus(); });
+  md.querySelector('#back').onclick=()=>openBanks(deal);
+  md.querySelector('#acceptLoan').onclick=()=>{
+    const amt = Math.round(base()*B.ltv/100/10000)*10000;
+    openClosing(deal, {bank:bank.name, amt, rate:B.rate, years:B.years, grace:B.grace, fee:B.fee+B.conds.reduce((s,c)=>s+(c.cost||0),0), conds:B.conds.map(c=>c.text)});
+  };
+  const send = async ()=>{
+    const text = md.querySelector('#say').value.trim(); if (!text) return;
+    bubble('me',text); B.hist.push({who:'me',text}); md.querySelector('#say').value='';
+    const sb=md.querySelector('#send'); sb.disabled=true;
+    const th=document.createElement('div'); th.className='msg sys'; th.textContent='行員正在試算……'; chat.appendChild(th);
+    let r=null; if (aiOn && SAMPLE) r = await bankAI(deal,bank,B,C,text);
+    if (!r) r = bankLocal(deal,bank,B,C,text);
+    th.remove(); sb.disabled=false;
+    applyBank(deal,bank,B,C,r);
+    bubble('them', r.reply); B.hist.push({who:'them',text:r.reply});
+    upd(); save();
+  };
+  md.querySelector('#send').onclick=send;
+  md.querySelector('#say').addEventListener('keydown', e=>{ if (e.key==='Enter' && (e.ctrlKey||e.metaKey)) send(); });
+}
+function otherOffers(deal, bankId){ return Object.entries(deal.offers).filter(([k])=>k!==bankId).map(([k,o])=>({name:BANKS.find(b=>b.id===k).name,...o})); }
+async function bankAI(deal,bank,B,C,text){
+  const {L,price}=deal; const others = otherOffers(deal,bank.id);
+  const maxDBR = maxLoanDBR(B.years, B.rate, B.guarantor);
+  const prompt = `你是台灣「${bank.name}」（${bank.kind}）的房貸專員，正在房地產模擬遊戲中與客戶面談，請完全以角色回應。
+銀行風格：${bank.style}
+【必須遵守的規定】
+- 依央行選擇性信用管制（2026年9月最新）：本案屬「${C.label}」，貸款成數上限 ${Math.round(C.cap*100)}%；${C.grace?'可給寬限期，最長 3 年':'不得給寬限期'}；年限最長 ${C.maxY} 年${bank.id!=='ins'&&C.maxY===40?'（本行首購最長 40 年，但需年資與年齡符合）':''}。
+- 負債比：房貸月付加既有貸款不得超過家庭月收入 ${B.guarantor?70:60}%，以目前條件換算最高可貸約 ${W(maxDBR)} 萬。
+- 利率不得低於 ${bank.floor+S.rateAdj}%。
+【客戶】35 歲科技業工程師，雙薪家庭月收入 ${W1(S.income)} 萬，名下房屋 ${S.props.length} 戶，既有房貸月付 ${W1(existingPayments())} 萬，存款 ${W(S.cash)} 萬，近 3 個月聯徵查詢 ${jcicCount()} 次。${B.lied?'客戶先前有誇大收入被發現的紀錄。':''}
+【物件】成交價 ${W(price)} 萬，銀行鑑價 ${W(B.appraisal)} 萬（貸款以兩者低者計），${L.type}，屋齡 ${L.age} 年，${cityName(L)}。
+【目前條件】成數 ${B.ltv}%、利率 ${B.rate}%、年限 ${B.years} 年、寬限期 ${B.grace} 年、開辦費 ${B.fee} 元、附加條件：${B.conds.map(c=>c.text).join('；')||'無'}
+【客戶信任度】${B.trust}/100
+【他行已開條件】${others.length?others.map(o=>`${o.name} 成數${o.ltv}% 利率${o.rate}%`).join('；'):'客戶尚未提供（若客戶宣稱他行條件更好但這裡寫尚未提供，可能是虛張聲勢，可請他提供核貸書）'}
+【對話紀錄】
+${B.hist.slice(-8).map(h=>`${h.who==='me'?'客戶':'專員'}：${h.text}`).join('\n')}
+
+像真實的銀行專員一樣回應：合理的財力證明、薪轉往來、真實的比價能小幅改善條件；搭配房貸壽險或理財商品可以換成數但要列為附加條件並寫出一次性費用；誇大或無法證明的說法要請客戶提供文件並降低信任；違反規定的要求要委婉拒絕並說明是央行規定或內規。每次調整幅度要小（成數最多 ±5 個百分點、利率最多 ±0.15%）。
+只輸出 JSON：{"reply":"1到3句台灣銀行職場口語","ltv":百分比數字如75,"rate":數字如2.35,"years":整數,"grace_years":整數,"fee":整數元,"conditions":[{"text":"條件說明","cost":一次性費用元整數}],"trust_change":-20到10的整數}`;
+  const r = await ai(prompt);
+  if (!r || typeof r.reply!=='string') return null;
+  return {reply:r.reply, ltv:+r.ltv, rate:+r.rate, years:parseInt(r.years), grace:parseInt(r.grace_years)||0, fee:parseInt(r.fee), conds:Array.isArray(r.conditions)?r.conditions:null, trust:parseInt(r.trust_change)||0};
+}
+function bankLocal(deal,bank,B,C,text){
+  const hits = detect(text, KW_BANK); const out = {ltv:B.ltv, rate:B.rate, years:B.years, grace:B.grace, fee:B.fee, conds:null, trust:0}; const said=[];
+  const addCond = (t,cost)=>{ const c=[...B.conds]; if(!c.some(x=>x.text===t)) c.push({text:t,cost}); out.conds=c; };
+  for (const h of hits){
+    if (B.used[h]){ out.trust-=2; said.push('這部分您剛才提過了，我們已經有評估進去。'); continue; }
+    B.used[h]=true;
+    if (h==='stable'){ out.rate-=0.03; out.trust+=5; if (!S.props.length) out.ltv+=2; said.push('工作年資穩定是加分，我幫您在利率上爭取一點。'); }
+    if (h==='assets'){ if (S.cash > deal.price*0.25){ out.ltv+=3; out.rate-=0.03; out.trust+=5; said.push('財力證明充足的話，我可以往上呈報提高成數。'); } else { out.trust-=3; said.push('財力證明的部分，存款金額可能不太夠支撐更好的條件。'); } }
+    if (h==='payroll'){ out.rate-=0.06; addCond('夫妻薪轉帳戶與信用卡轉至本行',0); said.push('薪轉加信用卡往來，這個我們很歡迎，利率可以再減碼。'); }
+    if (h==='compare'){ const o = otherOffers(deal,bank.id); if (o.length){ const best = o.reduce((a,b)=>a.rate<b.rate?a:b); out.rate = Math.min(out.rate, best.rate+0.03); out.ltv = Math.max(out.ltv, Math.max(...o.map(x=>x.ltv))-2); said.push(`您說的條件我了解，${best.name}那邊確實不錯，我盡量跟上。`); } else { out.trust-=6; said.push('可以請您提供他行的核貸通知嗎？沒有書面我們比較難調整。'); } }
+    if (h==='insurance'){ out.ltv+=5; addCond('投保房貸壽險（躉繳）', Math.round(Math.min(deal.price,B.appraisal)*B.ltv/100*0.012)); said.push('搭配房貸壽險的話，成數我可以再往上申請，保費是一次繳清。'); }
+    if (h==='grace'){ if (C.grace){ out.grace = B.trust>60?3:2; said.push(`首購自住可以申請寬限期，先給您 ${out.grace} 年，這段期間只繳利息。`); } else said.push('不好意思，依照央行規定，這個案件不能給寬限期。'); }
+    if (h==='longer'){ if (C.maxY>=40){ out.years=40; said.push('首購自住可以到 40 年，不過總利息會多付不少喔。'); } else said.push('第二戶以上最長只能到 30 年，這是規定。'); }
+    if (h==='guarantor'){ B.guarantor=true; out.ltv+=3; out.trust+=3; addCond('父母擔任連帶保證人',0); said.push('有保證人的話，負債比我們可以放寬評估。'); }
+    if (h==='exaggerate'){ if (Math.random()<0.7){ out.trust-=15; out.ltv-=3; B.lied=true; said.push('兼職收入需要扣繳憑單或報稅資料佐證喔……您資料上看不到這筆，我們只能照申報收入算。'); } else { out.ltv+=2; out.trust-=3; said.push('這部分之後麻煩補上所得證明，我先暫時納入評估。'); } }
+  }
+  if (!hits.length) said.push(pick(['了解，還有其他條件想談的嗎？例如薪轉、財力證明，都可以幫您爭取。','這個我記下來了。您如果有他行的核貸條件也可以提供給我參考。','嗯，目前這樣的條件在市場上算是合理的，您可以再考慮看看。']));
+  out.reply = said.join('');
+  return out;
+}
+function applyBank(deal,bank,B,C,r){
+  const base = Math.min(deal.price, B.appraisal);
+  let ltv = isFinite(r.ltv)?r.ltv:B.ltv; ltv = clamp(ltv, B.ltv-5, B.ltv+5);
+  let rate = isFinite(r.rate)?r.rate:B.rate; rate = clamp(rate, B.rate-0.15, B.rate+0.15);
+  rate = Math.max(rate, bank.floor+S.rateAdj);
+  let years = clamp(r.years||B.years, 20, C.maxY);
+  if (bank.id==='gov' && years>30 && C.maxY<40) years=30;
+  let grace = C.grace ? clamp(r.grace||0,0,3) : 0;
+  B.trust = clamp(B.trust + (r.trust||0), 0, 100);
+  ltv = Math.min(ltv, C.cap*100);
+  const dbrMax = maxLoanDBR(years, rate, B.guarantor);
+  ltv = Math.min(ltv, Math.floor(dbrMax/base*100));
+  if (B.trust<25) ltv = Math.min(ltv, B.ltv);
+  B.ltv = Math.max(0, Math.round(ltv)); B.rate = +rate.toFixed(3); B.years = years; B.grace = grace;
+  if (isFinite(r.fee) && r.fee>=0) B.fee = clamp(r.fee, 0, 20000);
+  if (r.conds) B.conds = r.conds.filter(c=>c && c.text).slice(0,4).map(c=>({text:String(c.text).slice(0,40), cost:clamp(parseInt(c.cost)||0,0,Math.round(base*0.015))}));
+}
+
+// ======================= CLOSING =======================
+function openClosing(deal, loan){
+  const {L,price} = deal; const amt = loan?loan.amt:0;
+  const items = buyCosts(price, amt, L, loan?loan.fee:0);
+  const costs = items.reduce((s,x)=>s+x[1],0);
+  const need = price - amt + costs;
+  const ok = need <= S.cash;
+  const md = modal(`<h2>簽約與交屋確認</h2><p class="sub">${esc(titleOf(L))}</p>
+    <div class="two"><div><table class="t"><tr><td>成交價</td><td>${W(price)} 萬</td></tr>${loan?`<tr><td>${esc(loan.bank)} 房貸</td><td>−${W(amt)} 萬</td></tr><tr><td>自備款</td><td>${W(price-amt)} 萬</td></tr>`:'<tr><td>全額付現</td><td>—</td></tr>'}
+      ${items.map(i=>`<tr><td>${i[0]}</td><td>${NT(i[1])} 元</td></tr>`).join('')}
+      <tr class="total"><td>需準備現金</td><td>${W(need)} 萬</td></tr></table></div>
+    <div>${loan?`<div class="terms"><div>利率<b class="n">${loan.rate.toFixed(2)}%</b></div><div>年限<b class="n">${loan.years} 年</b></div><div>寬限期<b class="n">${loan.grace?loan.grace+' 年':'無'}</b></div><div>月付<b class="n">${W1(loan.grace?amt*loan.rate/100/12:pmt(amt,loan.rate,loan.years))} 萬</b></div></div>${loan.conds.length?`<p class="note">附加條件：${loan.conds.map(esc).join('；')}</p>`:''}`:''}
+      <p class="note">交屋流程：簽約用印 → 完稅 → 過戶與設定 → 銀行撥款 → 點交。遊戲中一次完成。<br>成交後持有未滿 2 年出售，房地合一稅率 45%；2～5 年 35%。</p>
+      ${ok?'':`<p class="warn">現金不足 ${W(need-S.cash)} 萬，無法完成交易。</p>`}</div></div>
+    <div class="foot"><button class="btn ghost" id="back">返回</button><button class="btn red" id="confirm" ${ok?'':'disabled'}>確認購買</button></div>`);
+  md.querySelector('#back').onclick=()=> loan?openBanks(deal):openBanks(deal);
+  md.querySelector('#confirm').onclick=()=>{
+    S.cash -= need;
+    const p = {id:nid(), L:{...L, nego:null}, boughtAt:S.t, price, cost:price+costs, reno:0, status:'空置', rent:0,
+      loan: loan? {bank:loan.bank, principal:amt, balance:amt, rate:loan.rate, years:loan.years, grace:loan.grace, start:S.t} : null};
+    S.props.push(p);
+    S.listings = S.listings.filter(x=>x.id!==L.id);
+    addLog(`🏠 購入 ${titleOf(L)}，成交價 ${W(price)} 萬${loan?`，${loan.bank}貸款 ${W(amt)} 萬（${loan.rate.toFixed(2)}%）`:'，全額付現'}。`,'good');
+    save(); closeModal(); S.tab='props'; render(); toast('恭喜成交！可以選擇自住、出租、裝修或轉手');
+  };
+}
+
+// ======================= RENOVATION =======================
+function renoOptions(p){
+  const L=p.L, ip=inPing(L), baths = parseInt(L.rooms.match(/(\d)衛/)[1]);
+  const o = [
+    {id:'paint',name:'全室油漆粉刷',desc:'批土、防霉漆、天花板',cost:Math.round(ip*3200),cond:8,months:0},
+    {id:'leak',name:'防水抓漏工程',desc:'外牆／浴室防水層重做，保固 3 年',cost:RI(8,16)*10000,cond:12,months:1,need:'漏水',fix:'漏水'},
+    {id:'mold',name:'壁癌處理',desc:'刨除、防水塗層、重新粉刷',cost:RI(4,9)*10000,cond:7,months:0,need:'壁癌',fix:'壁癌'},
+    {id:'pipe',name:'水電管線全面更新',desc:'配電盤、電線、給排水管全換',cost:Math.round(ip*18000),cond:15,months:1,fix:'管線老舊'},
+    {id:'floor',name:'超耐磨木地板',desc:'含拆除舊地板與踢腳板',cost:Math.round(ip*4800),cond:6,months:0},
+    {id:'window',name:'氣密窗更換',desc:'全室鋁窗改氣密隔音窗',cost:Math.round(ip*9000),cond:5,months:0,fix:'鄰居嘈雜'},
+    {id:'kitchen',name:'廚房更新',desc:'系統廚具＋三機（爐具、烘碗機、排油煙機）',cost:RI(22,32)*10000,cond:6,months:0},
+    {id:'bath',name:`衛浴翻新（${baths} 間）`,desc:'拆除、防水、磁磚、衛浴設備',cost:baths*RI(20,26)*10000,cond:8,months:1},
+    {id:'cabinet',name:'系統櫃收納',desc:'衣櫃、玄關櫃、電視櫃',cost:RI(30,42)*10000,cond:3,months:0,rent:0.04},
+    {id:'lay1',name:'格局重整：三房改兩房＋大客廳',desc:'拆牆、泥作、水電移位，空間感大增',cost:RI(40,55)*10000,layout:0.03,months:1,cond:3,cond2:L.rooms.startsWith('3')},
+    {id:'lay2',name:'格局重整：開放式廚房＋中島',desc:'打開廚房隔間、新增中島',cost:RI(28,38)*10000,layout:0.02,months:1,cond:3},
+    {id:'lay3',name:'格局重整：大坪數增設一房',desc:'隔間牆＋冷氣管線＋門窗',cost:RI(35,45)*10000,layout:0.03,months:1,cond:2,cond2:ip>=30},
+    {id:'stage',name:'全室軟裝擺設',desc:'家具、燈具、窗簾、家電；帶看與租金加分',cost:RI(40,55)*10000,cond:0,months:0,staging:true,rent:0.1},
+    {id:'smart',name:'智慧家居＋電子鎖',desc:'智慧照明、門鎖、監視器',cost:RI(6,10)*10000,cond:1,months:0,rent:0.03}
+  ];
+  return o.filter(x=>(!x.need || L.issues.includes(x.need)) && x.cond2!==false).map(x=>({...x, done:(p.done||[]).includes(x.id)}));
+}
+function openReno(pid){
+  const p = prop(pid); const opts = renoOptions(p); const layoutDone = (p.done||[]).some(d=>d.startsWith('lay'));
+  const md = modal(`<h2>裝修改造</h2><p class="sub">${esc(titleOf(p.L))}・室內約 ${inPing(p.L)} 坪・屋況 ${p.L.cond}/100${p.L.issues.length?'・問題：'+p.L.issues.join('、'):''}</p>
+    <p class="note">費用依 2026 年雙北與中南部行情估算（室內坪計價）。屋況提升會反映在估值上；格局重整一次只能做一種；軟裝對估值幫助有限，但能加快成交、提高租金。裝修的發票可以在出售時列為成本，抵減房地合一稅。</p>
+    <div id="opts">${opts.map(o=>{ const dis = o.done || (o.layout && layoutDone); return `<label class="opt ${dis?'dis':''}"><input type="checkbox" value="${o.id}" ${dis?'disabled':''}><span><b>${o.name}</b>${o.done?'（已完成）':''}<small>${o.desc}${o.months?`・工期約 ${o.months} 個月`:''}</small></span><span class="n">${W1(o.cost)} 萬</span></label>`; }).join('')}</div>
+    <div class="note" id="est"></div>
+    <div class="foot"><button class="btn ghost" id="cancel">取消</button><button class="btn red" id="go">開工</button></div>`);
+  const sel = () => [...md.querySelectorAll('#opts input:checked')].map(i=>opts.find(o=>o.id===i.value));
+  const calc = () => {
+    const s = sel();
+    const layouts = s.filter(o=>o.layout);
+    md.querySelectorAll('#opts input').forEach(i=>{ const o=opts.find(x=>x.id===i.value); if (o.layout && !o.done && !layoutDone) i.disabled = layouts.length && !layouts.includes(o); });
+    const cost = s.reduce((a,o)=>a+o.cost,0);
+    const L2 = {...p.L, cond:clamp(p.L.cond+s.reduce((a,o)=>a+o.cond,0),0,100), layout:Math.min(0.05,(p.L.layout||0)+s.reduce((a,o)=>a+(o.layout||0),0))};
+    const dv = valueOf(L2) - valueOf(p.L); const months = Math.max(0,...s.map(o=>o.months));
+    md.querySelector('#est').innerHTML = s.length ? `總費用 <b>${W1(cost)} 萬</b>　預估屋況 ${p.L.cond} → <b>${L2.cond}</b>　估值增加約 <b>${W(dv)} 萬</b>　工期 <b>${months||'不到 1'}</b> 個月${cost>S.cash?'<br><b style="color:var(--red)">現金不足</b>':''}` : '勾選要施作的項目。';
+    md.querySelector('#go').disabled = !s.length || cost>S.cash;
+  };
+  md.querySelectorAll('#opts input').forEach(i=>i.onchange=calc); calc();
+  md.querySelector('#cancel').onclick=closeModal;
+  md.querySelector('#go').onclick=()=>{
+    const s=sel(); const cost=s.reduce((a,o)=>a+o.cost,0);
+    S.cash-=cost; p.reno+=cost; p.done=[...(p.done||[]),...s.map(o=>o.id)];
+    p.L.cond = clamp(p.L.cond+s.reduce((a,o)=>a+o.cond,0),0,100);
+    p.L.layout = Math.min(0.05,(p.L.layout||0)+s.reduce((a,o)=>a+(o.layout||0),0));
+    p.rentBoost = (p.rentBoost||0)+s.reduce((a,o)=>a+(o.rent||0),0);
+    if (s.some(o=>o.staging)) p.L.staging=true;
+    s.forEach(o=>{ if (o.fix) p.L.issues = p.L.issues.filter(x=>x!==o.fix); });
+    const months = Math.max(0,...s.map(o=>o.months));
+    if (months){ p.prevStatus = p.status==='自住'?'自住':'空置'; p.status='裝修中'; p.renoUntil=S.t+months; }
+    addLog(`${titleOf(p.L)} 裝修：${s.map(o=>o.name).join('、')}，花費 ${W1(cost)} 萬。`);
+    save(); closeModal(); toast(months?`開工！約 ${months} 個月完工`:'施工完成！');
+  };
+}
+
+// ======================= SELLING =======================
+const SALE_MODES = {
+  self:{label:'自售',desc:'自己刊登在售屋平台、自己帶看。免仲介費，但曝光少、成交慢。',exp:0.32,fee:[0,0]},
+  general:{label:'一般委託',desc:'可同時委託多家仲介、也能自售。賣方服務費依法上限 4%，只付給成交的那家。',exp:0.55,fee:[2,4]},
+  exclusive:{label:'專任委託',desc:'委託期間只給一家仲介、不能自售。仲介會投入較多廣告與帶看。',exp:0.72,fee:[2,4]},
+  joint:{label:'專任＋聯賣',desc:'簽專任並開放同業聯合銷售，曝光最大、買方來源最多，服務費通常收滿 4%。',exp:0.9,fee:[3,4]}
+};
+function saleEstimate(p, price, feePct){
+  const fee = Math.round(price*feePct/100);
+  const landTax = Math.round(price*0.004*Math.min(1,(S.t-p.boughtAt+6)/60));
+  const misc = 15000 + Math.round(price*0.0003);
+  const held = S.t - p.boughtAt;
+  const bal = p.loan?p.loan.balance:0;
+  const penalty = p.loan ? Math.round(bal*(held<12?0.01:held<24?0.005:0)) : 0;
+  const gain = price - p.cost - p.reno - fee - landTax - misc;
+  const selfLong = p.status==='自住' && p.selfSince!=null && S.t-p.selfSince>=72 && S.props.length===1;
+  let rate = held<=24?0.45:held<=60?0.35:held<=120?0.2:0.15;
+  let taxable = Math.max(0,gain);
+  if (selfLong){ taxable = Math.max(0,gain-4000000); rate = 0.1; }
+  const tax = Math.round(taxable*rate);
+  return {fee, landTax, misc, penalty, gain, tax, rate, bal, net: price - fee - landTax - misc - penalty - tax - bal, held, selfLong};
+}
+function openSell(pid){
+  const p = prop(pid); const v = valueOf(p.L);
+  let mode = p.sale?.mode || 'exclusive', fee = p.sale?.feePct ?? 4, months = p.sale ? Math.max(1,p.sale.until-S.t) : 6;
+  let ask = p.sale?.ask || Math.round(v*1.06/10000)*10000;
+  const md = modal(`<h2>出售房屋</h2><p class="sub">${esc(titleOf(p.L))}・目前估值約 ${W(v)} 萬・持有 ${S.t-p.boughtAt} 個月</p>
+    <h3 style="margin:8px 0">銷售方式</h3><div class="modes">${Object.entries(SALE_MODES).map(([k,m])=>`<button class="mode" data-mode="${k}" aria-pressed="${k===mode}"><b>${m.label}</b><small>${m.desc}</small></button>`).join('')}</div>
+    <div class="two"><div>
+      <div class="field">開價（萬）<input type="number" id="ask" value="${Math.round(ask/10000)}" step="10"></div>
+      <div class="field" id="feeWrap">賣方服務費：<b id="feeTxt"></b><input type="range" id="fee" min="1" max="4" step="0.5" value="${fee}"></div>
+      <div class="field" id="monWrap">委託期間<select id="mon"><option value="3">3 個月</option><option value="6">6 個月</option></select></div>
+      <p class="note" id="odds"></p>
+    </div><div><table class="t" id="est"></table><p class="meta">房地合一稅為預估，自住滿 6 年且為唯一房屋可適用 400 萬免稅額與 10% 稅率。</p></div></div>
+    <div class="foot">${p.sale?'<button class="btn ghost" id="stop">撤銷委售</button>':''}<button class="btn ghost" id="cancel">取消</button><button class="btn red" id="go">${p.sale?'更新委售條件':'開始銷售'}</button></div>`);
+  md.querySelector('#mon').value = months>=6?'6':'3';
+  const calc = () => {
+    const M = SALE_MODES[mode];
+    ask = Math.round((parseFloat(md.querySelector('#ask').value)||0)*10000);
+    const fr = md.querySelector('#fee'); fr.min = M.fee[0]||0; fr.max = M.fee[1]||0;
+    if (mode==='self'){ fee=0; md.querySelector('#feeWrap').style.display='none'; md.querySelector('#monWrap').style.display='none'; }
+    else { md.querySelector('#feeWrap').style.display=''; md.querySelector('#monWrap').style.display = mode==='general'?'none':''; fee = clamp(parseFloat(fr.value),M.fee[0],M.fee[1]); fr.value=fee; }
+    md.querySelector('#feeTxt').textContent = fee+'%'+(fee<3?'（仲介意願較低）':'');
+    const e = saleEstimate(p, ask, fee);
+    md.querySelector('#est').innerHTML = `<tr><td>成交價（以開價試算）</td><td>${W(ask)} 萬</td></tr><tr><td>仲介服務費 ${fee}%</td><td>−${W1(e.fee)} 萬</td></tr><tr><td>土地增值稅（估）</td><td>−${W1(e.landTax)} 萬</td></tr><tr><td>代書、規費、履保</td><td>−${W1(e.misc)} 萬</td></tr>${e.penalty?`<tr><td>提前清償違約金</td><td>−${W1(e.penalty)} 萬</td></tr>`:''}<tr><td>房地合一稅（${e.selfLong?'自住10%':Math.round(e.rate*100)+'%'}）</td><td>−${W1(e.tax)} 萬</td></tr><tr><td>清償房貸</td><td>−${W(e.bal)} 萬</td></tr><tr class="total"><td>實拿現金</td><td>${W(e.net)} 萬</td></tr>`;
+    const pr = offerProb(p, ask, mode, fee);
+    md.querySelector('#odds').innerHTML = `開價是估值的 <b>${Math.round(ask/v*100)}%</b>。預估每月接到出價的機率約 <b>${Math.round(pr*100)}%</b>。${ask>v*1.12?'開價偏高，買方可能只看不出價。':''}${p.L.staging?'已做軟裝擺設，帶看加分。':''}`;
+  };
+  md.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{ mode=b.dataset.mode; md.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); if (SALE_MODES[mode].fee[1]) md.querySelector('#fee').value = SALE_MODES[mode].fee[1]; calc(); });
+  md.querySelectorAll('#ask,#fee,#mon').forEach(i=>i.oninput=calc); calc();
+  md.querySelector('#cancel').onclick=closeModal;
+  const st = md.querySelector('#stop'); st && (st.onclick=()=>{ p.sale=null; if (p.status==='委售中') p.status='空置'; addLog(`撤銷 ${titleOf(p.L)} 的委售。`); save(); closeModal(); });
+  md.querySelector('#go').onclick=()=>{
+    if (ask<=0) return;
+    const mon = mode==='general'||mode==='self' ? 99 : +md.querySelector('#mon').value;
+    const agency = mode==='self'?'':pick(['信義','永慶','住商','台灣房屋','有巢氏','中信房屋']);
+    p.sale = {mode, feePct:fee, ask, until:S.t+mon, agency, label: SALE_MODES[mode].label+(agency?`（${agency}）`:'')};
+    if (p.status==='空置') p.status='委售中';
+    addLog(`${titleOf(p.L)} 以${p.sale.label}出售，開價 ${W(ask)} 萬${fee?`，服務費 ${fee}%`:''}。`);
+    save(); closeModal(); toast('已開始銷售，每個月可能收到買方出價');
+  };
+}
+function offerProb(p, ask, mode, fee){
+  const M = SALE_MODES[mode]; const v = valueOf(p.L);
+  const feeF = mode==='self'?1:Math.sqrt(fee/4);
+  const priceF = Math.exp(-Math.max(0, ask/v-0.98)*9);
+  const heat = 0.85 + (S.idx[p.L.ck]-1)*3;
+  return clamp(M.exp*0.6*feeF*priceF*(p.L.staging?1.15:1)*(p.status==='出租'?0.8:1)*heat, 0.02, 0.8);
+}
+function saleOffer(p){
+  const v = valueOf(p.L); const s = p.sale;
+  const offer = Math.round(Math.min(s.ask, v*R(0.88,1.0))/10000)*10000;
+  let buyerMax = Math.max(offer, Math.round(v*R(0.96,1.04)*(p.L.staging?1.02:1)/10000)*10000);
+  const md = modal(`<h2>有買方出價了！</h2><p class="sub">${esc(titleOf(p.L))}・${s.label}・開價 ${W(s.ask)} 萬</p>
+    <p style="font-size:15px">${s.mode==='self'?'一位看過房子的買方直接聯絡你：「我很有誠意，':`${s.agency}的經紀人帶來斡旋：「現在市場看屋的人變少了，這個買方是自住、自備款很足、誠意最高的一個，錯過可能要再等半年。`}出價 <b class="n" style="font-size:24px">${W(offer)} 萬</b>，已經付了斡旋金。」</p>
+    <div class="note">目前估值約 ${W(v)} 萬。你可以接受、還價，或拒絕等下一組買方。還價太高，買方可能直接放棄。</div>
+    <div class="field">還價（萬）<input type="number" id="ctr" value="${Math.round((offer+s.ask)/2/10000)}" step="5"></div>
+    <div class="field">還價時搭配的話術<select id="stac"><option value="">不用話術，就事論事</option><option value="rival">已經有其他人出價了（製造競爭）</option><option value="future">這裡未來有重大建設（畫大餅）</option><option value="notneedy">我不缺錢，價格不到寧願放著（定錨）</option><option value="emigrate">要不是換屋也捨不得賣（合理化）</option></select></div>
+    <div class="foot"><button class="btn ghost" id="rej">拒絕</button><button class="btn" id="ctrBtn">還價</button><button class="btn red" id="acc">接受 ${W(offer)} 萬</button></div>`);
+  md.dataset.lock='1';
+  const done = () => { delete md.dataset.lock; closeModal(); };
+  md.querySelector('#rej').onclick=()=>{ addLog(`拒絕了 ${W(offer)} 萬的出價。`); done(); };
+  md.querySelector('#acc').onclick=()=>{ delete md.dataset.lock; completeSale(p, offer); };
+  let tacUsed = false, buyerLeft = false;
+  md.querySelector('#ctrBtn').onclick=()=>{
+    const c = Math.round((parseFloat(md.querySelector('#ctr').value)||0)*10000);
+    const tac = md.querySelector('#stac').value;
+    if (tac && !tacUsed){ tacUsed = true; const r=Math.random();
+      if (tac==='rival'){ if (r<0.45) buyerMax*=1.03; else if (r<0.7) buyerLeft=true; }
+      if (tac==='future') buyerMax *= S.idx[p.L.ck]>=1 ? 1.015 : 1.005;
+      if (tac==='notneedy'){ if (r<0.6) buyerMax*=1.02; else if (r<0.8) buyerLeft=true; }
+      if (tac==='emigrate') buyerMax *= 1.01;
+      buyerMax = Math.round(buyerMax/10000)*10000;
+    }
+    if (buyerLeft){ addLog('買方覺得被話術施壓，決定放棄。'); md.querySelector('.note').innerHTML = '買方回覆：「既然有人出更高，那你賣給他吧。」買方放棄了。'; md.querySelector('#acc').disabled=true; md.querySelector('#ctrBtn').disabled=true; md.querySelector('#rej').textContent='關閉'; return; }
+    if (c<=offer){ delete md.dataset.lock; completeSale(p, offer); return; }
+    if (c<=buyerMax){ delete md.dataset.lock; toast('買方同意了你的價格！'); completeSale(p, c); }
+    else if (c<=buyerMax*1.04){ const mid = Math.round((buyerMax+offer)/2/10000)*10000; md.querySelector('.note').innerHTML = `買方回覆：「${W(c)} 萬太高了，最多 <b>${W(mid)} 萬</b>，這是底線。」`; md.querySelector('#acc').textContent = `接受 ${W(mid)} 萬`; md.querySelector('#acc').onclick=()=>{ delete md.dataset.lock; completeSale(p, mid); }; md.querySelector('#ctrBtn').disabled=true; }
+    else { addLog(`還價 ${W(c)} 萬，買方覺得差太多，放棄了。`); md.querySelector('.note').innerHTML = '買方覺得差距太大，已經放棄。'; md.querySelector('#acc').disabled=true; md.querySelector('#ctrBtn').disabled=true; md.querySelector('#rej').textContent='關閉'; }
+  };
+}
+function completeSale(p, price){
+  const e = saleEstimate(p, price, p.sale?p.sale.feePct:0);
+  S.cash += e.net;
+  S.props = S.props.filter(x=>x!==p);
+  const profit = price - p.cost - p.reno - e.fee - e.landTax - e.misc - e.penalty - e.tax;
+  addLog(`🎉 售出 ${titleOf(p.L)}，成交 ${W(price)} 萬，繳稅 ${W1(e.tax)} 萬，實拿 ${W(e.net)} 萬，淨利 ${profit>=0?'+':''}${W(profit)} 萬。`, profit>=0?'good':'');
+  save();
+  modal(`<h2>成交！</h2><p class="sub">${esc(titleOf(p.L))}</p><table class="t"><tr><td>成交價</td><td>${W(price)} 萬</td></tr><tr><td>仲介費＋稅費＋違約金</td><td>−${W1(e.fee+e.landTax+e.misc+e.penalty)} 萬</td></tr><tr><td>房地合一稅</td><td>−${W1(e.tax)} 萬</td></tr><tr><td>清償房貸</td><td>−${W(e.bal)} 萬</td></tr><tr class="total"><td>入帳現金</td><td>${W(e.net)} 萬</td></tr></table><p class="note">這筆投資的淨利（扣除買入成本、裝修、所有稅費）：<b class="${profit>=0?'up':'down'}">${profit>=0?'+':''}${W(profit)} 萬</b></p><div class="foot"><button class="btn red" id="ok">好</button></div>`).querySelector('#ok').onclick=closeModal;
+}
+
+// ======================= MONTH TICK =======================
+const EVENTS = [
+  ()=>{ news('央行理監事會決議政策利率不變，房市觀望氣氛持續。'); },
+  ()=>{ S.rateAdj+=0.125; S.props.forEach(p=>p.loan&&(p.loan.rate+=0.125)); for(const k in S.idx) S.idx[k]*=0.99; news('央行意外升息半碼！機動房貸利率同步調升 0.125%，房價承壓。'); },
+  ()=>{ S.idx.ks*=1.02; news('台積電宣布擴大高雄楠梓投資，南部科技聚落效應推升高雄房價。'); },
+  ()=>{ S.idx.tc*=1.015; news('台中捷運藍線工程進度超前，沿線房市詢問度增加。'); },
+  ()=>{ S.idx.tp*=1.008; news('台北市都更危老案審議加速，老公寓持有者惜售。'); },
+  ()=>{ for(const k in S.idx) S.idx[k]*=0.988; news('全台建物買賣移轉棟數創同期新低，買方議價空間擴大。'); },
+  ()=>{ for(const k in S.idx) S.idx[k]*=1.01; news('台股創高、資金回流不動產，看屋人潮增加。'); },
+  ()=>{ if (S.rateAdj>0){ S.rateAdj-=0.125; S.props.forEach(p=>p.loan&&(p.loan.rate-=0.125)); news('央行降息半碼，房貸族壓力減輕。'); } else news('物價漲幅趨緩，市場預期央行利率將維持不變。'); },
+  ()=>{ S.idx.tp*=0.99; news('信義區豪宅交易冷清，台北高總價產品降價求售。'); }
+];
+function nextMonth(){
+  const offers = [];
+  S.t++;
+  const d = dateOf(S.t);
+  // income & costs
+  let flow = S.income - S.living - (selfUse()?0:S.rentHome);
+  for (const p of S.props){
+    if (p.loan && p.loan.balance>0){
+      const m = S.t-1-p.loan.start, r=p.loan.rate/100/12, interest = p.loan.balance*r;
+      const pay = monthlyLoan({loan:{...p.loan, start:p.loan.start+1}}); // payment for month m
+      const principal = m < p.loan.grace*12 ? 0 : Math.max(0, pay-interest);
+      p.loan.balance = Math.max(0, Math.round(p.loan.balance - principal));
+      flow -= Math.round(interest+principal);
+    }
+    flow -= mgmtFee(p);
+    if (p.status==='出租') flow += p.rent;
+    if (p.status==='招租中' && Math.random()<0.55){ p.status='出租'; p.rent = Math.round(valueOf(p.L)*CITIES[p.L.ck].yield/12*(1+(p.rentBoost||0))*(0.8+p.L.cond/250)/100)*100; addLog(`${titleOf(p.L)} 租出去了，月租 ${NT(p.rent)} 元。`,'good'); }
+    if (p.status==='裝修中' && S.t>=p.renoUntil){ p.status = p.prevStatus||'空置'; addLog(`${titleOf(p.L)} 裝修完工！`,'good'); }
+    if (d.m===5){ const tax = Math.round(valueOf(p.L)*(p.status==='自住'&&S.props.length===1?0.0006:0.0012+0.0004*(S.props.length-1))); flow -= tax; addLog(`繳納 ${titleOf(p.L)} 房屋稅 ${NT(tax)} 元${p.status!=='自住'?'（非自住適用囤房稅差別稅率）':''}。`); }
+    if (d.m===11){ const tax = Math.round(valueOf(p.L)*(p.status==='自住'?0.0003:0.0007)); flow -= tax; addLog(`繳納 ${titleOf(p.L)} 地價稅 ${NT(tax)} 元。`); }
+    if (d.m===1 && S.t>0) p.L.age++;
+    if (p.sale){
+      if (S.t > p.sale.until){ addLog(`${titleOf(p.L)} 的${p.sale.label}委託到期，未成交。`); p.sale=null; if (p.status==='委售中') p.status='空置'; }
+      else if (Math.random() < offerProb(p, p.sale.ask, p.sale.mode, p.sale.feePct)) offers.push(p);
+    }
+  }
+  S.cash += flow;
+  // market
+  S.didx = S.didx || {};
+  for (const k in CITIES){ S.idx[k] *= 1 + CITIES[k].drift + R(-0.004,0.004); CITIES[k].dists.forEach((x,i)=>{ const dd=DIST_DRIFT[x[0]]; if (dd) S.didx[k+i]=(S.didx[k+i]||1)*(1+dd); }); }
+  if (Math.random()<0.14) pick(EVENTS)();
+  // listings churn
+  S.listings = S.listings.filter(l=>!(Math.random()<0.07 && !(l.nego && l.nego.agreed)));
+  for (const k in CITIES) CITIES[k].dists.forEach((x,i)=>{ const n = S.listings.filter(l=>l.ck===k&&l.di===i).length; if (n<2 || (n<5 && Math.random()<0.25)) S.listings.push(genListing(k,i)); });
+  S.listings.forEach(l=>{ if (l.nego && !l.nego.done) l.nego.mood = Math.min(PERS[l.seller.pers].mood, l.nego.mood+10); if (S.t-l.listedAt>4 && Math.random()<0.15){ l.ask=Math.round(l.ask*0.97/10000)*10000; if(l.nego) l.nego.lastAsk=Math.min(l.nego.lastAsk,l.ask); } });
+  // cash crisis
+  if (S.cash<0){ S.negCash++; addLog(`⚠️ 現金透支 ${W(-S.cash)} 萬！連續 3 個月將被迫拍賣房產。`); if (S.negCash>=3 && S.props.length){ const p = S.props.reduce((a,b)=>valueOf(a.L)>valueOf(b.L)?a:b); const price=Math.round(valueOf(p.L)*0.82); const e=saleEstimate(p,price,0); S.cash+=e.net; S.props=S.props.filter(x=>x!==p); addLog(`🔨 ${titleOf(p.L)} 遭法拍，以 ${W(price)} 萬賤價售出。`); S.negCash=0; } }
+  else S.negCash=0;
+  S.hist.push(netWorth()); if (S.hist.length>240) S.hist.shift();
+  save(); render();
+  offers.forEach(p=>queue.push(()=>saleOffer(p)));
+  if (S.t===120) queue.push(()=>modal(`<h2>十年回顧</h2><p>你在房市打滾了十年，資產淨值來到 <b class="n" style="font-size:26px">${W(netWorth())} 萬</b>。${(()=>{const g=Math.max(50000000,(S.startCash||10000000)*3);return netWorth()>=g?`成功突破 ${W(g)} 萬，真正的房市大亨！`:`離 ${W(g)} 萬目標還有一段距離，繼續努力！`;})()}</p><div class="foot"><button class="btn red" id="ok">繼續遊戲</button></div>`).querySelector('#ok').onclick=closeModal);
+  if (queue.length && !$('#mw').classList.contains('open')) queue.shift()();
+  toast(`${d.y}年${d.m}月　本月現金流 ${flow>=0?'+':''}${W1(flow)} 萬`);
+}
+
+// ======================= BOOT =======================
+document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>{ S.tab=b.dataset.tab; render(); });
+$('#nextBtn').onclick = nextMonth;
+function setup(first){
+  const presets = [1000,1500,2000,2500,3000,5000];
+  const md = modal(`<h2>${first?'歡迎來到房市大亨':'重新開始'}</h2><p class="sub">2026 年 10 月，房市秋冬淡季</p>
+    <p>你是 35 歲的科技業工程師，和另一半雙薪、家庭月收入 <b>15 萬</b>，目前在外租屋。先決定你的起始資金：</p>
+    <div class="modes" id="cashPick">${presets.map(v=>`<button class="mode" data-v="${v}" aria-pressed="${v===1000}"><b class="n" style="font-size:22px">${v.toLocaleString()} 萬</b><small>${v<=1000?'標準難度：台北要精打細算':v<=2000?'寬裕：三都都有不少選擇':v<=3000?'富足：可以同時經營多間':'大戶：直攻蛋黃區'}</small></button>`).join('')}<button class="mode" data-v="custom" aria-pressed="false"><b>自訂金額</b><small>300 萬～5 億，自己決定</small></button></div>
+    <div class="field" id="customWrap" style="display:none">起始資金（萬）<input type="number" id="customCash" min="300" max="50000" step="100" value="1200"></div>
+    <p class="note"><b>玩法</b><br>1. 在「看房市場」切換台北、台中、高雄與各行政區，查看實價行情與地圖。<br>2. 先看屋了解屋況與屋主個性，再用各種話術議價；小心惹毛屋主，也要識破屋主與仲介的話術。<br>3. 找銀行談房貸：成數、利率、寬限期都能談，但要遵守央行規定與負債比。<br>4. 買到房子後可以自住、出租、裝修改造，再選擇自售或委託仲介賣出。<br>5. 按「下個月」推進時間，房價、利率與新聞都會變動。</p>
+    <p class="meta">${inClaude?'在 Claude 中開啟時，議價與銀行面談可使用 AI 對談，自由輸入任何話術（首次使用會詢問授權）。':'目前為經典對談模式：系統會從你輸入的文字判斷話術。'}遊戲進度會自動存在這個瀏覽器。${first?'':'<b>重新開始會清除目前進度。</b>'}</p>
+    <div class="foot">${first?'':'<button class="btn ghost" id="cancelSetup">取消</button>'}<button class="btn red" id="startGame">開始遊戲</button></div>`);
+  md.dataset.lock = '1'; if (first) md.querySelector('.x').style.display = 'none';
+  let choice = '1000';
+  md.querySelectorAll('#cashPick [data-v]').forEach(b=>b.onclick=()=>{ md.querySelectorAll('#cashPick [data-v]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); choice=b.dataset.v; md.querySelector('#customWrap').style.display = choice==='custom'?'':'none'; if (choice==='custom') md.querySelector('#customCash').focus(); });
+  const cs = md.querySelector('#cancelSetup'); cs && (cs.onclick = ()=>{ delete md.dataset.lock; closeModal(); });
+  md.querySelector('.x').onclick = ()=>{ if (!first){ delete md.dataset.lock; closeModal(); } };
+  md.querySelector('#startGame').onclick = ()=>{
+    const v = choice==='custom' ? parseFloat(md.querySelector('#customCash').value) : +choice;
+    if (!(v>=300 && v<=50000)){ toast('請輸入 300 萬到 50,000 萬（5 億）之間的金額'); return; }
+    newGame(Math.round(v)*10000); S.intro = true; save(); delete md.dataset.lock; closeModal();
+    toast(`起始資金 ${Math.round(v).toLocaleString()} 萬，開始看房吧！`);
+  };
+}
+$('#restart').onclick = () => setup(false);
+if (!load()) newGame();
+render();
+if (!S.intro) setup(true);
+})();
+</script>
+</body>
+</html>
