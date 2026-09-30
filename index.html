@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>房市大亨：北中高</title>
+<title>房產新手村：買房小白實戰訓練</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
@@ -179,7 +179,7 @@ table.t tr.total td{border-top:2px solid var(--ink);border-bottom:0;font-size:16
 </head>
 <body>
 <header>
-  <div class="brand"><div class="sale">售</div><div><b>房市大亨</b><small>台北・台中・高雄</small></div></div>
+  <div class="brand"><div class="sale">售</div><div><b>房產新手村</b><small>買房小白實戰訓練・六都</small></div></div>
   <div class="stats">
     <div class="stat"><span>日期</span><b class="n" id="sDate"></b></div>
     <div class="stat"><span>現金</span><b class="n" id="sCash"></b></div>
@@ -1360,7 +1360,7 @@ function nextMonth(){
   S.hist.push(netWorth()); if (S.hist.length>240) S.hist.shift();
   save(); render();
   offers.forEach(p=>queue.push(()=>saleOffer(p)));
-  if (S.t===120) queue.push(()=>modal(`<h2>十年回顧</h2><p>你在房市打滾了十年，資產淨值來到 <b class="n" style="font-size:26px">${W(netWorth())} 萬</b>。${(()=>{const g=Math.max(50000000,(S.startCash||10000000)*3);return netWorth()>=g?`成功突破 ${W(g)} 萬，真正的房市大亨！`:`離 ${W(g)} 萬目標還有一段距離，繼續努力！`;})()}</p><div class="foot"><button class="btn red" id="ok">繼續遊戲</button></div>`).querySelector('#ok').onclick=closeModal);
+  if (S.t===120) queue.push(()=>modal(`<h2>十年回顧</h2><p>你在房市打滾了十年，資產淨值來到 <b class="n" style="font-size:26px">${W(netWorth())} 萬</b>。${(()=>{const g=Math.max(50000000,(S.startCash||10000000)*3);return netWorth()>=g?`成功突破 ${W(g)} 萬，你已經從新手村畢業，成為房產達人！`:`離 ${W(g)} 萬目標還有一段距離，繼續努力！`;})()}</p><div class="foot"><button class="btn red" id="ok">繼續遊戲</button></div>`).querySelector('#ok').onclick=closeModal);
   if (queue.length && !$('#mw').classList.contains('open')) queue.shift()();
   toast(`${d.y}年${d.m}月　本月現金流 ${flow>=0?'+':''}${W1(flow)} 萬`);
 }
@@ -1370,7 +1370,7 @@ document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>{ S.tab=b.d
 $('#nextBtn').onclick = nextMonth;
 function setup(first){
   const presets = [1000,1500,2000,2500,3000,5000];
-  const md = modal(`<h2>${first?'歡迎來到房市大亨':'重新開始'}</h2><p class="sub">台北・新北・桃園・台中・臺南・高雄</p>
+  const md = modal(`<h2>${first?'歡迎來到房產新手村':'重新開始'}</h2><p class="sub">台北・新北・桃園・台中・臺南・高雄</p>
     <p>你是 35 歲的科技業工程師，和另一半雙薪、家庭月收入約 <b>15 萬</b>（越早的年代收入越低），目前在外租屋。先決定你的起始資金：</p>
     <div class="modes" id="cashPick">${presets.map(v=>`<button class="mode" data-v="${v}" aria-pressed="${v===1000}"><b class="n" style="font-size:22px">${v.toLocaleString()} 萬</b><small>${v<=1000?'標準難度：台北要精打細算':v<=2000?'寬裕：三都都有不少選擇':v<=3000?'富足：可以同時經營多間':'大戶：直攻蛋黃區'}</small></button>`).join('')}<button class="mode" data-v="custom" aria-pressed="false"><b>自訂金額</b><small>300 萬～5 億，自己決定</small></button></div>
     <div class="field" id="customWrap" style="display:none">起始資金（萬）<input type="number" id="customCash" min="300" max="50000" step="100" value="1200"></div>
