@@ -212,6 +212,23 @@ const CITIES = {
     ['北投區',62,['石牌路二段','中和街','大業路','光明路'],'榮總生活圈，環境清幽'],
     ['文山區',60,['木柵路三段','興隆路二段','景美街','萬芳路'],'綠意多，首購族熱區'],
     ['萬華區',58,['西園路二段','萬大路','環河南路二段','康定路'],'老城區，萬大線與都更題材']]},
+  nt:{name:'新北市', drift:-0.0002, park:180, yield:0.02, high:6000, dists:[
+    ['板橋區',62,['文化路一段','縣民大道二段','中山路一段','四川路二段'],'新板特區，雙捷運與高鐵'],
+    ['永和區',62,['永和路二段','中正路','竹林路','福和路'],'緊鄰台北，生活機能極佳'],
+    ['新店區',60,['北新路二段','中正路','民權路','安康路二段'],'碧潭、裕隆城，環境宜居'],
+    ['三重區',58,['重新路三段','正義北路','集美街','自強路一段'],'一橋之隔到台北，重劃區新案'],
+    ['中和區',55,['中和路','景平路','中山路二段','員山路'],'環狀線通車，交通便利'],
+    ['新莊區',55,['中正路','思源路','新泰路','化成路'],'副都心與新莊重劃區'],
+    ['林口區',42,['文化一路','仁愛路二段','忠孝路','中山路'],'機場捷運，三井Outlet'],
+    ['淡水區',30,['中正東路','淡金路','新市一路','英專路'],'淡海新市鎮，總價低']]},
+  ty:{name:'桃園市', drift:0.0003, park:120, yield:0.023, high:4000, dists:[
+    ['桃園區',38,['中正路','經國路','大興西路二段','中山路'],'藝文特區，市中心'],
+    ['大園區',36,['領航南路四段','高鐵北路二段','青昇路','致遠一路'],'青埔高鐵特區，桃園機場'],
+    ['龜山區',36,['文化一路','萬壽路二段','復興一路','自強南路'],'A7合宜住宅，工業區就業'],
+    ['蘆竹區',35,['南崁路一段','中正路','長興路三段','新南路一段'],'南崁商圈，機捷沿線'],
+    ['中壢區',33,['環北路','中央西路二段','新生路','元化路'],'中原、中央大學，後站開發'],
+    ['八德區',30,['介壽路一段','建國路','興豐路','東勇街'],'價格親民，捷運綠線延伸'],
+    ['平鎮區',28,['環南路','延平路二段','南東路','中豐路'],'首購入門區']]},
   tc:{name:'台中市', drift:0.0004, park:150, yield:0.021, high:4000, dists:[
     ['西屯區',48,['市政路','河南路三段','福星路','西屯路二段'],'七期重劃區，科技業進駐'],
     ['南屯區',45,['文心南五路','大墩十一街','永春東路','公益路二段'],'單元二、豐樂公園生活圈'],
@@ -219,6 +236,14 @@ const CITIES = {
     ['西區',36,['公益路','精誠路','忠明南路','美村路一段'],'草悟道商圈，生活機能佳'],
     ['北區',30,['學士路','中清路一段','太平路','雙十路二段'],'中友一中商圈，老屋比例高'],
     ['太平區',27,['中山路三段','太平路','樹孝路','永平路'],'總價親民，自住首購']]},
+  tn:{name:'臺南市', drift:0.0008, park:100, yield:0.024, high:4000, dists:[
+    ['安平區',38,['永華路二段','健康三街','中華西路二段','安平路'],'五期重劃區，市府所在'],
+    ['東區',32,['東門路二段','崇學路','林森路一段','裕農路'],'成大、東區學區'],
+    ['善化區',30,['大成路','陽光大道','中山路','光明路'],'南科台積電效應'],
+    ['中西區',30,['中正路','西門路二段','海安路二段','民生路二段'],'古都核心，觀光商圈'],
+    ['永康區',30,['中華路','永大路二段','大灣路','小東路'],'人口最多的行政區'],
+    ['北區',28,['北門路二段','公園路','文賢路','西門路三段'],'台南火車站周邊'],
+    ['新市區',26,['中興街','大營','南科三路','永就'],'南科園區就業人口']]},
   ks:{name:'高雄市', drift:0.0010, park:120, yield:0.024, high:4000, dists:[
     ['鼓山區',45,['美術東二路','大順一路','明誠四路','裕誠路'],'美術館、農16豪宅聚落'],
     ['前鎮區',40,['成功二路','中華五路','復興四路','擴建路'],'亞洲新灣區，輕軌環狀線'],
@@ -228,7 +253,32 @@ const CITIES = {
     ['三民區',30,['九如一路','建工路','民族一路','大昌二路'],'人口密集，租屋需求穩'],
     ['鳳山區',28,['中山西路','光遠路','青年路二段','文化路'],'捷運橘線，總價親民']]}
 };
-const DIST_DRIFT = {'楠梓區':0.0012,'前鎮區':0.0005,'西屯區':0.0005,'萬華區':0.0003};
+const DIST_DRIFT = {'楠梓區':0.0012,'前鎮區':0.0005,'西屯區':0.0005,'萬華區':0.0003,'善化區':0.001,'新市區':0.0008,'大園區':0.0004};
+// ---- 歷史房價：各市 2008～2026 年度相對價位（2026=1），依信義／國泰房價指數與實價登錄走勢整理的近似值 ----
+const HIST_Y0 = 2008;
+const HIST = {
+  tp:[0.54,0.58,0.68,0.75,0.80,0.88,0.93,0.90,0.85,0.84,0.84,0.85,0.87,0.91,0.95,0.96,1.01,1.01,1.00],
+  nt:[0.40,0.43,0.52,0.58,0.63,0.72,0.76,0.74,0.70,0.69,0.69,0.70,0.73,0.79,0.86,0.89,0.97,0.99,1.00],
+  ty:[0.35,0.37,0.42,0.47,0.52,0.60,0.64,0.62,0.60,0.60,0.61,0.63,0.67,0.74,0.83,0.87,0.97,1.00,1.00],
+  tc:[0.30,0.31,0.35,0.40,0.44,0.52,0.57,0.56,0.54,0.55,0.56,0.58,0.62,0.70,0.80,0.85,0.96,1.00,0.99],
+  tn:[0.30,0.31,0.34,0.37,0.40,0.46,0.50,0.50,0.49,0.50,0.51,0.53,0.57,0.65,0.76,0.82,0.95,1.00,0.99],
+  ks:[0.32,0.33,0.37,0.42,0.46,0.53,0.57,0.55,0.52,0.53,0.53,0.55,0.58,0.66,0.77,0.82,0.94,0.99,0.99]
+};
+// 個別行政區相對全市的額外漲跌（起年、迄年、幅度）
+const BOOST = {
+  '楠梓區':[[2020,2024,0.28]], '善化區':[[2020,2024,0.32]], '新市區':[[2020,2024,0.25]], '前鎮區':[[2019,2023,0.12]],
+  '西屯區':[[2012,2014,0.08],[2019,2023,0.10]], '北屯區':[[2018,2022,0.10]], '大園區':[[2011,2014,0.18],[2015,2018,-0.08],[2020,2023,0.10]],
+  '林口區':[[2011,2014,0.22],[2015,2019,-0.12]], '淡水區':[[2012,2014,0.10],[2015,2019,-0.10]], '信義區':[[2009,2013,0.08]], '大安區':[[2009,2013,0.06]],
+  '安平區':[[2019,2023,0.08]], '鼓山區':[[2011,2014,0.08]], '三重區':[[2019,2023,0.06]]
+};
+// 五大銀行新承做購屋貸款平均利率（年，近似）
+const RATE_HIST = [2.60,1.65,1.72,1.95,1.97,1.97,1.99,1.94,1.73,1.66,1.63,1.63,1.40,1.35,1.62,2.03,2.18,2.21,2.25];
+const NOW_ABS = 2026*12+9; // 2026/10
+function histLookup(arr, absM){ const yf = absM/12 - HIST_Y0 + (0.5/12) - 0.5; if (yf<=0) return arr[0]; if (yf>=arr.length-1) return arr[arr.length-1]; const i=Math.floor(yf), f=yf-i; return arr[i]*(1-f)+arr[i+1]*f; }
+function boostF(name, absM){ const y = absM/12; let v=1, full=1; for (const [a,b,pct] of (BOOST[name]||[])){ const f = clamp((y-a)/(b+1-a),0,1); v*=1+pct*f; full*=1+pct; } return v/full; }
+function absOf(t){ return S.start.y*12 + (S.start.m-1) + t; }
+function histRate(absM){ return histLookup(RATE_HIST, Math.min(absM, NOW_ABS)); }
+function inHistory(t){ return absOf(t) < NOW_ABS; }
 const TYPES = {
   '公寓':{f:0.84,ping:[22,34],pub:0.08,age:[35,52],floors:[4,5]},
   '華廈':{f:0.92,ping:[26,40],pub:0.22,age:[22,40],floors:[7,10]},
@@ -286,8 +336,7 @@ const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const W = v => Math.round(v/10000).toLocaleString();          // 元 -> 萬 (整數)
 const W1 = v => (v/10000).toLocaleString(undefined,{maximumFractionDigits:1});
 const NT = v => Math.round(v).toLocaleString();
-const START = {y:2026,m:10};
-const dateOf = t => { const m0 = START.m-1+t; return {y:START.y+Math.floor(m0/12), m:m0%12+1}; };
+const dateOf = t => { const a = absOf(t); return {y:Math.floor(a/12), m:a%12+1}; };
 const dateStr = t => { const d=dateOf(t); return `${d.y}/${String(d.m).padStart(2,'0')}`; };
 let uid = 1; const nid = () => 'x'+(Date.now().toString(36))+(uid++);
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2600); }
@@ -295,14 +344,19 @@ function pmt(P,ratePct,years){ const r=ratePct/100/12, n=years*12; if(n<=0) retu
 const inClaude = !!(window.claude && typeof window.claude.use === 'function');
 
 // ======================= STATE =======================
-const SAVE_KEY = 'fangshi-save-v1';
+const SAVE_KEY = 'fangshi-save-v2';
 let S;
-function newGame(startCash=10000000){
-  S = {t:0, cash:startCash, startCash, income:150000, living:40000, rentHome:25000, idx:{tp:1,tc:1,ks:1}, rateAdj:0, listings:[], props:[], log:[], jcic:[], blocked:{}, negCash:0, hist:[], tab:'market', city:'tp', dist:0, seen:{}};
-  for (const ck in CITIES) CITIES[ck].dists.forEach((d,i)=>{ const n = RI(2,4); for (let k=0;k<n;k++) S.listings.push(genListing(ck,i)); });
-  news('央行9月理監事會：政策利率維持2%「連10凍」，並將自然人第二戶房貸成數上限由6成放寬至7成。','news');
-  news('新青安2.0末班車效應後，房市進入秋冬淡季，市場觀望氣氛濃厚。','news');
-  addLog(`你帶著 ${W(startCash)} 萬自備資金進入房市。目前在外租屋，每月房租 2.5 萬。`,'good');
+function newGame(startCash=10000000, sy=2026, sm=10){
+  const inc = 0.78 + (sy-2008)*0.0122;
+  S = {t:0, start:{y:sy,m:sm}, cash:startCash, startCash, income:Math.round(150000*inc/1000)*1000, living:Math.round(40000*inc/1000)*1000, rentHome:Math.round(25000*inc/1000)*1000, idx:{}, rateAdj:0, listings:[], props:[], log:[], jcic:[], blocked:{}, negCash:0, hist:[], tab:'market', city:'tp', dist:0, seen:{}, newsDone:{}};
+  for (const k in CITIES) S.idx[k]=1;
+  S.lastHistRate = histRate(absOf(0));
+  for (const ck in CITIES) CITIES[ck].dists.forEach((d,i)=>{ const n = RI(2,3); for (let k=0;k<n;k++) S.listings.push(genListing(ck,i)); });
+  S.startAvg = {}; for (const k in CITIES) S.startAvg[k] = cityAvg(k);
+  const a0 = absOf(0);
+  HNEWS.filter(([y,m])=>{ const a=y*12+m-1; return a<=a0 && a>a0-14; }).slice(-3).forEach(([y,m,txt])=>{ S.newsDone[y*12+m]=1; news(`〔${y}/${String(m).padStart(2,'0')}〕${txt}`); });
+  HNEWS.forEach(([y,m])=>{ if (y*12+m-1<=a0) S.newsDone[y*12+m]=1; });
+  addLog(`${sy}年${sm}月，你帶著 ${W(startCash)} 萬自備資金進入房市。家庭月收入 ${W1(S.income)} 萬，在外租屋每月 ${W1(S.rentHome)} 萬。`,'good');
   S.hist.push(netWorth());
 }
 function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
@@ -313,10 +367,10 @@ function news(msg){ S.log.unshift({t:S.t,msg,cls:'news'}); }
 // ======================= LISTINGS & VALUE =======================
 function genListing(ck, di){
   const city = CITIES[ck], d = city.dists[di];
-  const type = pick(ck==='tp' ? ['公寓','公寓','華廈','電梯大樓','電梯大樓'] : ['公寓','華廈','電梯大樓','電梯大樓','透天','透天']);
+  const type = pick(ck==='tp'||ck==='nt' ? ['公寓','公寓','華廈','電梯大樓','電梯大樓'] : ['公寓','華廈','電梯大樓','電梯大樓','透天','透天']);
   const T = TYPES[type];
   const ping = Math.round(R(T.ping[0],T.ping[1])*10)/10;
-  const age = RI(T.age[0],T.age[1]);
+  const age = Math.max(0, RI(T.age[0],T.age[1]) - (type==='電梯大樓' && S && absOf(S.t)<NOW_ABS ? Math.round((NOW_ABS-absOf(S.t))/12*0.3) : 0));
   const total = RI(T.floors[0],T.floors[1]);
   const floor = type==='透天' ? total : RI(1,total);
   const parking = type!=='公寓' && type!=='透天' && Math.random()<0.55;
@@ -336,14 +390,17 @@ function genListing(ck, di){
   L.seller = {name:pick(NAMES), age:RI(38,78), pers:persKey, reason:pick(REASONS[persKey]), resF:R(P.res[0],P.res[1]), mood:P.mood};
   return L;
 }
-function unitNow(ck,di){ return CITIES[ck].dists[di][1]*S.idx[ck]*(S.didx?.[ck+di]||1); }
+function unitAt(ck,di,t){ const a=absOf(t); return CITIES[ck].dists[di][1]*histLookup(HIST[ck],a)*boostF(CITIES[ck].dists[di][0],a)*S.idx[ck]*(S.didx?.[ck+di]||1); }
+function unitNow(ck,di){ return unitAt(ck,di,S.t); }
+function cityF(ck){ return histLookup(HIST[ck],absOf(S.t))*S.idx[ck]; }
+function cityAvg(ck){ const ds=CITIES[ck].dists; return ds.reduce((s,d,i)=>s+unitNow(ck,i),0)/ds.length; }
 function ageF(age,type){ let f = age<5?1.1:age<15?1.02:age<30?0.93:0.84; if (type==='公寓' && age>40) f+=0.03; return f; }
 function floorF(L){ if (L.type==='公寓'){ if (L.floor===1) return 1.06; if (L.floor>=4) return 0.92; } if (L.type==='電梯大樓' && L.floor>L.total*0.7) return 1.04; return 1; }
 function condF(c){ return 0.86 + c*0.0022; }
 function valueOf(L){
   const unit = unitNow(L.ck,L.di)*10000;
   let v = unit*L.ping*TYPES[L.type].f*ageF(L.age,L.type)*floorF(L)*condF(L.cond)*(1+(L.layout||0));
-  if (L.parking) v += CITIES[L.ck].park*10000*S.idx[L.ck];
+  if (L.parking) v += CITIES[L.ck].park*10000*cityF(L.ck);
   if (L.issues.includes('頂樓加蓋（違建）')) v *= 0.97;
   return Math.round(v);
 }
@@ -361,11 +418,41 @@ function houseSVG(type, seed){
   else { b = `<polygon points="26,40 48,22 70,40" fill="#8b4a3c"/><rect x="28" y="40" width="40" height="52" fill="${c}"/><rect x="43" y="74" width="10" height="18" fill="#5b3a2e"/>`; for(const y of [46,60]) for(const x of [33,55]) b+=`<rect x="${x}" y="${y}" width="8" height="8" fill="#fff" opacity=".85"/>`; }
   return `<svg viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" fill="${sky}"/><circle cx="78" cy="18" r="8" fill="#ffd23f"/>${b}<rect y="90" width="96" height="6" fill="#9aa596"/></svg>`;
 }
-function mapHTML(q){
-  const link = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-  if (!inClaude) return `<div class="mapbox"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=15&output=embed" title="Google 地圖：${esc(q)}"></iframe></div><p class="meta" style="margin:6px 0 0"><a href="${link}" target="_blank" rel="noopener">在 Google 地圖開啟 ↗</a></p>`;
-  return `<div class="mapbox mapfb"><div class="pin">📍</div><b>${esc(q)}</b><p>預覽環境無法內嵌地圖，發布到 GitHub Pages 後會直接顯示 Google 地圖。</p><a class="btn sm" href="${link}" target="_blank" rel="noopener">在 Google 地圖開啟 ↗</a></div>`;
+const GEO = {
+  tp:{'大安區':[25.0265,121.5435],'信義區':[25.0330,121.5680],'松山區':[25.0500,121.5577],'中山區':[25.0640,121.5330],'內湖區':[25.0830,121.5880],'北投區':[25.1320,121.5010],'文山區':[24.9890,121.5700],'萬華區':[25.0340,121.4990]},
+  tc:{'西屯區':[24.1810,120.6180],'南屯區':[24.1380,120.6150],'北屯區':[24.1820,120.6860],'西區':[24.1410,120.6640],'北區':[24.1590,120.6820],'太平區':[24.1270,120.7190]},
+  ks:{'鼓山區':[22.6560,120.2800],'前鎮區':[22.5950,120.3140],'左營區':[22.6870,120.2940],'楠梓區':[22.7270,120.3260],'苓雅區':[22.6220,120.3120],'三民區':[22.6470,120.3110],'鳳山區':[22.6260,120.3570]}
+};
+// 自繪行政區房價地圖（不需任何外部服務）＋ OpenStreetMap 免費地圖（僅在自己的網站上內嵌）
+function priceMapSVG(ck, sel, clickable){
+  const pts = CITIES[ck].dists.map((d,i)=>({i, name:d[0], ll:GEO[ck][d[0]], u:unitNow(ck,i)}));
+  const lats = pts.map(p=>p.ll[0]), lngs = pts.map(p=>p.ll[1]);
+  const la0=Math.min(...lats), la1=Math.max(...lats), lo0=Math.min(...lngs), lo1=Math.max(...lngs);
+  const W=360, H=250, pad=46;
+  const sx = (W-pad*2)/Math.max(1e-6,lo1-lo0), sy = (H-pad*2)/Math.max(1e-6,la1-la0), sc=Math.min(sx,sy);
+  const ox = (W-(lo1-lo0)*sc)/2, oy = (H-(la1-la0)*sc)/2;
+  const X = lo => ox+(lo-lo0)*sc, Y = la => oy+(la1-la)*sc;
+  const us = pts.map(p=>p.u), umin=Math.min(...us), umax=Math.max(...us);
+  const col = u => { const t=(u-umin)/Math.max(1e-6,umax-umin); const r=Math.round(90+t*125), g=Math.round(170-t*120), b=Math.round(150-t*90); return `rgb(${r},${g},${b})`; };
+  let o = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${CITIES[ck].name}各區房價地圖" style="display:block;width:100%;height:auto;background:var(--soft)">`;
+  o += `<text x="10" y="18" font-size="11" fill="var(--muted)">圓越大、越紅＝單價越高（萬/坪）</text>`;
+  for (const p of pts){
+    const x=X(p.ll[1]), y=Y(p.ll[0]), r=14+ (p.u-umin)/Math.max(1e-6,umax-umin)*14, on=p.i===sel;
+    o += `<g ${clickable?`class="mapcity" data-dist="${p.i}" tabindex="0" role="button" aria-label="${p.name} ${p.u.toFixed(1)}萬每坪" style="cursor:pointer"`:''}>
+      <circle cx="${x}" cy="${y}" r="${r}" fill="${col(p.u)}" opacity="${on?1:0.78}" stroke="${on?'var(--ink)':'#fff'}" stroke-width="${on?3:1.5}"/>
+      <text x="${x}" y="${y+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" style="font-family:'Barlow Condensed',sans-serif">${p.u.toFixed(0)}</text>
+      <text x="${x}" y="${y+r+13}" text-anchor="middle" font-size="12" font-weight="${on?900:700}" fill="var(--ink)">${p.name}</text></g>`;
+  }
+  return o + `</svg>`;
 }
+function osmLink(ck, di){ const [la,lo]=GEO[ck][CITIES[ck].dists[di][0]]; return `https://www.openstreetmap.org/?mlat=${la}&mlon=${lo}#map=15/${la}/${lo}`; }
+function mapHTML(ck, di, clickable){
+  const [la,lo] = GEO[ck][CITIES[ck].dists[di][0]];
+  const d=0.012;
+  const osm = inClaude ? '' : `<div class="mapbox" style="margin-top:8px"><iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${lo-d*1.4},${la-d},${lo+d*1.4},${la+d}&layer=mapnik&marker=${la},${lo}" title="OpenStreetMap：${CITIES[ck].name}${CITIES[ck].dists[di][0]}"></iframe></div>`;
+  return `<div class="mapbox">${priceMapSVG(ck, di, clickable)}</div>${osm}<p class="meta" style="margin:6px 0 0">${inClaude?'街道地圖在 GitHub 版會直接顯示。':'地圖資料 © OpenStreetMap 貢獻者。'}<a href="${osmLink(ck,di)}" target="_blank" rel="noopener">在 OpenStreetMap 開啟 ↗</a></p>`;
+}
+
 
 // ======================= FINANCE =======================
 function monthlyLoan(p){ const l=p.loan; if(!l||l.balance<=0) return 0; const m=S.t-l.start; const r=l.rate/100/12; if (m < l.grace*12) return l.balance*r; const left = l.years*12 - m; return left>0 ? pmt(l.balance,l.rate,left/12) : l.balance; }
@@ -381,12 +468,30 @@ function monthlyFlow(){
 function netWorth(){ return S.cash + S.props.reduce((s,p)=>s+valueOf(p.L)-(p.loan?p.loan.balance:0),0); }
 function jcicCount(){ return S.jcic.filter(t=>S.t-t<3).length; }
 function loanCase(price, L){
-  const n = S.props.length;
-  const high = price >= CITIES[L.ck].high*10000;
-  if (high) return {label:`高價住宅（${CITIES[L.ck].name}總價 ${CITIES[L.ck].high} 萬以上）`, cap:0.3, grace:false, maxY:30};
-  if (n===0) return {label:'首購自住（名下無房）', cap:0.8, grace:true, maxY:40};
-  if (n===1) return {label:'自然人第二戶', cap:0.7, grace:false, maxY:30};
-  return {label:`自然人第${n+1}戶（第三戶以上）`, cap:0.3, grace:false, maxY:30};
+  const n = S.props.length, a = absOf(S.t), A=(y,m)=>y*12+m-1;
+  const hiLine = a>=A(2024,9) ? CITIES[L.ck].high : (L.ck==='tp'?8000:L.ck==='nt'?5000:4000);
+  const high = price >= hiLine*10000;
+  const maxY1 = a>=A(2023,8) ? 40 : 30;
+  const first = {label:'首購自住（名下無房）', cap:0.8, grace:true, maxY:maxY1};
+  const hiLbl = `高價住宅（${CITIES[L.ck].name}總價 ${hiLine} 萬以上）`;
+  let era, r;
+  if (a < A(2010,6)){ era='尚無選擇性信用管制'; r = high?{label:hiLbl,cap:0.7,grace:true,maxY:30} : n===0?first : {label:`自然人第${n+1}戶`,cap:0.8,grace:true,maxY:30}; }
+  else if (a < A(2016,3)){ era = a<A(2014,6)?'央行2010年起選擇性信用管制':'央行2014年第四波信用管制';
+    const specific = L.ck==='tp'||L.ck==='nt';
+    if (high) r={label:hiLbl, cap:a>=A(2012,6)?0.5:0.6, grace:false, maxY:30};
+    else if (n===0) r=first;
+    else if (specific && n===1) r={label:'特定地區（雙北）第二戶', cap:0.6, grace:false, maxY:30};
+    else if (specific && n>=2 && a>=A(2014,6)) r={label:`特定地區（雙北）第${n+1}戶`, cap:0.5, grace:false, maxY:30};
+    else r={label:`自然人第${n+1}戶`, cap:0.8, grace:true, maxY:30}; }
+  else if (a < A(2020,12)){ era='2016年解除管制，僅保留高價住宅';
+    r = high?{label:hiLbl,cap:0.6,grace:false,maxY:30} : n===0?first : {label:`自然人第${n+1}戶`,cap:0.8,grace:true,maxY:30}; }
+  else if (a < A(2023,6)){ era='央行2020～2022年多波信用管制';
+    r = high?{label:hiLbl,cap:0.4,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶',cap:0.8,grace:true,maxY:30} : {label:`自然人第${n+1}戶（第三戶以上）`,cap:a>=A(2021,3)?0.4:0.55,grace:false,maxY:30}; }
+  else if (a < A(2024,9)){ era = a<A(2024,6)?'央行2023年第五波信用管制':'央行2024年6月第六波信用管制';
+    r = high?{label:hiLbl,cap:0.4,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶（六都＋新竹）',cap:a>=A(2024,6)?0.6:0.7,grace:false,maxY:30} : {label:`自然人第${n+1}戶（第三戶以上）`,cap:a>=A(2024,6)?0.3:0.4,grace:false,maxY:30}; }
+  else { era = a<A(2026,9)?'央行2024年9月第七波信用管制':'央行2026年9月調整後規定';
+    r = high?{label:hiLbl,cap:0.3,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶',cap:a>=A(2026,9)?0.7:0.5,grace:false,maxY:30} : {label:`自然人第${n+1}戶（第三戶以上）`,cap:0.3,grace:false,maxY:30}; }
+  return {...r, era};
 }
 
 // ======================= RENDER =======================
@@ -408,12 +513,12 @@ function marketHTML(){
   const q = city.name + d[0];
   const unit = unitNow(S.city,S.dist);
   const ls = S.listings.filter(l=>l.ck===S.city && l.di===S.dist);
-  const yoy = ((S.idx[S.city]-1)*100);
+  const yoy = (cityAvg(S.city)/(S.startAvg?.[S.city]||cityAvg(S.city))-1)*100;
   return `<div class="seg" role="group" aria-label="城市">${Object.entries(CITIES).map(([k,c])=>`<button data-city="${k}" aria-pressed="${k===S.city}">${c.name}</button>`).join('')}</div>
-  <div class="chips">${city.dists.map((x,i)=>{ const u=unitNow(S.city,i); const tr=(S.idx[S.city]*(S.didx?.[S.city+i]||1)-1)*100; return `<button class="chip" data-dist="${i}" aria-pressed="${i===S.dist}"><b>${x[0]}</b><span class="n">${u.toFixed(1)} 萬/坪 <span class="${tr>=0?'up':'down'}">${tr>=0?'▲':'▼'}${Math.abs(tr).toFixed(1)}%</span></span></button>`; }).join('')}</div>
+  <div class="chips">${city.dists.map((x,i)=>{ const u=unitNow(S.city,i); const tr=(u/unitAt(S.city,i,S.t-12)-1)*100; return `<button class="chip" data-dist="${i}" aria-pressed="${i===S.dist}"><b>${x[0]}</b><span class="n">${u.toFixed(1)} 萬/坪 <span class="${tr>=0?'up':'down'}" title="近一年漲跌">${tr>=0?'▲':'▼'}${Math.abs(tr).toFixed(1)}%</span></span></button>`; }).join('')}</div>
   <div class="mk">
-    <div class="panel"><h3>${q}</h3>${mapHTML(q)}
-      <dl class="kv"><dt>實價登錄均價</dt><dd class="n">${unit.toFixed(1)} 萬／坪</dd><dt>區域特色</dt><dd>${d[3]}</dd><dt>車位行情</dt><dd class="n">約 ${Math.round(city.park*S.idx[S.city])} 萬／位</dd><dt>租金投報率</dt><dd class="n">約 ${(city.yield*100).toFixed(1)}%</dd><dt>自開局漲跌</dt><dd class="n ${yoy>=0?'up':'down'}">${yoy>=0?'+':''}${yoy.toFixed(1)}%</dd></dl>
+    <div class="panel"><h3>${q}</h3>${mapHTML(S.city, S.dist, true)}
+      <dl class="kv"><dt>${absOf(S.t)>=2012*12+7?'實價登錄均價':'市場行情均價'}</dt><dd class="n">${unit.toFixed(1)} 萬／坪</dd><dt>區域特色</dt><dd>${d[3]}</dd><dt>車位行情</dt><dd class="n">約 ${Math.round(city.park*cityF(S.city))} 萬／位</dd><dt>租金投報率</dt><dd class="n">約 ${(city.yield*100).toFixed(1)}%</dd><dt>自開局漲跌</dt><dd class="n ${yoy>=0?'up':'down'}">${yoy>=0?'+':''}${yoy.toFixed(1)}%</dd></dl>
       <p class="note" style="margin-top:10px">均價為遊戲內模擬的參考行情。實際房價請查詢內政部實價登錄。</p></div>
     <div><div class="list">${ls.length?ls.map(listCard).join(''):'<div class="empty">這個區域目前沒有待售物件，下個月再來看看。</div>'}</div></div>
   </div>`;
@@ -451,14 +556,15 @@ function newsHTML(){
   const goal = Math.max(50000000, (S.startCash||10000000)*3);
   return `<div class="two"><div class="panel"><h3>資產淨值走勢</h3><svg class="spark" viewBox="0 0 300 90" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--red)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>
     <p class="meta">目前 <b class="n" style="font-size:18px;color:var(--ink)">${W(netWorth())} 萬</b>　目標：10 年內淨資產突破 ${W(goal)} 萬（進度 ${Math.min(100,Math.round(netWorth()/goal*100))}%）</p></div>
-    <div class="panel"><h3>三都房價指數</h3>${Object.entries(CITIES).map(([k,c])=>`<p style="margin:6px 0">${c.name}　<b class="n ${S.idx[k]>=1?'up':'down'}" style="font-size:20px">${(S.idx[k]*100).toFixed(1)}</b> <span class="meta">（開局 = 100）</span></p>`).join('')}
-    <p class="meta">房貸利率加減碼：${S.rateAdj>=0?'+':''}${S.rateAdj.toFixed(3)}%</p></div></div>
+    <div class="panel"><h3>六都房價（平均單價）</h3>${Object.entries(CITIES).map(([k,c])=>{ const a=cityAvg(k), ch=(a/(S.startAvg?.[k]||a)-1)*100; return `<p style="margin:6px 0">${c.name}　<b class="n" style="font-size:20px">${a.toFixed(1)}</b> 萬/坪　<span class="n ${ch>=0?'up':'down'}">${ch>=0?'+':''}${ch.toFixed(1)}%</span> <span class="meta">（相對開局）</span></p>`; }).join('')}
+    <p class="meta">目前房貸基準利率約 ${(histRate(absOf(S.t))+S.rateAdj).toFixed(2)}%${inHistory(S.t)?'（歷史期間：房價依真實走勢變動）':'（已進入未來模擬）'}</p>
+    </div></div>
     <h3 style="margin:18px 0 8px">動態與紀錄</h3><div class="feed">${S.log.slice(0,80).map(l=>`<div class="it ${l.cls}"><time class="n">${dateStr(l.t)}</time>${esc(l.msg)}</div>`).join('')}</div>`;
 }
 function bindMain(){
   const m = $('#main');
   m.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{S.city=b.dataset.city;S.dist=0;render();});
-  m.querySelectorAll('[data-dist]').forEach(b=>b.onclick=()=>{S.dist=+b.dataset.dist;render();});
+  m.querySelectorAll('[data-dist]').forEach(b=>{ b.onclick=()=>{S.dist=+b.dataset.dist;render();}; b.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); S.dist=+b.dataset.dist; render(); } }; });
   m.querySelectorAll('[data-listing]').forEach(b=>b.onclick=()=>openListing(b.dataset.listing));
   m.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.go;render();});
   m.querySelectorAll('[data-reno]').forEach(b=>b.onclick=()=>openReno(b.dataset.reno));
@@ -485,7 +591,7 @@ function openListing(id){
   const blocked = S.blocked[id] && S.blocked[id]>S.t;
   const P = PERS[L.seller.pers];
   const md = modal(`<h2>${esc(titleOf(L))}</h2><p class="sub">${L.agent?'仲介代銷（買方服務費 1%）':'屋主自售（免仲介費）'}・刊登於 ${dateStr(L.listedAt)}</p>
-    <div class="two"><div>${mapHTML(`${cityName(L)}${L.road}`)}</div>
+    <div class="two"><div>${mapHTML(L.ck, L.di, false)}<p class="meta" style="margin:4px 0 0">物件位置：${esc(cityName(L)+L.road)}一帶</p></div>
     <div><div class="price n" style="font-size:40px">${W(L.ask)}<small>萬</small></div>
       <table class="t"><tr><td>權狀坪數</td><td>${L.ping} 坪（室內約 ${inPing(L)} 坪）</td></tr><tr><td>開價單價</td><td>${(L.ask/10000/L.ping).toFixed(1)} 萬/坪</td></tr><tr><td>類型／屋齡</td><td>${L.type}・${L.age} 年</td></tr><tr><td>樓層</td><td>${L.type==='透天'?`${L.total} 層透天`:`${L.floor} 樓／共 ${L.total} 樓`}</td></tr><tr><td>格局</td><td>${L.rooms}</td></tr><tr><td>車位</td><td>${L.parking?'坡道平面車位':'無'}</td></tr>
       <tr><td>區域均價</td><td>${unit.toFixed(1)} 萬/坪</td></tr><tr><td>實價登錄參考區間</td><td>${W(v*0.95)}～${W(v*1.04)} 萬</td></tr></table></div></div>
@@ -631,11 +737,53 @@ ${bluffNote?`【剛剛發生】${bluffNote}\n`:''}${N.rival?`【你們先前說�
 3. 這次沒有出價時 decision 用 "talk"（可以反問、試探）。
 4. 情緒很差或買方太過分時可以 walkaway 結束談判。
 5. reply 用台灣口語繁體中文，1 到 3 句，貼合個性，不要提到遊戲、AI 或底價數字。
+6. 不要重複你在對話紀錄裡說過的句子或開頭，語氣要自然有變化；可以回應買方話中的細節、反問、帶點情緒或生活感。
 只輸出 JSON：{"reply":"...","mood_change":-30到15的整數,"persuaded":0到2的整數,"decision":"accept或counter或talk或walkaway","counter_price":數字或null,"pressure":"rival或emigrate或scarce或notneedy或future或none"}`;
   const r = await ai(prompt);
   if (!r || typeof r.reply!=='string') return null;
   return {reply:r.reply, mood:clamp(parseInt(r.mood_change)||0,-30,15), persuade:clamp(parseInt(r.persuaded)||0,0,2), decision:r.decision, counter: r.counter_price? Math.round(parseFloat(r.counter_price)*10000):0, pressure: PRESSURE[r.pressure]?r.pressure:null, pressureInReply:true};
 }
+const REACT = {
+  data:{like:['實價登錄我也有在看，你說的數字我承認。','嗯，你有做功課，數字會說話。','你拿成交行情來講，我比較聽得進去。','好，你講的那幾筆成交我知道。'],neutral:['實價登錄是參考啦，每間房子條件不一樣。','那些成交的樓層、屋況跟我這間不一樣喔。','網路上的數字看看就好，你要實際比較。'],dislike:['不要拿那些數字壓我，我這間不能這樣比。','實價登錄又沒算我裝潢的錢。']},
+  issue:{like:['那個問題……好啦，我承認是要處理。','你說的狀況我知道，可以反映在價格上。','嗯，那是老房子的通病，我可以讓一點。'],neutral:['那是小問題啦，找師傅弄一弄就好。','哪間中古屋沒有一點狀況？','修一下花不了你說的那麼多啦。'],dislike:['你是來買房子還是來挑毛病的？','住了這麼多年都沒事，你講得太誇張了。']},
+  liar:['你講的那些問題我怎麼不知道？你有來看過屋嗎？','我住這麼久從來沒這種事，你不要亂講。','你這樣隨便說，我很難相信你的誠意。'],
+  cash:{like:['貸款已經預審好？那我放心多了。','能快點交屋對我幫助很大。','付款乾脆的買方我最喜歡了。'],neutral:['資金準備好是基本的啦。','這樣很好，但價格還是要談。'],dislike:['錢準備好不代表可以亂砍喔。']},
+  deposit:{like:['願意先付斡旋金，看得出你是認真的。','有斡旋金我比較好跟家裡交代。'],neutral:['斡旋金是誠意沒錯，但數字還是要漂亮。','斡旋金歸斡旋金，價格我們再看。'],dislike:['斡旋金就想壓價喔？']},
+  budget:{like:['大家買房子都不容易，我懂。','預算有限我理解，我年輕時也是這樣。'],neutral:['你家人不答應，我家人也不答應啊。','預算就那樣的話，要不要看小一點的？','我也有我的壓力，不是只有你辛苦。'],dislike:['每個來看的人都說預算不夠。']},
+  compare:{like:['那間喔……其實我也知道價格比較低。'],neutral:['那間你去看過了嗎？條件真的一樣嗎？','別間比較便宜，也有比較便宜的原因。'],dislike:['那你去買那間啊。','拿別間來比，我聽了不太舒服。']},
+  market:{like:['景氣確實不太好，這我不否認。','最近看屋的人是少了一點。'],neutral:['景氣好壞都有人買房子。','房價跌不跌，也不是你我說了算。'],dislike:['每個人都說景氣不好，結果房價還不是漲。']},
+  patience:{like:['你不急……可是我這邊有點急耶。','慢慢等喔……唉，我是希望這個月就能處理掉。'],neutral:['不急很好啊，那我們都慢慢想。','我也不急，好房子不怕沒人要。'],dislike:['不急就不要浪費我時間。']},
+  praise:{like:['你真有眼光，這間我真的很用心照顧。','聽你這樣講我很開心，這裡的鄰居也都很好。','我們家小孩就是在這裡長大的，很有感情。'],neutral:['謝謝啦，不過稱讚歸稱讚，價格是另一回事。','很多人都這樣說。'],dislike:['好聽話就不用說了，直接講數字吧。']},
+  flaws:{like:['格局確實是比較舊式的。'],neutral:['格局是個人喜好啦，很多人很喜歡。','採光還好吧，下午的陽光很漂亮。'],dislike:['嫌東嫌西的，那你幹嘛來看？','這房子我住了幾十年都好好的，哪裡有問題？','嫌貨才是買貨人我知道啦，但你講太超過了。']},
+  deadline:{like:['今天就能簽？這樣好，我也想快點結束。'],neutral:['你急我也不能亂降啊。','限時決定喔……讓我想一下。'],dislike:['用這種方式逼我，我反而不想賣。','今天不簽就不簽，我不喜歡被催。']},
+  lowball:['七折？你在開玩笑吧。','這個價錢我連聽都不想聽。','你這樣砍，我覺得你不太尊重這間房子。','直接砍這麼多喔？那我們沒什麼好談了。'],
+  insult:['你講話客氣一點！','請你放尊重一點，這是我的家。','你再這樣講，我就請你出去了。'],
+  chat:['你還有什麼想問的嗎？','房子的狀況你都看到了，想好出價再跟我說。','嗯……你繼續說。','這附近生活很方便，走路就有市場。','你是自住還是投資？','這間我保養得不錯，住進來不用花太多錢。']
+};
+const OFFER_REACT = [
+  [0.8,['差太多了吧，這個價我賣不下去。','這個數字離我的期待太遠了。','你出這樣，連我當初買的成本都不夠。','這樣出價，我很難認真考慮。']],
+  [0.9,['還有一段距離喔。','再加一點吧，這樣我很難點頭。','差了 {gap} 萬，這不是小數目。','你單價才出 {unit} 萬，太低了。']],
+  [0.97,['有接近了，但還差一點。','這個價開始有誠意了。','我們快談到了，再努力一下。','嗯……這個數字我有在考慮。']],
+  [9,['差不多了，就差那一點點。','就差 {gap} 萬，你要不要乾脆一點？','這樣很接近了，我們別卡在這一點。']]
+];
+const CLOSE = {
+  counter:{rush:['好啦，我再讓一點，你也爽快一點。','我是真的急，價格可以再降，但你要快。','這樣吧，我退一步，你看看這個數字。','再降一點給你，這真的是我能做的了。','我們各退一步，快點把事情處理掉。'],
+    stubborn:['我最多只能動這麼一點點。','這個價是看你有誠意才讓的，再低就不賣了。','我這房子保養得好，降這些已經很多了。','唉，就讓一點點吧，不能再多了。','你們年輕人喔……好啦，再少一點。'],
+    investor:['我算過了，這是我能接受的數字。','各退一步，我們用數字說話。','這個價格對你我都合理，你評估一下。','我讓這些，是看在你資金到位的份上。','再往下，我的報酬率就不對了。'],
+    emotional:['嗯……看在你人不錯，我再讓一點。','我心情好才降的喔，你要珍惜。','其實我也很捨不得，但好吧，這個數字。','你這樣講我有點動搖了……再降一點好了。','唉，算了算了，就這個價給你參考。'],
+    heir:['我跟兄弟姊妹商量過，最多到這裡。','家裡意見很多，這已經是大家勉強同意的價格。','我先回報這個數字，再低我很難交代。','這個價我可以去說服他們，你看怎麼樣？','分一分大家都拿不多，你體諒一下。']},
+  hold:['這個價我不能再動了。','我剛剛已經讓過了，這次換你。','價格我堅持，你再想想。','不是我不讓，是真的沒空間了。','這個數字我守得住，不急。'],
+  talk:{rush:['那你打算出多少？有誠意我們就快點談。','你直接給我一個數字吧，我時間不多。','想買的話今天就可以談。','你覺得多少合理？說說看。'],
+    stubborn:['你要知道，這附近像我保養這麼好的房子不多了。','我不缺這一點錢，是要找對的人。','你慢慢看，想清楚再出價。','這間房子有很多回憶，價格我是很實在的。'],
+    investor:['理由我聽到了，給我一個具體的數字吧。','我們不要繞圈子，直接談價格。','你的評估是多少？','數字出來我們再討論。'],
+    emotional:['你說的我有在聽啦，那你想出多少？','嗯～你這個人蠻好聊的，那價格呢？','我今天心情不錯，你說說看。','我很想把房子交給喜歡它的人。'],
+    heir:['我們主要是想快點處理，價格合理就好，你出個價吧。','家裡的人都在等我回報，你給個數字。','你出個價，我好跟兄弟姊妹開會。','這間大家都住不到了，合理就賣。']},
+  accept:{rush:['好啦好啦，就這個價，我們趕快簽一簽。','成交！我終於可以鬆一口氣了。','沒問題，明天就找代書。'],stubborn:['唉，看你們是真心喜歡，就這樣吧。','好吧，房子交給你們，要好好照顧它。','行，這個價我賣。'],
+    investor:['這個數字我可以接受，成交。','合理，就這樣定案。','很好，我們準備簽約吧。'],emotional:['你這個人講話實在，好！賣你！','好啦～就這樣說定了，我很開心。','OK！希望你們住得幸福。'],heir:['我跟兄弟姊妹講一下……好，大家同意，成交。','終於可以跟家裡交代了，成交。','好，這個價我們接受。']},
+  walkaway:{rush:['算了算了，我找別的買方。','我沒時間跟你耗了。'],stubborn:['你這樣講我不想賣你了，請回吧。','我寧可放著也不賣你。'],investor:['我們認知差太多，不用再浪費彼此時間。','這筆交易我放棄。'],emotional:['你太過分了！我不賣了！','我不想再談了，你走吧。'],heir:['這樣談不下去，我們找其他買家。','我會跟家裡說你沒誠意。']}
+};
+const MOOD_PRE = {low:['（嘆了口氣）','（臉色有點難看）','（語氣變冷）','（皺起眉頭）'],high:['（笑著說）','（心情不錯）','（點點頭）','']};
+function sayOne(pool, N){ N.said = N.said||{}; const fresh = pool.filter(x=>!N.said[x]); const c = pick(fresh.length?fresh:pool); N.said[c]=1; return c; }
 function sellerLocal(L,N,text,offer){
   const P = PERS[L.seller.pers];
   const hits = detect(text, KW_SELLER);
@@ -662,17 +810,24 @@ function sellerLocal(L,N,text,offer){
   }
   if (N.mood+mood<=0) decision='walkaway';
   const tone = L.seller.pers;
-  const say = {
-    accept:{rush:'好啦好啦，就這個價，我們趕快簽一簽。',stubborn:'唉，看你們是真心喜歡，就這樣吧。',investor:'這個數字我可以接受，成交。',emotional:'你這個人講話實在，好！賣你！',heir:'我跟兄弟姊妹講一下……好，大家同意，成交。'},
-    counter:{rush:'這個價真的有點低，我最多再讓一點，你看看。',stubborn:'這價錢差太多了，我這房子不是這個行情。',investor:'你的出價跟我的成本差距還有點大，我們各退一步。',emotional:'嗯……你這樣出我有點難過耶，我只能再降一點點。',heir:'這個價我們家裡不會同意，我先回報一個數字給你。'},
-    talk:{rush:'那你打算出多少？有誠意我們就快點談。',stubborn:'你要知道，這附近像我保養這麼好的房子不多了。',investor:'理由我聽到了，給我一個具體的數字吧。',emotional:'你說的我有在聽啦，那你想出多少？',heir:'我們主要是想快點處理，價格合理就好，你出個價吧。'},
-    walkaway:{rush:'算了算了，我找別的買方。',stubborn:'你這樣講我不想賣你了，請回吧。',investor:'我們認知差太多，不用再浪費彼此時間。',emotional:'你太過分了！我不賣了！',heir:'這樣談不下去，我們找其他買家。'}
-  }[decision][tone];
-  let reply = say;
-  if (lines.includes('liar')) reply = '你講的那些問題我怎麼不知道？你有來看過屋嗎？' + (decision==='walkaway'?'':' '+say);
-  else if (hits.includes('insult')) reply = '你講話客氣一點！' + (decision==='walkaway'?'':' '+say);
-  else if (hits.includes('lowball') && decision!=='walkaway') reply = '打七折？你在開玩笑吧。'+say;
-  else if (hits.includes('praise') && P.likes.includes('praise') && decision==='talk') reply = '哈哈，被你這樣講我心情很好。'+say;
+  const parts = [];
+  const moodAfter = N.mood + mood;
+  if (moodAfter<30 && Math.random()<0.6) parts.push(sayOne(MOOD_PRE.low,N)); else if (moodAfter>80 && Math.random()<0.4) parts.push(sayOne(MOOD_PRE.high,N));
+  if (lines.includes('liar')) parts.push(sayOne(REACT.liar,N));
+  else if (hits.includes('insult')) parts.push(sayOne(REACT.insult,N));
+  else if (hits.includes('lowball')) parts.push(sayOne(REACT.lowball,N));
+  else {
+    const h = hits.filter(x=>REACT[x] && !Array.isArray(REACT[x]))[0];
+    if (h){ const kind = P.likes.includes(h)?'like':P.dislikes.includes(h)?'dislike':'neutral'; const pool = REACT[h][kind].length?REACT[h][kind]:REACT[h].neutral; parts.push(sayOne(pool,N)); }
+    else if (!offer) parts.push(sayOne(REACT.chat,N));
+  }
+  if (offer && decision!=='accept' && decision!=='walkaway'){
+    const r = offer/N.lastAsk; const band = OFFER_REACT.find(([lim])=>r<lim)[1];
+    parts.push(sayOne(band,N).replace('{gap}',W(N.lastAsk-offer)).replace('{unit}',(offer/10000/L.ping).toFixed(1)));
+  }
+  const holdNow = decision==='counter' && counter>=N.lastAsk-5000;
+  parts.push(sayOne(holdNow ? CLOSE.hold : CLOSE[decision][tone], N));
+  const reply = parts.filter(Boolean).join(' ');
   return {reply, mood, persuade:pers/1.2, decision, counter};
 }
 function applySeller(L,N,r,offer,bubble){
@@ -756,7 +911,7 @@ function openBanks(deal){
   const {L, price} = deal;
   const C = loanCase(price, L);
   const md = modal(`<h2>安排房貸</h2><p class="sub">${esc(titleOf(L))}・成交價 ${W(price)} 萬</p>
-    <div class="note"><b>本案適用：${C.label}</b><br>依央行選擇性信用管制（2026年9月最新調整）與銀行實務：本案成數上限 <b>${Math.round(C.cap*100)}%</b>、${C.grace?'可申請寬限期（最長 3 年）':'<b>不得</b>給寬限期'}、年限最長 ${C.maxY} 年。銀行會以「成交價與鑑價取低者」計算貸款，並檢視負債比（月付約不超過家庭月收入 6 成）。<br>每諮詢一家銀行就會查一次聯徵，近 3 個月查詢太多次會被加碼利率。目前近 3 個月查詢：<b>${jcicCount()} 次</b>。</div>
+    <div class="note"><b>本案適用：${C.label}</b><br>依 ${C.era}與銀行實務：本案成數上限 <b>${Math.round(C.cap*100)}%</b>、${C.grace?'可申請寬限期（最長 3 年）':'<b>不得</b>給寬限期'}、年限最長 ${C.maxY} 年。銀行會以「成交價與鑑價取低者」計算貸款，並檢視負債比（月付約不超過家庭月收入 6 成）。<br>每諮詢一家銀行就會查一次聯徵，近 3 個月查詢太多次會被加碼利率。目前近 3 個月查詢：<b>${jcicCount()} 次</b>。</div>
     <h3 style="margin:14px 0 8px">選擇銀行</h3>
     <div class="banks">${BANKS.map(b=>`<button class="bank" data-bank="${b.id}"><span class="k">${b.kind}</span><b>${b.name}</b><p>${b.style}</p>${deal.offers[b.id]?`<p style="color:var(--ink)">已開條件：${deal.offers[b.id].ltv}%・${deal.offers[b.id].rate.toFixed(2)}%</p>`:''}</button>`).join('')}</div>
     <div class="foot"><button class="btn ghost" id="cashBuy">不貸款，全額付現</button></div>`);
@@ -779,7 +934,7 @@ function openBankChat(deal, bank){
     ltv = Math.min(ltv, C.cap);
     if (L.type==='公寓' && L.age>40) ltv -= 0.1;
     const jc = Math.max(0, jcicCount()-2)*0.05;
-    const rate = +(bank.base + S.rateAdj + n*0.12 + jc + (L.age>35?0.08:0)).toFixed(3);
+    const rate = +(histRate(absOf(S.t)) + (bank.base-2.25) + S.rateAdj + n*0.12 + jc + (L.age>35?0.08:0)).toFixed(3);
     B = {ltv:Math.round(ltv*100), rate, years:30, grace:0, fee:bank.fee, conds:[], trust:55, hist:[], used:{}, appraisal, guarantor:false};
     B.ltv = Math.max(0, Math.min(B.ltv, Math.floor(maxLoanDBR(30, rate, false)/Math.min(price,appraisal)*100)));
     deal.bankState = {...(deal.bankState||{}), [bank.id]:B};
@@ -848,6 +1003,7 @@ function openBankChat(deal, bank){
   md.querySelector('#send').onclick=send;
   md.querySelector('#say').addEventListener('keydown', e=>{ if (e.key==='Enter' && (e.ctrlKey||e.metaKey)) send(); });
 }
+function bankFloor(bank){ return histRate(absOf(S.t)) + (bank.floor-2.25) + S.rateAdj; }
 function otherOffers(deal, bankId){ return Object.entries(deal.offers).filter(([k])=>k!==bankId).map(([k,o])=>({name:BANKS.find(b=>b.id===k).name,...o})); }
 async function bankAI(deal,bank,B,C,text){
   const {L,price}=deal; const others = otherOffers(deal,bank.id);
@@ -855,9 +1011,9 @@ async function bankAI(deal,bank,B,C,text){
   const prompt = `你是台灣「${bank.name}」（${bank.kind}）的房貸專員，正在房地產模擬遊戲中與客戶面談，請完全以角色回應。
 銀行風格：${bank.style}
 【必須遵守的規定】
-- 依央行選擇性信用管制（2026年9月最新）：本案屬「${C.label}」，貸款成數上限 ${Math.round(C.cap*100)}%；${C.grace?'可給寬限期，最長 3 年':'不得給寬限期'}；年限最長 ${C.maxY} 年${bank.id!=='ins'&&C.maxY===40?'（本行首購最長 40 年，但需年資與年齡符合）':''}。
+- 依${C.era}（目前時間 ${dateStr(S.t)}）：本案屬「${C.label}」，貸款成數上限 ${Math.round(C.cap*100)}%；${C.grace?'可給寬限期，最長 3 年':'不得給寬限期'}；年限最長 ${C.maxY} 年${bank.id!=='ins'&&C.maxY===40?'（本行首購最長 40 年，但需年資與年齡符合）':''}。
 - 負債比：房貸月付加既有貸款不得超過家庭月收入 ${B.guarantor?70:60}%，以目前條件換算最高可貸約 ${W(maxDBR)} 萬。
-- 利率不得低於 ${bank.floor+S.rateAdj}%。
+- 利率不得低於 ${(bankFloor(bank)).toFixed(2)}%。
 【客戶】35 歲科技業工程師，雙薪家庭月收入 ${W1(S.income)} 萬，名下房屋 ${S.props.length} 戶，既有房貸月付 ${W1(existingPayments())} 萬，存款 ${W(S.cash)} 萬，近 3 個月聯徵查詢 ${jcicCount()} 次。${B.lied?'客戶先前有誇大收入被發現的紀錄。':''}
 【物件】成交價 ${W(price)} 萬，銀行鑑價 ${W(B.appraisal)} 萬（貸款以兩者低者計），${L.type}，屋齡 ${L.age} 年，${cityName(L)}。
 【目前條件】成數 ${B.ltv}%、利率 ${B.rate}%、年限 ${B.years} 年、寬限期 ${B.grace} 年、開辦費 ${B.fee} 元、附加條件：${B.conds.map(c=>c.text).join('；')||'無'}
@@ -896,7 +1052,7 @@ function applyBank(deal,bank,B,C,r){
   const base = Math.min(deal.price, B.appraisal);
   let ltv = isFinite(r.ltv)?r.ltv:B.ltv; ltv = clamp(ltv, B.ltv-5, B.ltv+5);
   let rate = isFinite(r.rate)?r.rate:B.rate; rate = clamp(rate, B.rate-0.15, B.rate+0.15);
-  rate = Math.max(rate, bank.floor+S.rateAdj);
+  rate = Math.max(rate, bankFloor(bank));
   let years = clamp(r.years||B.years, 20, C.maxY);
   if (bank.id==='gov' && years>30 && C.maxY<40) years=30;
   let grace = C.grace ? clamp(r.grace||0,0,3) : 0;
@@ -1009,11 +1165,21 @@ function saleEstimate(p, price, feePct){
   const penalty = p.loan ? Math.round(bal*(held<12?0.01:held<24?0.005:0)) : 0;
   const gain = price - p.cost - p.reno - fee - landTax - misc;
   const selfLong = p.status==='自住' && p.selfSince!=null && S.t-p.selfSince>=72 && S.props.length===1;
-  let rate = held<=24?0.45:held<=60?0.35:held<=120?0.2:0.15;
-  let taxable = Math.max(0,gain);
-  if (selfLong){ taxable = Math.max(0,gain-4000000); rate = 0.1; }
-  const tax = Math.round(taxable*rate);
-  return {fee, landTax, misc, penalty, gain, tax, rate, bal, net: price - fee - landTax - misc - penalty - tax - bal, held, selfLong};
+  const buyA = absOf(p.boughtAt), sellA = absOf(S.t), A=(y,m)=>y*12+m-1;
+  let rate=0, tax=0, taxName='', luxury=0;
+  if (buyA < A(2016,1)){
+    taxName='舊制財產交易所得（依評定現值，估）'; tax = Math.round(price*0.003); rate=0;
+    if (sellA>=A(2011,6) && sellA<A(2016,1) && held<24 && p.status!=='自住'){ luxury = Math.round(price*(held<12?0.15:0.10)); }
+  } else {
+    const v2 = sellA >= A(2021,7);
+    rate = v2 ? (held<=24?0.45:held<=60?0.35:held<=120?0.2:0.15) : (held<=12?0.45:held<=24?0.35:held<=120?0.2:0.15);
+    taxName = v2 ? '房地合一稅2.0' : '房地合一稅1.0';
+    let taxable = Math.max(0,gain);
+    if (selfLong){ taxable = Math.max(0,gain-4000000); rate = 0.1; }
+    tax = Math.round(taxable*rate);
+  }
+  tax += luxury;
+  return {fee, landTax, misc, penalty, gain, tax, rate, bal, net: price - fee - landTax - misc - penalty - tax - bal, held, selfLong, taxName, luxury};
 }
 function openSell(pid){
   const p = prop(pid); const v = valueOf(p.L);
@@ -1037,7 +1203,7 @@ function openSell(pid){
     else { md.querySelector('#feeWrap').style.display=''; md.querySelector('#monWrap').style.display = mode==='general'?'none':''; fee = clamp(parseFloat(fr.value),M.fee[0],M.fee[1]); fr.value=fee; }
     md.querySelector('#feeTxt').textContent = fee+'%'+(fee<3?'（仲介意願較低）':'');
     const e = saleEstimate(p, ask, fee);
-    md.querySelector('#est').innerHTML = `<tr><td>成交價（以開價試算）</td><td>${W(ask)} 萬</td></tr><tr><td>仲介服務費 ${fee}%</td><td>−${W1(e.fee)} 萬</td></tr><tr><td>土地增值稅（估）</td><td>−${W1(e.landTax)} 萬</td></tr><tr><td>代書、規費、履保</td><td>−${W1(e.misc)} 萬</td></tr>${e.penalty?`<tr><td>提前清償違約金</td><td>−${W1(e.penalty)} 萬</td></tr>`:''}<tr><td>房地合一稅（${e.selfLong?'自住10%':Math.round(e.rate*100)+'%'}）</td><td>−${W1(e.tax)} 萬</td></tr><tr><td>清償房貸</td><td>−${W(e.bal)} 萬</td></tr><tr class="total"><td>實拿現金</td><td>${W(e.net)} 萬</td></tr>`;
+    md.querySelector('#est').innerHTML = `<tr><td>成交價（以開價試算）</td><td>${W(ask)} 萬</td></tr><tr><td>仲介服務費 ${fee}%</td><td>−${W1(e.fee)} 萬</td></tr><tr><td>土地增值稅（估）</td><td>−${W1(e.landTax)} 萬</td></tr><tr><td>代書、規費、履保</td><td>−${W1(e.misc)} 萬</td></tr>${e.penalty?`<tr><td>提前清償違約金</td><td>−${W1(e.penalty)} 萬</td></tr>`:''}<tr><td>${e.taxName}${e.rate?`（${e.selfLong?'自住10%':Math.round(e.rate*100)+'%'}）`:''}${e.luxury?`＋奢侈稅 ${W1(e.luxury)} 萬`:''}</td><td>−${W1(e.tax)} 萬</td></tr><tr><td>清償房貸</td><td>−${W(e.bal)} 萬</td></tr><tr class="total"><td>實拿現金</td><td>${W(e.net)} 萬</td></tr>`;
     const pr = offerProb(p, ask, mode, fee);
     md.querySelector('#odds').innerHTML = `開價是估值的 <b>${Math.round(ask/v*100)}%</b>。預估每月接到出價的機率約 <b>${Math.round(pr*100)}%</b>。${ask>v*1.12?'開價偏高，買方可能只看不出價。':''}${p.L.staging?'已做軟裝擺設，帶看加分。':''}`;
   };
@@ -1105,6 +1271,35 @@ function completeSale(p, price){
 }
 
 // ======================= MONTH TICK =======================
+const HNEWS = [
+  [2008,9,'雷曼兄弟破產，全球金融海嘯爆發，房市交易急凍。'],
+  [2008,10,'央行啟動連續降息，重貼現率一路降到2009年2月的1.25%，房貸利率大降。'],
+  [2009,5,'遺產及贈與稅降至10%，海外資金回流，台北房價率先反彈。'],
+  [2010,6,'央行首度祭出選擇性信用管制：台北市及新北十區第二戶貸款最高7成、無寬限期。'],
+  [2010,12,'央行擴大管制：特定地區第二戶降至6成，高價住宅貸款成數6成。'],
+  [2011,6,'特種貨物及勞務稅（奢侈稅）上路：非自住房屋持有2年內出售，課成交價10～15%。'],
+  [2012,6,'央行將高價住宅貸款成數降至5成。'],
+  [2012,8,'不動產實價登錄上路，成交價格首度公開透明。'],
+  [2014,6,'央行第四波信用管制：特定地區第三戶5成、高價住宅5成。'],
+  [2014,7,'台北市推出豪宅稅，雙北房價漲勢開始趨緩。'],
+  [2016,1,'房地合一稅1.0上路，奢侈稅退場，全台房市交易量創新低。'],
+  [2016,3,'央行解除大部分信用管制，僅保留高價住宅貸款6成。'],
+  [2019,1,'台商回流投資方案啟動，資金回流，房市止跌回穩。'],
+  [2020,3,'COVID-19疫情爆發，央行降息1碼至1.125%，資金寬鬆。'],
+  [2020,12,'央行重啟選擇性信用管制，限制公司法人及第三戶購屋貸款。'],
+  [2021,3,'央行第二波管制：第三戶、高價住宅貸款成數降至4成。'],
+  [2021,7,'房地合一稅2.0上路：持有2年內出售稅率45%、5年內35%。'],
+  [2021,11,'台積電宣布在高雄楠梓設廠，南部科技聚落帶動房價。'],
+  [2022,3,'央行升息1碼，展開升息循環，房貸利率走揚。'],
+  [2023,6,'央行第五波管制：六都與新竹第二戶貸款成數上限7成、無寬限期。'],
+  [2023,7,'平均地權條例修法施行：限制預售屋換約轉售，私法人購屋改採許可制。'],
+  [2023,8,'新青安貸款上路：首購最高貸1,000萬、40年、寬限期5年，買氣升溫。'],
+  [2024,3,'央行升息半碼至2%，並將六都及新竹第二戶貸款成數調降。'],
+  [2024,6,'央行第六波管制：第二戶成數降至6成、第三戶以上3成。'],
+  [2024,9,'央行第七波管制：自然人第二戶全國限貸5成、無寬限期；銀行房貸額度吃緊。'],
+  [2025,3,'房市交易量明顯萎縮，建商讓利、中古屋議價空間擴大。'],
+  [2026,9,'央行9月理監事會：政策利率維持2%，並將自然人第二戶房貸成數上限由5成放寬至7成。']
+];
 const EVENTS = [
   ()=>{ news('央行理監事會決議政策利率不變，房市觀望氣氛持續。'); },
   ()=>{ S.rateAdj+=0.125; S.props.forEach(p=>p.loan&&(p.loan.rate+=0.125)); for(const k in S.idx) S.idx[k]*=0.99; news('央行意外升息半碼！機動房貸利率同步調升 0.125%，房價承壓。'); },
@@ -1145,8 +1340,16 @@ function nextMonth(){
   S.cash += flow;
   // market
   S.didx = S.didx || {};
-  for (const k in CITIES){ S.idx[k] *= 1 + CITIES[k].drift + R(-0.004,0.004); CITIES[k].dists.forEach((x,i)=>{ const dd=DIST_DRIFT[x[0]]; if (dd) S.didx[k+i]=(S.didx[k+i]||1)*(1+dd); }); }
-  if (Math.random()<0.14) pick(EVENTS)();
+  const aNow = absOf(S.t);
+  const hr = histRate(aNow); const dRate = hr - (S.lastHistRate??hr); S.lastHistRate = hr;
+  if (Math.abs(dRate)>0.0001) S.props.forEach(p=>p.loan&&(p.loan.rate=+(p.loan.rate+dRate).toFixed(3)));
+  if (aNow >= NOW_ABS){
+    for (const k in CITIES){ S.idx[k] *= 1 + CITIES[k].drift + R(-0.004,0.004); CITIES[k].dists.forEach((x,i)=>{ const dd=DIST_DRIFT[x[0]]; if (dd) S.didx[k+i]=(S.didx[k+i]||1)*(1+dd); }); }
+    if (Math.random()<0.14) pick(EVENTS)();
+    if (aNow===NOW_ABS) news('時間來到 2026 年 10 月，之後的房價走勢改為隨機模擬。');
+  }
+  for (const [y,m,txt] of HNEWS){ const key=y*12+m; if (!S.newsDone[key] && y*12+m-1<=aNow){ S.newsDone[key]=1; news(`〔${y}/${String(m).padStart(2,'0')}〕${txt}`); } }
+  if (d.m===1){ S.income=Math.round(S.income*1.012/100)*100; S.rentHome=Math.round(S.rentHome*1.01/100)*100; S.living=Math.round(S.living*1.012/100)*100; }
   // listings churn
   S.listings = S.listings.filter(l=>!(Math.random()<0.07 && !(l.nego && l.nego.agreed)));
   for (const k in CITIES) CITIES[k].dists.forEach((x,i)=>{ const n = S.listings.filter(l=>l.ck===k&&l.di===i).length; if (n<2 || (n<5 && Math.random()<0.25)) S.listings.push(genListing(k,i)); });
@@ -1167,22 +1370,28 @@ document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>{ S.tab=b.d
 $('#nextBtn').onclick = nextMonth;
 function setup(first){
   const presets = [1000,1500,2000,2500,3000,5000];
-  const md = modal(`<h2>${first?'歡迎來到房市大亨':'重新開始'}</h2><p class="sub">2026 年 10 月，房市秋冬淡季</p>
-    <p>你是 35 歲的科技業工程師，和另一半雙薪、家庭月收入 <b>15 萬</b>，目前在外租屋。先決定你的起始資金：</p>
+  const md = modal(`<h2>${first?'歡迎來到房市大亨':'重新開始'}</h2><p class="sub">台北・新北・桃園・台中・臺南・高雄</p>
+    <p>你是 35 歲的科技業工程師，和另一半雙薪、家庭月收入約 <b>15 萬</b>（越早的年代收入越低），目前在外租屋。先決定你的起始資金：</p>
     <div class="modes" id="cashPick">${presets.map(v=>`<button class="mode" data-v="${v}" aria-pressed="${v===1000}"><b class="n" style="font-size:22px">${v.toLocaleString()} 萬</b><small>${v<=1000?'標準難度：台北要精打細算':v<=2000?'寬裕：三都都有不少選擇':v<=3000?'富足：可以同時經營多間':'大戶：直攻蛋黃區'}</small></button>`).join('')}<button class="mode" data-v="custom" aria-pressed="false"><b>自訂金額</b><small>300 萬～5 億，自己決定</small></button></div>
     <div class="field" id="customWrap" style="display:none">起始資金（萬）<input type="number" id="customCash" min="300" max="50000" step="100" value="1200"></div>
+    <p style="margin:14px 0 6px">選擇開始的時間點（房價、利率、信用管制與稅制都會依當時的真實狀況變化）：</p>
+    <div class="row"><select id="sy">${Array.from({length:19},(_,i)=>2008+i).map(y=>`<option ${y===2026?'selected':''}>${y}</option>`).join('')}</select> 年
+      <select id="sm">${Array.from({length:12},(_,i)=>i+1).map(m=>`<option ${m===10?'selected':''}>${m}</option>`).join('')}</select> 月</div>
+    <div class="modes" style="margin-top:8px" id="eraPick">${[[2008,9,'金融海嘯','房價低點'],[2012,8,'實價登錄上路','多頭中段'],[2016,1,'房地合一','盤整期'],[2020,3,'疫情資金潮','大多頭起點'],[2026,10,'現在','信用管制下']].map(([y,m,a,b])=>`<button class="mode" data-y="${y}" data-m="${m}"><b>${y}/${m} ${a}</b><small>${b}</small></button>`).join('')}</div>
     <p class="note"><b>玩法</b><br>1. 在「看房市場」切換台北、台中、高雄與各行政區，查看實價行情與地圖。<br>2. 先看屋了解屋況與屋主個性，再用各種話術議價；小心惹毛屋主，也要識破屋主與仲介的話術。<br>3. 找銀行談房貸：成數、利率、寬限期都能談，但要遵守央行規定與負債比。<br>4. 買到房子後可以自住、出租、裝修改造，再選擇自售或委託仲介賣出。<br>5. 按「下個月」推進時間，房價、利率與新聞都會變動。</p>
     <p class="meta">${inClaude?'在 Claude 中開啟時，議價與銀行面談可使用 AI 對談，自由輸入任何話術（首次使用會詢問授權）。':'目前為經典對談模式：系統會從你輸入的文字判斷話術。'}遊戲進度會自動存在這個瀏覽器。${first?'':'<b>重新開始會清除目前進度。</b>'}</p>
     <div class="foot">${first?'':'<button class="btn ghost" id="cancelSetup">取消</button>'}<button class="btn red" id="startGame">開始遊戲</button></div>`);
   md.dataset.lock = '1'; if (first) md.querySelector('.x').style.display = 'none';
   let choice = '1000';
   md.querySelectorAll('#cashPick [data-v]').forEach(b=>b.onclick=()=>{ md.querySelectorAll('#cashPick [data-v]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); choice=b.dataset.v; md.querySelector('#customWrap').style.display = choice==='custom'?'':'none'; if (choice==='custom') md.querySelector('#customCash').focus(); });
+  md.querySelectorAll('#eraPick [data-y]').forEach(b=>b.onclick=()=>{ md.querySelector('#sy').value=b.dataset.y; md.querySelector('#sm').value=b.dataset.m; md.querySelectorAll('#eraPick [data-y]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); });
   const cs = md.querySelector('#cancelSetup'); cs && (cs.onclick = ()=>{ delete md.dataset.lock; closeModal(); });
   md.querySelector('.x').onclick = ()=>{ if (!first){ delete md.dataset.lock; closeModal(); } };
   md.querySelector('#startGame').onclick = ()=>{
     const v = choice==='custom' ? parseFloat(md.querySelector('#customCash').value) : +choice;
     if (!(v>=300 && v<=50000)){ toast('請輸入 300 萬到 50,000 萬（5 億）之間的金額'); return; }
-    newGame(Math.round(v)*10000); S.intro = true; save(); delete md.dataset.lock; closeModal();
+    let sy=+md.querySelector('#sy').value, sm=+md.querySelector('#sm').value; if (sy===2026 && sm>10) sm=10;
+    newGame(Math.round(v)*10000, sy, sm); S.intro = true; save(); delete md.dataset.lock; closeModal();
     toast(`起始資金 ${Math.round(v).toLocaleString()} 萬，開始看房吧！`);
   };
 }
