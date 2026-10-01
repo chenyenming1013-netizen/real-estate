@@ -179,7 +179,7 @@ table.t tr.total td{border-top:2px solid var(--ink);border-bottom:0;font-size:16
 </head>
 <body>
 <header>
-  <div class="brand"><div class="sale">售</div><div><b>房產新手村</b><small>買房小白實戰訓練・六都</small></div></div>
+  <div class="brand"><div class="sale">售</div><div><b>房產新手村</b><small>買房小白實戰訓練・六都＋新竹</small></div></div>
   <div class="stats">
     <div class="stat"><span>日期</span><b class="n" id="sDate"></b></div>
     <div class="stat"><span>現金</span><b class="n" id="sCash"></b></div>
@@ -230,6 +230,13 @@ const CITIES = {
     ['中壢區',33,['環北路','中央西路二段','新生路','元化路'],'中原、中央大學，後站開發'],
     ['八德區',30,['介壽路一段','建國路','興豐路','東勇街'],'價格親民，捷運綠線延伸'],
     ['平鎮區',28,['環南路','延平路二段','南東路','中豐路'],'首購入門區']]},
+  hc:{name:'新竹', drift:0.0006, park:150, yield:0.021, high:4000, dists:[
+    ['竹北市',52,['光明六路','文興路','嘉豐南路','莊敬北路'],'高鐵特區，科技新貴首選'],
+    ['東區',45,['關新路','光復路一段','建功一路','慈雲路'],'竹科、關埔重劃區'],
+    ['北區',36,['經國路一段','中正路','西大路','北大路'],'新竹市舊城區，生活機能成熟'],
+    ['香山區',30,['五福路一段','中華路五段','牛埔南路','香山路'],'價格親民的首購區'],
+    ['竹東鎮',28,['長春路三段','中興路','北興路','東林路'],'鄰近竹科二期，總價低'],
+    ['湖口鄉',26,['中正路一段','仁和路','光復北路','達生路'],'新竹工業區，交流道旁']]},
   tc:{name:'台中市', drift:0.0004, park:150, yield:0.021, high:4000, dists:[
     ['西屯區',48,['市政路','河南路三段','福星路','西屯路二段'],'七期重劃區，科技業進駐'],
     ['南屯區',45,['文心南五路','大墩十一街','永春東路','公益路二段'],'單元二、豐樂公園生活圈'],
@@ -261,6 +268,7 @@ const HIST = {
   tp:[0.54,0.58,0.68,0.75,0.80,0.88,0.93,0.90,0.85,0.84,0.84,0.85,0.87,0.91,0.95,0.96,1.01,1.01,1.00],
   nt:[0.40,0.43,0.52,0.58,0.63,0.72,0.76,0.74,0.70,0.69,0.69,0.70,0.73,0.79,0.86,0.89,0.97,0.99,1.00],
   ty:[0.35,0.37,0.42,0.47,0.52,0.60,0.64,0.62,0.60,0.60,0.61,0.63,0.67,0.74,0.83,0.87,0.97,1.00,1.00],
+  hc:[0.33,0.35,0.40,0.45,0.50,0.57,0.61,0.60,0.58,0.58,0.59,0.62,0.67,0.76,0.86,0.89,0.98,1.00,0.98],
   tc:[0.30,0.31,0.35,0.40,0.44,0.52,0.57,0.56,0.54,0.55,0.56,0.58,0.62,0.70,0.80,0.85,0.96,1.00,0.99],
   tn:[0.30,0.31,0.34,0.37,0.40,0.46,0.50,0.50,0.49,0.50,0.51,0.53,0.57,0.65,0.76,0.82,0.95,1.00,0.99],
   ks:[0.32,0.33,0.37,0.42,0.46,0.53,0.57,0.55,0.52,0.53,0.53,0.55,0.58,0.66,0.77,0.82,0.94,0.99,0.99]
@@ -270,7 +278,7 @@ const BOOST = {
   '楠梓區':[[2020,2024,0.28]], '善化區':[[2020,2024,0.32]], '新市區':[[2020,2024,0.25]], '前鎮區':[[2019,2023,0.12]],
   '西屯區':[[2012,2014,0.08],[2019,2023,0.10]], '北屯區':[[2018,2022,0.10]], '大園區':[[2011,2014,0.18],[2015,2018,-0.08],[2020,2023,0.10]],
   '林口區':[[2011,2014,0.22],[2015,2019,-0.12]], '淡水區':[[2012,2014,0.10],[2015,2019,-0.10]], '信義區':[[2009,2013,0.08]], '大安區':[[2009,2013,0.06]],
-  '安平區':[[2019,2023,0.08]], '鼓山區':[[2011,2014,0.08]], '三重區':[[2019,2023,0.06]]
+  '安平區':[[2019,2023,0.08]], '竹北市':[[2011,2014,0.10],[2020,2023,0.12]], '鼓山區':[[2011,2014,0.08]], '三重區':[[2019,2023,0.06]]
 };
 // 五大銀行新承做購屋貸款平均利率（年，近似）
 const RATE_HIST = [2.60,1.65,1.72,1.95,1.97,1.97,1.99,1.94,1.73,1.66,1.63,1.63,1.40,1.35,1.62,2.03,2.18,2.21,2.25];
@@ -361,7 +369,10 @@ function newGame(startCash=10000000, sy=2026, sm=10){
   S.hist.push(netWorth());
 }
 function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
-function load(){ try{ const s=localStorage.getItem(SAVE_KEY); if(s){ S=JSON.parse(s); return true; } }catch(e){} return false; }
+function load(){ try{ const s=localStorage.getItem(SAVE_KEY); if(s){ S=JSON.parse(s);
+  for (const k in CITIES){ if (S.idx[k]==null) S.idx[k]=1; S.startAvg=S.startAvg||{}; if (S.startAvg[k]==null) S.startAvg[k]=cityAvg(k);
+    if (!S.listings.some(l=>l.ck===k)) CITIES[k].dists.forEach((d,i)=>{ for (let n=0;n<2;n++) S.listings.push(genListing(k,i)); }); }
+  return true; } }catch(e){} return false; }
 function addLog(msg,cls=''){ S.log.unshift({t:S.t,msg,cls}); S.log.length = Math.min(S.log.length,200); }
 function news(msg){ S.log.unshift({t:S.t,msg,cls:'news'}); }
 
@@ -421,6 +432,10 @@ function houseSVG(type, seed){
 }
 const GEO = {
   tp:{'大安區':[25.0265,121.5435],'信義區':[25.0330,121.5680],'松山區':[25.0500,121.5577],'中山區':[25.0640,121.5330],'內湖區':[25.0830,121.5880],'北投區':[25.1320,121.5010],'文山區':[24.9890,121.5700],'萬華區':[25.0340,121.4990]},
+  nt:{'板橋區':[25.0100,121.4630],'永和區':[25.0080,121.5150],'新店區':[24.9680,121.5410],'三重區':[25.0620,121.4880],'中和區':[24.9990,121.4990],'新莊區':[25.0360,121.4500],'林口區':[25.0770,121.3910],'淡水區':[25.1690,121.4410]},
+  ty:{'桃園區':[24.9930,121.3010],'大園區':[25.0160,121.2150],'龜山區':[24.9920,121.3380],'蘆竹區':[25.0460,121.2920],'中壢區':[24.9650,121.2250],'八德區':[24.9280,121.2840],'平鎮區':[24.9450,121.2180]},
+  hc:{'竹北市':[24.8380,121.0040],'東區':[24.7960,120.9930],'北區':[24.8160,120.9620],'香山區':[24.7700,120.9300],'竹東鎮':[24.7370,121.0900],'湖口鄉':[24.9010,121.0440]},
+  tn:{'安平區':[22.9990,120.1650],'東區':[22.9800,120.2240],'善化區':[23.1320,120.2970],'中西區':[22.9920,120.1980],'永康區':[23.0260,120.2570],'北區':[23.0070,120.2080],'新市區':[23.0790,120.2950]},
   tc:{'西屯區':[24.1810,120.6180],'南屯區':[24.1380,120.6150],'北屯區':[24.1820,120.6860],'西區':[24.1410,120.6640],'北區':[24.1590,120.6820],'太平區':[24.1270,120.7190]},
   ks:{'鼓山區':[22.6560,120.2800],'前鎮區':[22.5950,120.3140],'左營區':[22.6870,120.2940],'楠梓區':[22.7270,120.3260],'苓雅區':[22.6220,120.3120],'三民區':[22.6470,120.3110],'鳳山區':[22.6260,120.3570]}
 };
@@ -557,7 +572,7 @@ function newsHTML(){
   const goal = Math.max(50000000, (S.startCash||10000000)*3);
   return `<div class="two"><div class="panel"><h3>資產淨值走勢</h3><svg class="spark" viewBox="0 0 300 90" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--red)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>
     <p class="meta">目前 <b class="n" style="font-size:18px;color:var(--ink)">${W(netWorth())} 萬</b>　目標：10 年內淨資產突破 ${W(goal)} 萬（進度 ${Math.min(100,Math.round(netWorth()/goal*100))}%）</p></div>
-    <div class="panel"><h3>六都房價（平均單價）</h3>${Object.entries(CITIES).map(([k,c])=>{ const a=cityAvg(k), ch=(a/(S.startAvg?.[k]||a)-1)*100; return `<p style="margin:6px 0">${c.name}　<b class="n" style="font-size:20px">${a.toFixed(1)}</b> 萬/坪　<span class="n ${ch>=0?'up':'down'}">${ch>=0?'+':''}${ch.toFixed(1)}%</span> <span class="meta">（相對開局）</span></p>`; }).join('')}
+    <div class="panel"><h3>各縣市房價（平均單價）</h3>${Object.entries(CITIES).map(([k,c])=>{ const a=cityAvg(k), ch=(a/(S.startAvg?.[k]||a)-1)*100; return `<p style="margin:6px 0">${c.name}　<b class="n" style="font-size:20px">${a.toFixed(1)}</b> 萬/坪　<span class="n ${ch>=0?'up':'down'}">${ch>=0?'+':''}${ch.toFixed(1)}%</span> <span class="meta">（相對開局）</span></p>`; }).join('')}
     <p class="meta">目前房貸基準利率約 ${(histRate(absOf(S.t))+S.rateAdj).toFixed(2)}%${inHistory(S.t)?'（歷史期間：房價依真實走勢變動）':'（已進入未來模擬）'}</p>
     </div></div>
     <h3 style="margin:18px 0 8px">動態與紀錄</h3><div class="feed">${S.log.slice(0,80).map(l=>`<div class="it ${l.cls}"><time class="n">${dateStr(l.t)}</time>${esc(l.msg)}</div>`).join('')}</div>`;
@@ -1371,7 +1386,7 @@ document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>{ S.tab=b.d
 $('#nextBtn').onclick = nextMonth;
 function setup(first){
   const presets = [1000,1500,2000,2500,3000,5000];
-  const md = modal(`<h2>${first?'歡迎來到房產新手村':'重新開始'}</h2><p class="sub">台北・新北・桃園・台中・臺南・高雄</p>
+  const md = modal(`<h2>${first?'歡迎來到房產新手村':'重新開始'}</h2><p class="sub">台北・新北・桃園・新竹・台中・臺南・高雄</p>
     <p>你是 35 歲的科技業工程師，和另一半雙薪、家庭月收入約 <b>15 萬</b>（越早的年代收入越低），目前在外租屋。先決定你的起始資金：</p>
     <div class="modes" id="cashPick">${presets.map(v=>`<button class="mode" data-v="${v}" aria-pressed="${v===1000}"><b class="n" style="font-size:22px">${v.toLocaleString()} 萬</b><small>${v<=1000?'標準難度：台北要精打細算':v<=2000?'寬裕：三都都有不少選擇':v<=3000?'富足：可以同時經營多間':'大戶：直攻蛋黃區'}</small></button>`).join('')}<button class="mode" data-v="custom" aria-pressed="false"><b>自訂金額</b><small>300 萬～5 億，自己決定</small></button></div>
     <div class="field" id="customWrap" style="display:none">起始資金（萬）<input type="number" id="customCash" min="300" max="50000" step="100" value="1200"></div>
