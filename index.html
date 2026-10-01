@@ -196,6 +196,7 @@ table.t tr.total td{border-top:2px solid var(--ink);border-bottom:0;font-size:16
   <button id="restart" class="btn sm ghost" style="margin-bottom:6px">重新開始</button>
 </nav>
 <main id="main"></main>
+<footer style="max-width:1280px;margin:0 auto;padding:8px 16px 24px;font-size:12px;color:var(--muted);line-height:1.6">本遊戲為房地產知識學習用的模擬軟體，所有屋主、銀行與房仲品牌皆為虛構；房價、利率與法規為依公開資訊整理的近似值，僅供練習參考，不構成投資或財務建議。</footer>
 <div id="mw" role="dialog" aria-modal="true"><div id="md"></div></div>
 <div id="toast"></div>
 
@@ -296,9 +297,9 @@ const REASONS = {rush:['生意周轉需要現金','要移民了，想盡快處�
 const NAMES = ['陳先生','林太太','王媽媽','張大哥','李老師','黃小姐','吳伯伯','劉先生','蔡太太','楊先生','許阿姨','鄭先生','謝小姐','郭先生','洪太太'];
 const ISSUES = ['漏水','壁癌','管線老舊','採光不佳','鄰居嘈雜','頂樓加蓋（違建）'];
 const BANKS = [
-  {id:'gov',name:'臺灣國民銀行',kind:'公股行庫',base:2.28,floor:2.12,style:'作風保守、重視財力證明與負債比，利率低但成數給得保守',ltvD:{0:0.75,1:0.65},fee:5000,appr:0.95},
-  {id:'priv',name:'信和商業銀行',kind:'民營銀行',base:2.42,floor:2.22,style:'業績導向、願意多給成數，喜歡搭配保險、信用卡與薪轉往來',ltvD:{0:0.78,1:0.68},fee:9000,appr:0.975},
-  {id:'ins',name:'宏泰人壽',kind:'壽險公司房貸',base:2.55,floor:2.35,style:'成數與年限彈性（首購可到40年），利率較高，通常要求投保房貸壽險',ltvD:{0:0.8,1:0.7},fee:6000,appr:0.97}
+  {id:'gov',name:'聯興銀行',kind:'公股行庫',base:2.28,floor:2.12,style:'作風保守、重視財力證明與負債比，利率低但成數給得保守',ltvD:{0:0.75,1:0.65},fee:5000,appr:0.95},
+  {id:'priv',name:'晴川商業銀行',kind:'民營銀行',base:2.42,floor:2.22,style:'業績導向、願意多給成數，喜歡搭配保險、信用卡與薪轉往來',ltvD:{0:0.78,1:0.68},fee:9000,appr:0.975},
+  {id:'ins',name:'松柏人壽',kind:'壽險公司房貸',base:2.55,floor:2.35,style:'成數與年限彈性（首購可到40年），利率較高，通常要求投保房貸壽險',ltvD:{0:0.8,1:0.7},fee:6000,appr:0.97}
 ];
 const SELLER_T = [
   {id:'data',label:'引用實價登錄'},{id:'issue',label:'指出屋況問題'},{id:'cash',label:'資金到位快速交屋'},{id:'deposit',label:'付斡旋金表誠意'},
@@ -450,7 +451,7 @@ function mapHTML(ck, di, clickable){
   const [la,lo] = GEO[ck][CITIES[ck].dists[di][0]];
   const d=0.012;
   const osm = inClaude ? '' : `<div class="mapbox" style="margin-top:8px"><iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${lo-d*1.4},${la-d},${lo+d*1.4},${la+d}&layer=mapnik&marker=${la},${lo}" title="OpenStreetMap：${CITIES[ck].name}${CITIES[ck].dists[di][0]}"></iframe></div>`;
-  return `<div class="mapbox">${priceMapSVG(ck, di, clickable)}</div>${osm}<p class="meta" style="margin:6px 0 0">${inClaude?'街道地圖在 GitHub 版會直接顯示。':'地圖資料 © OpenStreetMap 貢獻者。'}<a href="${osmLink(ck,di)}" target="_blank" rel="noopener">在 OpenStreetMap 開啟 ↗</a></p>`;
+  return `<div class="mapbox">${priceMapSVG(ck, di, clickable)}</div>${osm}<p class="meta" style="margin:6px 0 0">${inClaude?'街道地圖在 GitHub 版會直接顯示。':'地圖資料 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 貢獻者（ODbL）。'}<a href="${osmLink(ck,di)}" target="_blank" rel="noopener">在 OpenStreetMap 開啟 ↗</a></p>`;
 }
 
 
@@ -1214,7 +1215,7 @@ function openSell(pid){
   md.querySelector('#go').onclick=()=>{
     if (ask<=0) return;
     const mon = mode==='general'||mode==='self' ? 99 : +md.querySelector('#mon').value;
-    const agency = mode==='self'?'':pick(['信義','永慶','住商','台灣房屋','有巢氏','中信房屋']);
+    const agency = mode==='self'?'':pick(['安家房屋','樂居不動產','好宅地產','晴天房仲','大城房屋','家和不動產']);
     p.sale = {mode, feePct:fee, ask, until:S.t+mon, agency, label: SALE_MODES[mode].label+(agency?`（${agency}）`:'')};
     if (p.status==='空置') p.status='委售中';
     addLog(`${titleOf(p.L)} 以${p.sale.label}出售，開價 ${W(ask)} 萬${fee?`，服務費 ${fee}%`:''}。`);
