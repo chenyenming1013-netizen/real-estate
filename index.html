@@ -485,7 +485,7 @@ function mapHTML(ck, di, clickable){
   const [la,lo] = GEO[ck][CITIES[ck].dists[di][0]];
   const d=0.012;
   const osm = inClaude ? '' : `<div class="mapbox" style="margin-top:8px"><iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${lo-d*1.4},${la-d},${lo+d*1.4},${la+d}&layer=mapnik&marker=${la},${lo}" title="OpenStreetMap：${CITIES[ck].name}${CITIES[ck].dists[di][0]}"></iframe></div>`;
-  return `<div class="mapbox">${priceMapSVG(ck, di, clickable)}</div>${osm}<p class="meta" style="margin:6px 0 0">${inClaude?'街道地圖在 GitHub 版會直接顯示。':'地圖資料 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 貢獻者（ODbL）。'}<a href="${osmLink(ck,di)}" target="_blank" rel="noopener">在 OpenStreetMap 開啟 ↗</a></p>`;
+  return `<div class="mapbox">${priceMapSVG(ck, di, clickable)}</div>${osm}<p class="meta" style="margin:6px 0 0">${inClaude?'街道地圖在 GitHub 版會直接顯示。':'地圖資料 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> 貢獻者（ODbL）。'}<a href="${osmLink(ck,di)}" target="_blank" rel="noopener noreferrer">在 OpenStreetMap 開啟 ↗</a></p>`;
 }
 
 
@@ -503,29 +503,41 @@ function monthlyFlow(){
 function netWorth(){ return S.cash + S.props.reduce((s,p)=>s+valueOf(p.L)-(p.loan?p.loan.balance:0),0); }
 function jcicCount(){ return S.jcic.filter(t=>S.t-t<3).length; }
 function loanCase(price, L){
+  // 依央行歷次選擇性信用管制整理（簡化版）：2010/6、2010/12、2012/6、2014/6、2015/8、2016/3、2020/12、2021/3、2021/9、2021/12、2023/6、2024/6、2024/9、2026/3、2026/9
   const n = S.props.length, a = absOf(S.t), A=(y,m)=>y*12+m-1;
-  const hiLine = a>=A(2024,9) ? CITIES[L.ck].high : (L.ck==='tp'?8000:L.ck==='nt'?5000:4000);
+  const hiLine = a>=A(2020,12) ? CITIES[L.ck].high : (L.ck==='tp'?8000:L.ck==='nt'?5000:4000);
   const high = price >= hiLine*10000;
-  const maxY1 = a>=A(2023,8) ? 40 : 30;
+  const maxY1 = a>=A(2023,8) && a<A(2026,8) ? 40 : 30;
   const first = {label:'首購自住（名下無房）', cap:0.8, grace:true, maxY:maxY1};
   const hiLbl = `高價住宅（${CITIES[L.ck].name}總價 ${hiLine} 萬以上）`;
+  const nth = `自然人第${n+1}戶`;
+  const sp = L.ck==='tp'||L.ck==='nt';   // 2010～2016 的特定地區以雙北為主（簡化）
   let era, r;
-  if (a < A(2010,6)){ era='尚無選擇性信用管制'; r = high?{label:hiLbl,cap:0.7,grace:true,maxY:30} : n===0?first : {label:`自然人第${n+1}戶`,cap:0.8,grace:true,maxY:30}; }
-  else if (a < A(2016,3)){ era = a<A(2014,6)?'央行2010年起選擇性信用管制':'央行2014年第四波信用管制';
-    const specific = L.ck==='tp'||L.ck==='nt';
-    if (high) r={label:hiLbl, cap:a>=A(2012,6)?0.5:0.6, grace:false, maxY:30};
+  if (a < A(2010,6)){ era='尚未實施選擇性信用管制';
+    r = n===0&&!high ? first : {label:high?hiLbl:nth, cap:0.8, grace:true, maxY:30}; }
+  else if (a < A(2016,3)){
+    era = a<A(2010,12)?'央行2010年6月首波信用管制' : a<A(2012,6)?'央行2010年12月第二波信用管制' : a<A(2014,6)?'央行2012年6月第三波信用管制' : a<A(2015,8)?'央行2014年6月第四波信用管制':'央行2015年8月部分鬆綁後規定';
+    const spCap = a<A(2010,12)?0.7 : (a>=A(2014,6)&&a<A(2015,8))?0.5 : 0.6;
+    if (high && a>=A(2012,6)) r={label:hiLbl, cap:(a>=A(2014,6)&&a<A(2015,8))?0.5:0.6, grace:false, maxY:30};
     else if (n===0) r=first;
-    else if (specific && n===1) r={label:'特定地區（雙北）第二戶', cap:0.6, grace:false, maxY:30};
-    else if (specific && n>=2 && a>=A(2014,6)) r={label:`特定地區（雙北）第${n+1}戶`, cap:0.5, grace:false, maxY:30};
-    else r={label:`自然人第${n+1}戶`, cap:0.8, grace:true, maxY:30}; }
-  else if (a < A(2020,12)){ era='2016年解除管制，僅保留高價住宅';
-    r = high?{label:hiLbl,cap:0.6,grace:false,maxY:30} : n===0?first : {label:`自然人第${n+1}戶`,cap:0.8,grace:true,maxY:30}; }
-  else if (a < A(2023,6)){ era='央行2020～2022年多波信用管制';
-    r = high?{label:hiLbl,cap:0.4,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶',cap:0.8,grace:true,maxY:30} : {label:`自然人第${n+1}戶（第三戶以上）`,cap:a>=A(2021,3)?0.4:0.55,grace:false,maxY:30}; }
-  else if (a < A(2024,9)){ era = a<A(2024,6)?'央行2023年第五波信用管制':'央行2024年6月第六波信用管制';
-    r = high?{label:hiLbl,cap:0.4,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶（六都＋新竹）',cap:a>=A(2024,6)?0.6:0.7,grace:false,maxY:30} : {label:`自然人第${n+1}戶（第三戶以上）`,cap:a>=A(2024,6)?0.3:0.4,grace:false,maxY:30}; }
-  else { era = a<A(2026,9)?'央行2024年9月第七波信用管制':'央行2026年9月調整後規定';
-    r = high?{label:hiLbl,cap:0.3,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶',cap:a>=A(2026,9)?0.7:0.5,grace:false,maxY:30} : {label:`自然人第${n+1}戶（第三戶以上）`,cap:0.3,grace:false,maxY:30}; }
+    else if (n>=2 && a>=A(2014,6) && a<A(2015,8)) r={label:`${nth}（全國第三戶以上）`, cap:0.5, grace:false, maxY:30};
+    else if (sp) r={label:`特定地區（雙北）${nth}`, cap:spCap, grace:false, maxY:30};
+    else r={label:nth, cap:0.8, grace:true, maxY:30}; }
+  else if (a < A(2020,12)){ era='2016年3月解除管制，僅保留高價住宅規定';
+    r = high?{label:hiLbl,cap:0.6,grace:false,maxY:30} : n===0?first : {label:nth,cap:0.8,grace:true,maxY:30}; }
+  else if (a < A(2023,6)){
+    era = a<A(2021,3)?'央行2020年12月信用管制' : a<A(2021,9)?'央行2021年3月第二波信用管制' : a<A(2021,12)?'央行2021年9月第三波信用管制':'央行2021年12月第四波信用管制';
+    const hiCap = a<A(2021,3)?0.6 : a<A(2021,12)?(n>=3?0.4:0.55) : 0.4;
+    const n3Cap = a<A(2021,3)?0.6 : a<A(2021,12)?(n>=3?0.5:0.55) : 0.4;
+    if (high) r={label:hiLbl,cap:hiCap,grace:false,maxY:30};
+    else if (n===0) r=first;
+    else if (n===1) r={label:'自然人第二戶（六都＋新竹）',cap:0.8,grace:a<A(2021,9),maxY:30};
+    else r={label:`${nth}（第三戶以上）`,cap:n3Cap,grace:false,maxY:30}; }
+  else if (a < A(2024,9)){ era = a<A(2024,6)?'央行2023年6月第五波信用管制':'央行2024年6月第六波信用管制';
+    r = high?{label:hiLbl,cap:0.4,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶（六都＋新竹）',cap:a>=A(2024,6)?0.6:0.7,grace:false,maxY:30} : {label:`${nth}（第三戶以上）`,cap:0.4,grace:false,maxY:30}; }
+  else { era = a<A(2026,2)?'央行2024年9月第七波信用管制' : a<A(2026,8)?'央行2026年3月調整後規定':'央行2026年9月調整後規定';
+    const c2 = a>=A(2026,8)?0.7 : a>=A(2026,2)?0.6 : 0.5;
+    r = high?{label:hiLbl,cap:0.3,grace:false,maxY:30} : n===0?first : n===1?{label:'自然人第二戶（全國）',cap:c2,grace:false,maxY:30} : {label:`${nth}（第三戶以上）`,cap:0.3,grace:false,maxY:30}; }
   return {...r, era};
 }
 
@@ -753,7 +765,7 @@ function resolveBluff(L,N,bubble){
   const who = L.agent?'仲介':'屋主';
   if (N.rival){
     if (!N.rival.real){ N.persuade=Math.min(8,N.persuade+2); N.mood-=3; N.rival=null; bubble('sys',`${who}支支吾吾拿不出斡旋書，「有人下斡旋」看來只是話術，屋主氣勢弱了下來。`); return '買方要求看斡旋書，你們拿不出來，「有人下斡旋」的話術被識破了，你有點心虛尷尬。'; }
-    bubble('sys',`${who}拿出斡旋書影本（金額遮住），確實有另一組買方出價。`); return '買方要求看斡旋書，你們拿出來了，確實有另一組買方，你的立場更硬了。';
+    bubble('sys',`${who}拿出斡旋書影本（買方個資與金額都已遮蔽），確實有另一組買方出價。`); return '買方要求看斡旋書，你們拿出來了，確實有另一組買方，你的立場更硬了。';
   }
   N.mood-=4; bubble('sys','根本沒人提過有其他買方，對方覺得被懷疑。'); return '買方莫名懷疑你們說謊，你有點不高興。';
 }
@@ -1211,7 +1223,11 @@ for (const k in BANK_SAY_MORE) BANK_SAY[k].push(...BANK_SAY_MORE[k]);
 const BANK_IDLE_MORE = {gov:['公股銀行的好處是利率穩、流程透明。','有任何不清楚的地方，我都可以說明。','資料準備齊全，審核會很順利。'],priv:['我們客戶滿意度很高，很多都是轉介紹來的。','您今天決定的話，我可以優先幫您送件。','條件有任何想調整的，都可以跟我說。'],ins:['壽險房貸很適合想降低月付壓力的首購族。','我們也可以幫您做整體的財務規劃。','保障跟房貸一起規劃，比較安心。']};
 for (const k in BANK_IDLE_MORE) BANK_IDLE[k].push(...BANK_IDLE_MORE[k]);
 const BANK_QA2 = [
-  {kw:['新青安','青年','首購優惠','政府補貼','優惠貸款'], a:()=>{ const a=absOf(S.t), A=(y,m)=>y*12+m-1; if (a>=A(2023,8) && a<A(2026,8)) return ['新青安最高可貸 1,000 萬、40 年、寬限期 5 年，有政府利息補貼，但額度要另外排隊，我們先用一般房貸評估。','政府優惠房貸要符合首購資格，審核時間比較長喔。']; if (a<A(2023,8)) return ['目前有青年安心成家貸款，條件跟一般房貸差不多，主要是年限跟寬限期比較長。']; return ['新青安已經結束了，現在以一般房貸條件為主。']; }},
+  {kw:['新青安','青年','首購優惠','政府補貼','優惠貸款','青安'], a:()=>{ const a=absOf(S.t), A=(y,m)=>y*12+m-1;
+    if (a<A(2010,1)) return ['政府的首購優惠房貸條件依各銀行公告，我們先用一般房貸幫您評估。'];
+    if (a<A(2023,8)) return ['目前有青年安心成家貸款可以申請，主要是年限和寬限期比較長，額度有上限，不足的部分再搭配一般房貸。'];
+    if (a<A(2026,8)) return ['新青安最高可貸 1,000 萬、最長 40 年、寬限期最長 5 年，但要符合首購資格，審核也比較久，我們先用一般房貸評估。','政府優惠房貸要符合首購資格，條件以財政部公告為準。'];
+    return ['新青安已在 2026 年 7 月截止申辦，新方案的條件請以財政部最新公告為準，我們先用一般房貸幫您評估。']; }},
   {kw:['理財型','循環','備用金'], a:()=>['理財型房貸是把還掉的本金變成可以動用的額度，用多少算多少利息。','理財型利率會比一般房貸高一點，適合需要周轉的人。']},
   {kw:['轉貸','換銀行'], a:()=>['之後想轉貸也可以，但要注意原銀行的違約金和新的設定費用。','轉貸通常要利率差 0.2% 以上才划算。']},
   {kw:['增貸','加貸'], a:()=>['房價有上漲、還款紀錄良好的話，之後可以申請增貸。','增貸要重新鑑價，也要看當時的信用管制規定。']},
@@ -1289,7 +1305,7 @@ function openClosing(deal, loan){
       ${items.map(i=>`<tr><td>${i[0]}</td><td>${NT(i[1])} 元</td></tr>`).join('')}
       <tr class="total"><td>需準備現金</td><td>${W(need)} 萬</td></tr></table></div>
     <div>${loan?`<div class="terms"><div>利率<b class="n">${loan.rate.toFixed(2)}%</b></div><div>年限<b class="n">${loan.years} 年</b></div><div>寬限期<b class="n">${loan.grace?loan.grace+' 年':'無'}</b></div><div>月付<b class="n">${W1(loan.grace?amt*loan.rate/100/12:pmt(amt,loan.rate,loan.years))} 萬</b></div></div>${loan.conds.length?`<p class="note">附加條件：${loan.conds.map(esc).join('；')}</p>`:''}`:''}
-      <p class="note">交屋流程：簽約用印 → 完稅 → 過戶與設定 → 銀行撥款 → 點交。遊戲中一次完成。<br>成交後持有未滿 2 年出售，房地合一稅率 45%；2～5 年 35%。</p>
+      <p class="note">交屋流程：簽約用印 → 完稅 → 過戶與設定 → 銀行撥款 → 點交。遊戲中一次完成。<br>${absOf(S.t)<2016*12?'2016 年前取得的房屋出售時適用舊制財產交易所得稅'+(absOf(S.t)>=2011*12+5?'；非自住房屋持有 2 年內出售另需繳奢侈稅（1 年內 15%、2 年內 10%）':'')+'。':absOf(S.t)<2021*12+6?'之後出售適用房地合一稅 1.0：持有 1 年內 45%、1～2 年 35%、2～10 年 20%、10 年以上 15%（2021 年 7 月起改為 2.0 制）。':'之後出售適用房地合一稅 2.0：持有 2 年內 45%、2～5 年 35%、5～10 年 20%、10 年以上 15%。'}稅制為簡化試算。</p>
       ${ok?'':`<p class="warn">現金不足 ${W(need-S.cash)} 萬，無法完成交易。</p>`}</div></div>
     <div class="foot"><button class="btn ghost" id="back">返回</button><button class="btn red" id="confirm" ${ok?'':'disabled'}>確認簽約交屋</button></div>`);
   md.querySelector('#back').onclick=()=> loan?openBanks(deal):openBanks(deal);
@@ -1484,32 +1500,36 @@ function completeSale(p, price){
 // ======================= MONTH TICK =======================
 const HNEWS = [
   [2008,9,'雷曼兄弟破產，全球金融海嘯爆發，房市交易急凍。'],
-  [2008,10,'央行啟動連續降息，重貼現率一路降到2009年2月的1.25%，房貸利率大降。'],
-  [2009,5,'遺產及贈與稅降至10%，海外資金回流，台北房價率先反彈。'],
-  [2010,6,'央行首度祭出選擇性信用管制：台北市及新北十區第二戶貸款最高7成、無寬限期。'],
-  [2010,12,'央行擴大管制：特定地區第二戶降至6成，高價住宅貸款成數6成。'],
-  [2011,6,'特種貨物及勞務稅（奢侈稅）上路：非自住房屋持有2年內出售，課成交價10～15%。'],
-  [2012,6,'央行將高價住宅貸款成數降至5成。'],
-  [2012,8,'不動產實價登錄上路，成交價格首度公開透明。'],
-  [2014,6,'央行第四波信用管制：特定地區第三戶5成、高價住宅5成。'],
-  [2014,7,'台北市推出豪宅稅，雙北房價漲勢開始趨緩。'],
-  [2016,1,'房地合一稅1.0上路，奢侈稅退場，全台房市交易量創新低。'],
-  [2016,3,'央行解除大部分信用管制，僅保留高價住宅貸款6成。'],
+  [2008,10,'央行自2008年9月起連續降息，重貼現率於2009年2月降至1.25%，房貸利率大降。'],
+  [2009,1,'遺產及贈與稅率降至10%，海外資金回流，台北房價率先反彈。'],
+  [2010,6,'央行首度祭出選擇性信用管制：台北市及新北特定地區第二戶貸款最高7成、無寬限期。'],
+  [2010,12,'央行擴大管制：雙北特定地區範圍擴大，第二戶貸款降至最高6成，並新增購地貸款限制。'],
+  [2011,6,'特種貨物及勞務稅（奢侈稅）上路：非自住房屋持有1年內出售課成交價15%、2年內10%。'],
+  [2012,6,'央行將高價住宅納入管制：貸款最高6成、無寬限期。'],
+  [2012,8,'不動產實價登錄上路，成交價格首度公開。'],
+  [2014,6,'央行第四波管制：特定地區再擴大、第二戶降至5成，全國第三戶及高價住宅最高5成。'],
+  [2015,8,'央行部分鬆綁：縮小特定地區範圍並放寬第二戶貸款成數。'],
+  [2016,1,'房地合一稅1.0上路，不動產奢侈稅停徵，全台房市交易量創新低。'],
+  [2016,3,'央行解除大部分信用管制，僅保留高價住宅貸款最高6成。'],
   [2019,1,'台商回流投資方案啟動，資金回流，房市止跌回穩。'],
   [2020,3,'COVID-19疫情爆發，央行降息1碼至1.125%，資金寬鬆。'],
-  [2020,12,'央行重啟選擇性信用管制，限制公司法人及第三戶購屋貸款。'],
-  [2021,3,'央行第二波管制：第三戶、高價住宅貸款成數降至4成。'],
-  [2021,7,'房地合一稅2.0上路：持有2年內出售稅率45%、5年內35%。'],
-  [2021,11,'台積電宣布在高雄楠梓設廠，南部科技聚落帶動房價。'],
+  [2020,12,'央行重啟選擇性信用管制：公司法人購屋限貸，自然人第三戶以上最高6成、無寬限期。'],
+  [2021,3,'央行第二波管制：自然人第三戶降至5.5成、第四戶以上5成，高價住宅降至5.5成。'],
+  [2021,7,'房地合一稅2.0上路：持有2年內出售稅率45%、2至5年35%。'],
+  [2021,9,'央行第三波管制：六都及新竹縣市的自然人第二戶購屋貸款不得有寬限期。'],
+  [2021,11,'台積電確定在高雄楠梓設廠，南部科技聚落題材升溫。'],
+  [2021,12,'央行第四波管制：高價住宅與第三戶以上購屋貸款最高成數一律降為4成。'],
   [2022,3,'央行升息1碼，展開升息循環，房貸利率走揚。'],
-  [2023,6,'央行第五波管制：六都與新竹第二戶貸款成數上限7成、無寬限期。'],
+  [2023,6,'央行第五波管制：六都及新竹縣市自然人第二戶購屋貸款最高7成。'],
   [2023,7,'平均地權條例修法施行：限制預售屋換約轉售，私法人購屋改採許可制。'],
-  [2023,8,'新青安貸款上路：首購最高貸1,000萬、40年、寬限期5年，買氣升溫。'],
-  [2024,3,'央行升息半碼至2%，並將六都及新竹第二戶貸款成數調降。'],
-  [2024,6,'央行第六波管制：第二戶成數降至6成、第三戶以上3成。'],
-  [2024,9,'央行第七波管制：自然人第二戶全國限貸5成、無寬限期；銀行房貸額度吃緊。'],
-  [2025,3,'房市交易量明顯萎縮，建商讓利、中古屋議價空間擴大。'],
-  [2026,9,'央行9月理監事會：政策利率維持2%，並將自然人第二戶房貸成數上限由5成放寬至7成。']
+  [2023,8,'新青安貸款上路：首購最高貸1,000萬、最長40年、寬限期最長5年。'],
+  [2024,3,'央行意外升息半碼，政策利率（重貼現率）升至2%。'],
+  [2024,6,'央行第六波管制：六都及新竹縣市第二戶貸款成數由7成降至6成，並調升存款準備率。'],
+  [2024,9,'央行第七波管制：自然人第二戶全國限貸5成、無寬限期，第三戶以上及高價住宅降至3成。'],
+  [2025,3,'房市交易量明顯萎縮，中古屋議價空間擴大。'],
+  [2026,3,'央行微幅鬆綁：自然人第二戶購屋貸款最高成數由5成調升至6成。'],
+  [2026,7,'新青安貸款方案申辦截止，後續方案條件以財政部公告為準。'],
+  [2026,9,'央行再度鬆綁：自然人第二戶購屋貸款最高成數由6成調升至7成，第二戶仍不得有寬限期，高價住宅與第三戶以上維持3成。']
 ];
 const EVENTS = [
   ()=>{ news('央行理監事會決議政策利率不變，房市觀望氣氛持續。'); },
@@ -1540,7 +1560,7 @@ function nextMonth(){
     if (p.status==='出租') flow += p.rent;
     if (p.status==='招租中' && Math.random()<0.55){ p.status='出租'; p.rent = Math.round(valueOf(p.L)*CITIES[p.L.ck].yield/12*(1+(p.rentBoost||0))*(0.8+p.L.cond/250)/100)*100; addLog(`${titleOf(p.L)} 租出去了，月租 ${NT(p.rent)} 元。`,'good'); }
     if (p.status==='裝修中' && S.t>=p.renoUntil){ p.status = p.prevStatus||'空置'; addLog(`${titleOf(p.L)} 裝修完工！`,'good'); }
-    if (d.m===5){ const tax = Math.round(valueOf(p.L)*(p.status==='自住'&&S.props.length===1?0.0006:0.0012+0.0004*(S.props.length-1))); flow -= tax; addLog(`繳納 ${titleOf(p.L)} 房屋稅 ${NT(tax)} 元${p.status!=='自住'?'（非自住適用囤房稅差別稅率）':''}。`); }
+    if (d.m===5){ const tax = Math.round(valueOf(p.L)*(p.status==='自住'&&S.props.length===1?0.0006:0.0012+0.0004*(S.props.length-1))); flow -= tax; addLog(`繳納 ${titleOf(p.L)} 房屋稅 ${NT(tax)} 元${p.status!=='自住'?(absOf(S.t)>=2024*12+6?'（非自住適用囤房稅2.0差別稅率，遊戲為簡化估算）':'（非自住適用較高稅率，遊戲為簡化估算）'):''}。`); }
     if (d.m===11){ const tax = Math.round(valueOf(p.L)*(p.status==='自住'?0.0003:0.0007)); flow -= tax; addLog(`繳納 ${titleOf(p.L)} 地價稅 ${NT(tax)} 元。`); }
     if (d.m===1 && S.t>0) p.L.age++;
     if (p.sale){
@@ -1589,7 +1609,7 @@ const DISC_HTML = `<h2>免責聲明與使用說明</h2><p class="sub">最後更�
 <h3>六、虛構角色與機構</h3><p>遊戲中的屋主、買方、銀行（聯興銀行、晴川商業銀行、松柏人壽）、房仲品牌、對話內容與其經營方式均為虛構，如與真實人物、企業或機構名稱雷同，純屬巧合，不代表任何真實機構的產品、利率或立場。遊戲中提及的地名、路名與歷史新聞事件僅作為背景描述。</p>
 <h3>七、議價與貸款情境</h3><p>遊戲中的議價話術是為了讓使用者認識常見的談判方式與其背後的心理，並非鼓勵在真實交易中使用不實陳述。現實中向銀行或交易對象提供不實資料，可能涉及民事或刑事責任。</p>
 <h3>八、個人資料與存檔</h3><p>本軟體不設會員、不收集姓名或聯絡方式。遊戲進度只儲存在使用者自己裝置的瀏覽器中，開發者無法讀取；清除瀏覽器資料後存檔即會消失。在 Claude 中使用 AI 對談時，輸入的文字會送交 Anthropic 處理並使用玩家自己的帳號額度；GitHub 版的街道地圖由 OpenStreetMap 提供並從其伺服器載入。</p>
-<h3>九、第三方資源與授權</h3><p>本軟體使用 Google Fonts 提供的 Noto Sans TC、Barlow Condensed 字型（SIL Open Font License），街道地圖資料 © OpenStreetMap 貢獻者（ODbL 授權）。其餘圖形與程式為本軟體自行製作。</p>
+<h3>九、第三方資源與授權</h3><p>本軟體使用 Google Fonts 提供的 Noto Sans TC、Barlow Condensed 字型（SIL Open Font License），街道地圖資料 © OpenStreetMap 貢獻者（ODbL 授權）。其餘圖形與程式為本軟體自行製作。本軟體中的外部連結僅為方便使用者查詢，連結網站的內容、服務與隱私政策由該網站自行負責，與本軟體無關。</p>
 <h3>十、責任限制</h3><p>本軟體按現狀提供，不保證內容正確、完整或不中斷。使用者因使用或信賴本軟體內容所生之任何直接或間接損失，開發者在法律允許的範圍內不負賠償責任。使用本軟體即表示您已閱讀並同意本聲明。</p>
 </div>`;
 function showDisclaimer(){ modal(DISC_HTML + `<div class="foot"><button class="btn red" id="discOk">我知道了</button></div>`).querySelector('#discOk').onclick=closeModal; }
