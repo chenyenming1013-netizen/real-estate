@@ -121,6 +121,26 @@ table.t td{padding:5px 0;border-bottom:1px dashed var(--line)}
 table.t td:last-child{text-align:right;font-weight:700}
 table.t tr.total td{border-top:2px solid var(--ink);border-bottom:0;font-size:16px;padding-top:8px}
 
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:0 0 14px;counter-reset:st;padding-right:36px}
+.step{position:relative;text-align:center;font-size:12px;color:var(--muted);padding-top:2px}
+.step::before{content:'';position:absolute;top:15px;left:-50%;width:100%;height:3px;background:var(--line);z-index:0}
+.step:first-child::before{display:none}
+.step i{position:relative;z-index:1;display:grid;place-items:center;width:30px;height:30px;margin:0 auto 4px;border-radius:50%;background:var(--soft);border:2px solid var(--line);font-style:normal;font-weight:900;font-family:"Barlow Condensed",sans-serif;font-size:16px;color:var(--muted)}
+.step b{display:block;font-size:13px;color:var(--muted)}
+.step.done i{background:var(--green);border-color:var(--green);color:#fff}
+.step.done::before,.step.cur::before{background:var(--green)}
+.step.done b{color:var(--green)}
+.step.cur i{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 0 4px rgba(215,38,61,.18)}
+.step.cur b{color:var(--ink)}
+.steptip{background:var(--soft);border-left:4px solid var(--red);border-radius:6px;padding:8px 12px;font-size:13px;margin:-4px 0 14px;line-height:1.6}
+.steptip b{color:var(--red)}
+.flow{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 4px;margin-bottom:14px}
+.flow h3{margin:0 0 10px;font-size:15px}
+.flow .steps{padding-right:0}
+.pending{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff8d6;border:1px solid #f0d36b;border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:14px;color:#5a4a00}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .pending{background:#3a3418;border-color:#6b5a1c;color:#f3e3a0} }
+@media (max-width:640px){ .step b{font-size:11px} .step small{display:none} .step i{width:26px;height:26px;font-size:14px} .step::before{top:13px} }
 /* chat */
 .nego{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px}
 .side{display:flex;flex-direction:column;gap:10px}
@@ -331,7 +351,7 @@ const BANK_T = [
   {id:'longer',label:'延長年限',text:'年限可以拉長到 40 年嗎？月付壓力會小一點。'},
   {id:'guarantor',label:'父母當保證人',text:'我父母可以當保證人，他們名下也有不動產。'}
 ];
-const KW_SELLER = {data:['實價','行情','成交','登錄','附近'],issue:['漏水','壁癌','管線','整修','修繕','屋況','違建'],cash:['現金','付現','預審','自備','快速','交屋'],deposit:['斡旋','訂金','誠意'],budget:['預算','極限','負擔'],compare:['別間','另一間','比較','其他物件'],praise:['喜歡','照顧','溫馨','漂亮','感情','家人','用心'],flaws:['老舊','公設','缺點','採光','吵','屋齡'],deadline:['今天','馬上','限時','現在就'],lowball:['七折','六折','打折','砍一半','砍三成'],market:['景氣','不好','不考慮','封頂','高於'],patience:['不急','慢慢等','等下一間','隨緣','可以等'],callbluff:['斡旋書','要約書','證明','真的有人','拿出來'],insult:['爛','垃圾','鬼屋','騙','坑人','白痴','凶宅']};
+const KW_SELLER = {data:['實價','行情','成交','登錄'],issue:['漏水','壁癌','管線','整修','修繕','屋況','違建'],cash:['現金','付現','預審','自備','快速交屋','很快交屋'],deposit:['斡旋','訂金','誠意'],budget:['預算','極限','負擔'],compare:['別間','另一間','比較','其他物件'],praise:['喜歡','照顧','溫馨','漂亮','感情','家人','用心'],flaws:['老舊','公設','缺點','採光','吵','屋齡'],deadline:['今天','馬上','限時','現在就'],lowball:['七折','六折','打折','砍一半','砍三成'],market:['景氣','不好','不考慮','封頂','高於'],patience:['不急','慢慢等','等下一間','隨緣','可以等'],callbluff:['斡旋書','要約書','證明','真的有人','拿出來'],insult:['爛','垃圾','鬼屋','騙','坑人','白痴','凶宅']};
 const KW_BANK = {stable:['穩定','年資','工作','雙薪','公務員','正職'],assets:['存款','財力','資產','股票','投資'],payroll:['薪轉','信用卡','往來','存在'],compare:['其他銀行','別家','他行','比較好','比價'],insurance:['保險','壽險','基金'],grace:['寬限','只繳利息','繳息'],longer:['40年','四十年','拉長','延長'],guarantor:['保證人','父母','爸媽']};
 
 // ======================= HELPERS =======================
@@ -530,7 +550,11 @@ function marketHTML(){
   const unit = unitNow(S.city,S.dist);
   const ls = S.listings.filter(l=>l.ck===S.city && l.di===S.dist);
   const yoy = (cityAvg(S.city)/(S.startAvg?.[S.city]||cityAvg(S.city))-1)*100;
-  return `<div class="seg" role="group" aria-label="城市">${Object.entries(CITIES).map(([k,c])=>`<button data-city="${k}" aria-pressed="${k===S.city}">${c.name}</button>`).join('')}</div>
+  const pend = S.listings.filter(l=>l.nego && l.nego.agreed);
+  const owned = S.props.length;
+  return `${pend.length?pend.map(l=>`<div class="pending">📝 <span><b>${esc(titleOf(l))}</b> 已談妥 ${W(l.nego.agreed)} 萬，尚未完成貸款與簽約。</span><button class="btn sm red" data-resume="${l.id}">繼續 Step 4 申請房貸</button></div>`).join(''):''}
+  ${owned<1?`<div class="flow"><h3>購屋流程</h3>${stepper(1,false)}<p class="meta" style="margin:-6px 0 8px">先在下方選縣市與行政區，點選想看的物件開始。每一步都會告訴你該做什麼。</p></div>`:''}
+  <div class="seg" role="group" aria-label="城市">${Object.entries(CITIES).map(([k,c])=>`<button data-city="${k}" aria-pressed="${k===S.city}">${c.name}</button>`).join('')}</div>
   <div class="chips">${city.dists.map((x,i)=>{ const u=unitNow(S.city,i); const tr=(u/unitAt(S.city,i,S.t-12)-1)*100; return `<button class="chip" data-dist="${i}" aria-pressed="${i===S.dist}"><b>${x[0]}</b><span class="n">${u.toFixed(1)} 萬/坪 <span class="${tr>=0?'up':'down'}" title="近一年漲跌">${tr>=0?'▲':'▼'}${Math.abs(tr).toFixed(1)}%</span></span></button>`; }).join('')}</div>
   <div class="mk">
     <div class="panel"><h3>${q}</h3>${mapHTML(S.city, S.dist, true)}
@@ -582,6 +606,7 @@ function bindMain(){
   m.querySelectorAll('[data-city]').forEach(b=>b.onclick=()=>{S.city=b.dataset.city;S.dist=0;render();});
   m.querySelectorAll('[data-dist]').forEach(b=>{ b.onclick=()=>{S.dist=+b.dataset.dist;render();}; b.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); S.dist=+b.dataset.dist; render(); } }; });
   m.querySelectorAll('[data-listing]').forEach(b=>b.onclick=()=>openListing(b.dataset.listing));
+  m.querySelectorAll('[data-resume]').forEach(b=>b.onclick=()=>{ const L=listing(b.dataset.resume); if (!L) return; const pr=L.nego.agreed; openBanks(DEALS[L.id] && DEALS[L.id].price===pr ? DEALS[L.id] : (DEALS[L.id]={L, price:pr, offers:{}})); });
   m.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.go;render();});
   m.querySelectorAll('[data-reno]').forEach(b=>b.onclick=()=>openReno(b.dataset.reno));
   m.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>openSell(b.dataset.sell));
@@ -600,13 +625,25 @@ const queue = [];
 $('#mw').addEventListener('mousedown', e=>{ if (e.target.id==='mw' && !$('#md').dataset.lock) closeModal(); });
 document.addEventListener('keydown', e=>{ if (e.key==='Escape' && $('#mw').classList.contains('open') && !$('#md').dataset.lock) closeModal(); });
 
+// ======================= 購屋流程步驟 =======================
+const STEPS = [
+  {t:'找物件',tip:'選擇縣市與行政區，比較物件開價和區域行情，挑出想看的房子。'},
+  {t:'實地看屋',tip:'看屋可以發現漏水、壁癌等問題，也能了解屋主的個性和賣屋原因，這些都是議價籌碼。'},
+  {t:'議價',tip:'用有根據的理由（實價登錄、屋況問題、付款誠意）爭取降價，也要留意屋主或仲介的話術，別把屋主惹毛。'},
+  {t:'申請房貸',tip:'比較不同銀行的成數、利率、年限與附加條件。每諮詢一家就會查一次聯徵，查太多次利率會被加碼。'},
+  {t:'簽約交屋',tip:'確認自備款與各項稅費都準備好，簽約用印、完稅、過戶設定、銀行撥款後點交。'}
+];
+function stepper(cur, withTip=true){
+  return `<div class="steps" aria-label="購屋流程：第 ${cur} 步，共 5 步">${STEPS.map((st,i)=>{ const n=i+1; const c = n<cur?'done':n===cur?'cur':''; return `<div class="step ${c}"><i>${n<cur?'✓':n}</i><b>${st.t}</b></div>`; }).join('')}</div>`
+    + (withTip?`<div class="steptip"><b>Step ${cur}　${STEPS[cur-1].t}</b>：${STEPS[cur-1].tip}</div>`:'');
+}
 // ======================= LISTING DETAIL =======================
 function openListing(id){
   const L = listing(id); if (!L) return;
   const seen = S.seen[id], v = valueOf(L), unit = unitNow(L.ck,L.di);
   const blocked = S.blocked[id] && S.blocked[id]>S.t;
   const P = PERS[L.seller.pers];
-  const md = modal(`<h2>${esc(titleOf(L))}</h2><p class="sub">${L.agent?'仲介代銷（買方服務費 1%）':'屋主自售（免仲介費）'}・刊登於 ${dateStr(L.listedAt)}</p>
+  const md = modal(`${stepper(seen?3:2)}<h2>${esc(titleOf(L))}</h2><p class="sub">${L.agent?'仲介代銷（買方服務費 1%）':'屋主自售（免仲介費）'}・刊登於 ${dateStr(L.listedAt)}</p>
     <div class="two"><div>${mapHTML(L.ck, L.di, false)}<p class="meta" style="margin:4px 0 0">物件位置：${esc(cityName(L)+L.road)}一帶</p></div>
     <div><div class="price n" style="font-size:40px">${W(L.ask)}<small>萬</small></div>
       <table class="t"><tr><td>權狀坪數</td><td>${L.ping} 坪（室內約 ${inPing(L)} 坪）</td></tr><tr><td>開價單價</td><td>${(L.ask/10000/L.ping).toFixed(1)} 萬/坪</td></tr><tr><td>類型／屋齡</td><td>${L.type}・${L.age} 年</td></tr><tr><td>樓層</td><td>${L.type==='透天'?`${L.total} 層透天`:`${L.floor} 樓／共 ${L.total} 樓`}</td></tr><tr><td>格局</td><td>${L.rooms}</td></tr><tr><td>車位</td><td>${L.parking?'坡道平面車位':'無'}</td></tr>
@@ -615,7 +652,7 @@ function openListing(id){
     ${seen?`<div class="note"><b>屋主：${L.seller.name}（${L.seller.age}歲）</b>・個性印象：<b>${P.label}</b>，${P.desc}。<br>賣屋原因：${L.seller.reason}。<br>屋況：${L.cond}/100　${L.issues.length?`發現問題：<b style="color:var(--red)">${L.issues.join('、')}</b>`:'沒有發現明顯問題。'}</div>`
           :`<div class="note">還沒去看過這間房子。實地看屋可以了解屋況、發現隱藏問題，也能跟屋主聊聊，摸清對方的個性與賣屋原因。</div>`}
     ${blocked?`<p class="warn" style="margin-top:10px">上次議價讓屋主很不愉快，他說 ${S.blocked[id]-S.t} 個月內不想再跟你談。</p>`:''}
-    <div class="foot">${seen?'':'<button class="btn ghost" id="viewBtn">預約看屋</button>'}<button class="btn red" id="negoBtn" ${blocked?'disabled':''}>開始議價</button></div>`);
+    <div class="foot">${seen?'':'<button class="btn red" id="viewBtn">Step 2 預約看屋</button>'}<button class="btn ${seen?'red':'ghost'}" id="negoBtn" ${blocked?'disabled':''}>${seen?'Step 3 開始議價 ▶':'跳過看屋直接議價'}</button></div>`);
   const vb = md.querySelector('#viewBtn'); vb && (vb.onclick=()=>{ S.seen[id]=true; addLog(`到 ${titleOf(L)} 看屋。`); save(); openListing(id); toast('看屋完成，屋況與屋主資訊已記錄'); });
   md.querySelector('#negoBtn').onclick=()=>openNego(id);
 }
@@ -644,7 +681,7 @@ function tacticText(id, L){
 function openNego(id){
   const L = listing(id); const P = PERS[L.seller.pers];
   const N = L.nego || (L.nego = {mood:L.seller.mood, lastAsk:L.ask, lastOffer:0, persuade:0, used:{}, hist:[], round:0, done:false});
-  const md = modal(`<h2>議價：${esc(L.road)} ${L.type}</h2><p class="sub">${L.agent?'由仲介居中斡旋，屋主會親自到場談':'屋主自售，直接和屋主面對面談'}　${aiOn?'・<b>AI 對談模式</b>：可以輸入任何話術':'・經典模式：依關鍵字判斷話術'}</p>
+  const md = modal(`${stepper(3)}<h2>議價：${esc(L.road)} ${L.type}</h2><p class="sub">${L.agent?'由仲介居中斡旋，屋主會親自到場談':'屋主自售，直接和屋主面對面談'}　${aiOn?'・<b>AI 對談模式</b>：可以輸入任何話術':'・經典模式：依關鍵字判斷話術'}</p>
   <div class="nego"><div class="side">
     <div class="who"><div class="avatar" style="background:${['#d7263d','#2f5bd3','#17805a','#8a5cc7','#c9704f'][L.seller.name.length%5]}">${L.seller.name[0]}</div><div><b>${L.seller.name}</b><div class="meta">${S.seen[id]?`${P.label}・${L.seller.age}歲`:'個性未知（看屋可得知）'}</div></div></div>
     <div><div class="meta">屋主情緒</div><div class="meter"><i id="moodBar"></i></div></div>
@@ -754,6 +791,7 @@ ${bluffNote?`【剛剛發生】${bluffNote}\n`:''}${N.rival?`【你們先前說�
 4. 情緒很差或買方太過分時可以 walkaway 結束談判。
 5. reply 用台灣口語繁體中文，1 到 3 句，貼合個性，不要提到遊戲、AI 或底價數字。
 6. 不要重複你在對話紀錄裡說過的句子或開頭，語氣要自然有變化；可以回應買方話中的細節、反問、帶點情緒或生活感。
+7. 買方問到管理費、鄰居、學區、交通、屋況、賣屋原因、交屋時間、家具家電等問題時，依你的個性回答（誠實、含糊帶過或避重就輕都可以），但不能捏造與上面設定矛盾的事實。
 只輸出 JSON：{"reply":"...","mood_change":-30到15的整數,"persuaded":0到2的整數,"decision":"accept或counter或talk或walkaway","counter_price":數字或null,"pressure":"rival或emigrate或scarce或notneedy或future或none"}`;
   const r = await ai(prompt);
   if (!r || typeof r.reply!=='string') return null;
@@ -799,10 +837,77 @@ const CLOSE = {
   walkaway:{rush:['算了算了，我找別的買方。','我沒時間跟你耗了。'],stubborn:['你這樣講我不想賣你了，請回吧。','我寧可放著也不賣你。'],investor:['我們認知差太多，不用再浪費彼此時間。','這筆交易我放棄。'],emotional:['你太過分了！我不賣了！','我不想再談了，你走吧。'],heir:['這樣談不下去，我們找其他買家。','我會跟家裡說你沒誠意。']}
 };
 const MOOD_PRE = {low:['（嘆了口氣）','（臉色有點難看）','（語氣變冷）','（皺起眉頭）'],high:['（笑著說）','（心情不錯）','（點點頭）','']};
+const REACT_MORE = {
+  data:{like:['你連附近哪幾筆成交都查了，真的很認真。','好啦，行情我也知道最近比較保守。'],neutral:['成交價會有特殊原因，像親友交易就比較低。','你看的那幾筆是低樓層吧？我這間樓層比較好。'],dislike:['網路查一查就以為很懂喔？','那些數字跟我這間沒得比。']},
+  issue:{like:['好，這點我認，整修費我們可以一起算一算。','你說得沒錯，這個我也想過要處理。'],neutral:['那個問題我可以先找人報價給你看。','小地方啦，不影響住。'],dislike:['每個來看的都講這個，我聽到都煩了。']},
+  cash:{like:['自備款充足的買方，我願意多給一點空間。','有預審好就少很多麻煩，這很加分。'],neutral:['付款能力我相信你，重點還是價格。']},
+  deposit:{like:['先付斡旋金很乾脆，我欣賞這種買方。'],neutral:['斡旋金多少都是心意，我收到了。']},
+  budget:{like:['預算卡在那邊我可以理解，我們再想辦法。'],neutral:['預算可以再拉一下嗎？差一點點而已。','要不要回家再跟家人商量看看？']},
+  compare:{neutral:['那間的屋況跟格局，跟我這間比過嗎？','附近我也知道那間，它屋齡比較老喔。'],dislike:['拿別人的房子跟我比，不太公平吧。']},
+  market:{like:['你說的我同意，現在確實不是賣方市場。'],neutral:['景氣歸景氣，好地段還是有人搶。']},
+  patience:{like:['你不急的話……那我可能要再想想怎麼讓步了。'],neutral:['慢慢等也好，但好房子不會一直在這裡等你。']},
+  praise:{like:['這個陽台是我太太最喜歡的地方。','你看得出來我用心，我就很高興了。'],neutral:['住久了就會發現它的好。']},
+  flaws:{neutral:['缺點每間都有，就看你在不在意。'],dislike:['你這樣講，我真的不太想賣你了。']},
+  deadline:{neutral:['給我一點時間跟家人討論好嗎？'],dislike:['買房子又不是買菜，哪有這樣逼的。']},
+  chat:['要不要再看一次房子？我可以帶你看陽台和儲藏室。','有什麼疑問都可以問，我知道的都跟你說。','你覺得這間跟你之前看的比起來怎麼樣？','附近晚上很安靜，很好睡喔。','這間的採光早上最漂亮。']
+};
+for (const k in REACT_MORE){ const v=REACT_MORE[k]; if (Array.isArray(v)) REACT[k].push(...v); else for (const t in v) REACT[k][t].push(...v[t]); }
+const SELLER_QA = [
+  {kw:['管理費','管委會'], a:(L)=> (L.type==='電梯大樓'||L.type==='華廈') ? [`管理費一坪大概 ${L.ck==='tp'?90:65} 元，一個月 ${NT(L.ping*(L.ck==='tp'?90:65))} 左右。`,'管委會運作得不錯，公設都有專人維護。','管理費有包含垃圾代收跟大廳管理，很方便。'] : [`這是${L.type}，沒有管理費喔。`,'沒有管委會，樓梯間是鄰居輪流打掃。']},
+  {kw:['為什麼賣','為何賣','原因','怎麼會賣','為什麼要賣'], a:(L,P,k)=>({rush:[`老實說是${L.seller.reason}。`,`主要是${L.seller.reason}，時間有點趕。`],stubborn:[`${L.seller.reason}，不然我是捨不得賣的。`],investor:['就資產配置的考量，資金要調度。','持有一段時間了，想換個標的。'],emotional:[`唉……${L.seller.reason}，說來話長。`],heir:[`${L.seller.reason}，大家意見很多，想早點處理。`]})[k]},
+  {kw:['鄰居','住戶','鄰里','樓上','樓下'], a:(L)=> L.issues.includes('鄰居嘈雜') && S.seen[L.id] ? ['樓上小孩比較活潑啦，晚上就還好。','鄰居是有一點吵，不過大家都很客氣。'] : ['鄰居都很好相處，很多都住十幾年了。','這棟住戶單純，大多是自住的家庭。','逢年過節大家還會互相送東西。']},
+  {kw:['學區','學校','國小','國中','上學'], a:()=>['走路十分鐘就有國小，很多家長特地搬來。','附近有國中小，接送很方便。','學區算不錯，這也是當初我買的原因之一。']},
+  {kw:['捷運','公車','交通','通勤','停車','車位'], a:(L)=>[L.parking?'有附車位，是坡道平面，進出很方便。':'沒有車位，不過附近有月租停車場，一個月三四千。','走路到大眾運輸大概十分鐘。','門口就有公車站，好幾條線經過。','開車上快速道路很方便。']},
+  {kw:['有沒有漏水','會不會漏水','屋況如何','有什麼問題','有問題嗎','狀況'], a:(L,P,k)=>{ const is=L.issues[0]; if (!is) return ['屋況很好，前幾年才整理過。','沒什麼問題，住進來就可以用。']; return ({investor:[`老實說${is}是有，價格我有考慮進去。`],heir:[`${is}的部分我們知道，所以價格開得比較實在。`],rush:[`有一點${is}的狀況，我才開得比較便宜。`],stubborn:['我們住得好好的，沒什麼大問題啦。'],emotional:['嗯……小地方有一點，但不影響生活啦。']})[k]; }},
+  {kw:['底價','最低','降多少','少多少','空間','可以算便宜'], a:()=>['底價不能講啦，你出個價我們再談。','空間是有一點，但要看你的誠意。','你先出價，我再看看能不能接受。','這種事不是我先說的吧（笑）。']},
+  {kw:['地震','結構','耐震','海砂','輻射','凶宅'], a:()=>['這棟建商口碑不錯，大地震也沒怎麼樣。','結構沒問題，海砂輻射檢測報告可以給你看。','產權跟屋況都乾淨，簽約時會附現況說明書。']},
+  {kw:['什麼時候','交屋','搬走','點交','多久可以'], a:(L,P,k)=> k==='rush' ? ['隨時都可以，簽完一個月內就能交屋。','我已經找好新地方了，交屋時間配合你。'] : ['我需要兩三個月找新住處，交屋時間可以談。','交屋時間我們可以寫進合約，彼此都方便。']},
+  {kw:['家具','家電','冷氣','附送','留下'], a:()=>['冷氣可以留給你，其他家具我要帶走。','價格談得攏的話，廚具家電都可以留下來。','要留什麼我們再寫進合約，免得之後有爭議。']}
+];
+// ---- 第二批語庫 ----
+const CLOSE_MORE = {
+  counter:{rush:['你再加一點，我們今天就收工。','我讓這些已經很痛了，你也幫幫忙。','就這個數字，再談下去我也撐不住。'],stubborn:['我讓這一步是給你面子。','這價錢我跟老伴商量很久才決定的。','再降，我寧願留給孫子住。'],investor:['這是最後一輪調整，你評估看看。','我把利潤再壓一點，給你這個價。','數字我算得很清楚，這是我的底線附近了。'],emotional:['你人真的不錯，我就破例一次。','好啦好啦，看你這麼喜歡，我再少一點。','我想了想……還是讓你一點吧。'],heir:['我先自己吸收一點，這個價你看看。','大哥那邊我再去講，這個價應該還說得過去。','我們幾個討論到這個數字，算是很有誠意了。']},
+  hold:['這已經是我能接受的極限，不用再試了。','我不會再降了，你可以回去考慮。','價格就這樣，其他條件倒是可以談。','我寧可等下一個買方，也不想再降。'],
+  talk:{rush:['我這週就想定案，你考慮得怎麼樣？','有問題趕快問，我都可以回答。','你喜歡的話我們就快點談價格。'],stubborn:['年輕人做事要穩，你慢慢想。','這間房子住起來真的很舒服，你住過就知道。','價格是一回事，我更在意買的人會不會好好照顧它。'],investor:['你的預算和貸款規劃都想清楚了嗎？','我比較在意成交速度和付款條件。','你可以把你的出價依據說給我聽。'],emotional:['你覺得這間哪裡最吸引你？','我很好奇，你們是怎麼看到這間的？','跟你聊天蠻開心的，我們慢慢談。'],heir:['我們不太懂這些，你直接講你的想法。','我想聽聽你的出價依據，好回去說服家人。','你出價合理的話，我會盡力幫你爭取。']},
+  accept:{rush:['太好了，這週就簽約吧！','就這麼決定，我馬上聯絡代書。'],stubborn:['好吧，就交給你們了。','這個價我同意了，你們要住得開心喔。'],investor:['沒問題，準備簽約文件吧。','成交，我們把細節寫清楚。'],emotional:['好！我今天真的很開心。','就這樣吧，感覺你們是對的人。'],heir:['大家都同意了，我們約時間簽約。','這個價我們接受，謝謝你的耐心。']},
+  walkaway:{rush:['不談了，下一位。'],stubborn:['我送客了，請回吧。'],investor:['我們就到這裡吧。'],emotional:['我心情很差，不想談了。'],heir:['我們家不會賣給你了。']}
+};
+for (const d in CLOSE_MORE){ if (Array.isArray(CLOSE_MORE[d])) CLOSE[d].push(...CLOSE_MORE[d]); else for (const t in CLOSE_MORE[d]) CLOSE[d][t].push(...CLOSE_MORE[d][t]); }
+const SELLER_QA2 = [
+  {kw:['公設比','公設','實坪','室內'], a:(L)=>[`權狀 ${L.ping} 坪，室內大概 ${inPing(L)} 坪，公設比在這一帶算正常。`,'公設比確實有一點，但大廳跟頂樓花園都很實用。']},
+  {kw:['電梯','爬樓梯','幾樓'], a:(L)=> L.type==='公寓' ? [`這是公寓沒有電梯，在 ${L.floor} 樓，爬習慣就還好。`,'沒電梯是缺點，所以價格也比較實在。'] : [`在 ${L.floor} 樓，${L.type==='透天'?'透天是自己一整棟':'電梯很快，不用等'}。`,'電梯每年都有定期保養。']},
+  {kw:['採光','西曬','座向','方位','通風'], a:(L)=> L.issues.includes('採光不佳') && S.seen[L.id] ? ['採光是比較普通，白天要開燈。','座向不是最好，但夏天比較不熱。'] : ['座向坐北朝南，採光通風都不錯。','早上陽光會照進客廳，很舒服。','前後都有窗，空氣對流很好。']},
+  {kw:['噪音','吵','大馬路','安靜'], a:()=>['臨巷子，晚上很安靜。','白天會有一點車聲，關窗就聽不太到。','這裡算是住宅區，沒什麼噪音。']},
+  {kw:['市場','超市','醫院','診所','便利商店','生活機能'], a:()=>['走路五分鐘有超市，傳統市場也不遠。','附近診所、藥局、便利商店都有，很方便。','生活機能很好，買東西不用開車。']},
+  {kw:['公園','綠地','運動'], a:()=>['旁邊就有公園，早上很多人在運動。','綠地不多，但河濱自行車道騎車就到。']},
+  {kw:['治安','安全','警衛','保全'], a:(L)=>[L.type==='電梯大樓'?'有 24 小時警衛，門禁很嚴。':'治安很好，派出所就在附近。','住這麼多年從來沒遇過小偷。']},
+  {kw:['寵物','養狗','養貓'], a:(L)=>[L.type==='電梯大樓'?'社區規約可以養寵物，但搭電梯要抱著。':'可以養寵物，我們以前也養過狗。','鄰居很多人有養，沒問題。']},
+  {kw:['會漲','增值','未來','前景','投資價值'], a:(L,P,k)=> k==='investor' ? ['未來怎樣沒人說得準，但這區需求一直都在。','我不跟你保證漲，但地段是不會變的。'] : ['以後會不會漲我不敢講，自住的話住得舒服最重要。','這附近這幾年一直在發展，生活越來越方便。']},
+  {kw:['產權','持分','共有','繼承'], a:(L,P,k)=> k==='heir' ? ['產權是兄弟姊妹共有，簽約時大家都會到。','繼承登記都辦好了，產權很清楚。'] : ['產權清楚，簽約時可以請代書幫你確認。','沒有被查封或設定糾紛，你放心。']},
+  {kw:['頂樓','加蓋','違建'], a:(L)=> L.issues.includes('頂樓加蓋（違建）') ? ['頂樓加蓋是早期就有的，算既存違建。','加蓋的部分不算在權狀裡，這點要先說清楚。'] : ['頂樓是大家共用的，沒有加蓋。']},
+  {kw:['裝潢','整修過','翻修'], a:(L)=> L.cond>70 ? ['前幾年才重新裝潢過，水電也換過。','裝潢花了不少錢，你可以直接入住。'] : ['裝潢比較舊了，你可能會想重新弄。','基本的都可以用，要不要重新裝潢看你。']},
+  {kw:['管線','水電','電線','水管'], a:(L)=> L.issues.includes('管線老舊') && S.seen[L.id] ? ['管線是原始的，建議你之後換一換。','水電是老了一點，換新大概要幾十萬。'] : ['水電前幾年整理過，沒什麼問題。','管線都還正常，沒有跳電或堵塞。']},
+  {kw:['房貸','設定','還有貸款','抵押'], a:()=>['我還有一點房貸，成交時會從價金裡直接塗銷。','銀行的設定簽約後會處理，走履約保證很安全。']},
+  {kw:['斡旋','要約','訂金怎麼付'], a:(L)=> L.agent ? ['【仲介】斡旋金是表達誠意，屋主同意後就轉成定金。','【仲介】也可以簽要約書，不用先付錢。'] : ['你可以先付一點定金，我們寫清楚就好。','要不要找代書一起來，比較有保障。']}
+];
+SELLER_QA.push(...SELLER_QA2);
+const SELLER_SOCIAL = {
+  greet:{kw:['你好','您好','打擾','午安','早安','晚安','哈囉'], say:['你好你好，請坐。','歡迎歡迎，外面很熱吧？','你好，房子看得還喜歡嗎？','來，先喝杯水再慢慢聊。'], mood:2},
+  thanks:{kw:['謝謝','感謝','辛苦了'], say:['不客氣啦。','哪裡哪裡，應該的。','客氣了，有問題再問。'], mood:2},
+  sorry:{kw:['抱歉','不好意思','對不起','失禮'], say:['沒關係啦，我也有點激動。','好啦，我們重新好好談。','說開就好，我不會記在心上。'], mood:5},
+  think:{kw:['回去想想','考慮一下','再想想','跟家人討論','商量一下'], say:{rush:['別想太久喔，這週還有人約看。','好，但我希望你這兩天就給我答覆。'],stubborn:['好，想清楚再來，我不急。','買房子是大事，慢慢想沒關係。'],investor:['可以，但價格不保證會一直這樣。','好，有結論再通知我。'],emotional:['好啊，希望你們會喜歡這裡。','嗯，我等你們的好消息。'],heir:['好，我也要回去跟家人說一下。','沒問題，大家都想想。']}, mood:0},
+  joke:{kw:['哈哈','笑死','開玩笑'], say:['哈哈，你這個人很有趣。','（笑）你很會聊天耶。'], mood:3}
+};
+const AGENT_LINES = ['【仲介】屋主跟買方都有誠意，我們再拉近一點就好。','【仲介】我幫兩位整理一下，現在差距其實不大。','【仲介】今天能談到這裡已經很不錯了。','【仲介】價格之外，交屋時間跟家具也可以一起談。','【仲介】我私下跟您說，屋主其實蠻喜歡您的。'];
+const OFFER_TREND = {up:['你加了 {d} 萬，我感受到誠意了。','有往上加，這樣比較好談。','嗯，這次比較像樣了。'], big:['一下加這麼多？好，我們認真談。'], same:['你剛剛就出這個價了耶。','同一個數字再講一次，我還是一樣的答案。','價格沒動，我很難跟著動喔。'], down:['怎麼越出越低？這樣我很難談下去。','你上次出得比較高耶，這樣不太對吧。']};
+const FATIGUE = ['我們已經談很久了，給個痛快吧。','談了這麼多回，你到底想不想買？','我等一下還有事，我們快點決定好嗎？','說真的，我有點累了。'];
 function sayOne(pool, N){ N.said = N.said||{}; const fresh = pool.filter(x=>!N.said[x]); const c = pick(fresh.length?fresh:pool); N.said[c]=1; return c; }
 function sellerLocal(L,N,text,offer){
   const P = PERS[L.seller.pers];
-  const hits = detect(text, KW_SELLER);
+  const isQ = /[？?]|嗎|多少|如何|怎麼|有沒有|會不會|是不是/.test(text);
+  const qaFirst = SELLER_QA.find(q=>q.kw.some(w=>text.includes(w)));
+  let hits = detect(text, KW_SELLER);
+  if (isQ && qaFirst) hits = hits.filter(h=>!['issue','flaws','compare','market','data'].includes(h));
   let mood=0, pers=0; const lines=[];
   const base = {data:[1.2,-2],issue:[1.5,-2],cash:[0.8,3],deposit:[0.9,5],budget:[0.5,-1],compare:[0.7,-4],market:[1.0,-3],patience:[0.9,-2],praise:[0.3,7],flaws:[0.8,-7],deadline:[0.6,-6],lowball:[0,-22],insult:[0,-28]};
   for (const h of hits){
@@ -816,6 +921,11 @@ function sellerLocal(L,N,text,offer){
   }
   if (!hits.length && text.length>6) mood+=1;
   if (N.round>8) mood -= 4;
+  const qa = SELLER_QA.find(q=>q.kw.some(w=>text.includes(w)));
+  const social = Object.entries(SELLER_SOCIAL).find(([k,v])=>v.kw.some(w=>text.includes(w)));
+  if (social) mood += (social[0]==='sorry' && N.mood>=60) ? 0 : social[1].mood;
+  let trend = '';
+  if (offer && N.lastOffer){ const d=offer-N.lastOffer; if (d>N.lastOffer*0.05){ trend='big'; mood+=4; } else if (d>0){ trend='up'; mood+=2; } else if (d===0){ trend='same'; mood-=3; } else { trend='down'; mood-=8; } }
   let decision='talk', counter=0;
   const P2 = {...N, persuade:N.persuade+pers/1.2};
   const res = effReserve(L,P2);
@@ -829,20 +939,26 @@ function sellerLocal(L,N,text,offer){
   const parts = [];
   const moodAfter = N.mood + mood;
   if (moodAfter<30 && Math.random()<0.6) parts.push(sayOne(MOOD_PRE.low,N)); else if (moodAfter>80 && Math.random()<0.4) parts.push(sayOne(MOOD_PRE.high,N));
+  if (social && !hits.includes('insult')){ const sv=social[1].say; parts.push(sayOne(Array.isArray(sv)?sv:sv[tone],N)); }
   if (lines.includes('liar')) parts.push(sayOne(REACT.liar,N));
   else if (hits.includes('insult')) parts.push(sayOne(REACT.insult,N));
   else if (hits.includes('lowball')) parts.push(sayOne(REACT.lowball,N));
   else {
     const h = hits.filter(x=>REACT[x] && !Array.isArray(REACT[x]))[0];
     if (h){ const kind = P.likes.includes(h)?'like':P.dislikes.includes(h)?'dislike':'neutral'; const pool = REACT[h][kind].length?REACT[h][kind]:REACT[h].neutral; parts.push(sayOne(pool,N)); }
-    else if (!offer) parts.push(sayOne(REACT.chat,N));
+    if (qa){ const ans = qa.a(L,P,L.seller.pers); if (ans && ans.length) parts.push(sayOne(ans,N)); }
+    if (!h && !qa && !offer && !social) parts.push(sayOne(REACT.chat,N));
   }
-  if (offer && decision!=='accept' && decision!=='walkaway'){
+  if (trend && decision!=='walkaway') parts.push(sayOne(OFFER_TREND[trend],N).replace('{d}',W(offer-N.lastOffer)));
+  if (offer && decision!=='accept' && decision!=='walkaway' && (!trend || Math.random()<0.4)){
     const r = offer/N.lastAsk; const band = OFFER_REACT.find(([lim])=>r<lim)[1];
     parts.push(sayOne(band,N).replace('{gap}',W(N.lastAsk-offer)).replace('{unit}',(offer/10000/L.ping).toFixed(1)));
   }
+  if (N.round>8 && decision!=='accept' && parts.length<3 && Math.random()<0.5) parts.push(sayOne(FATIGUE,N));
+  while (parts.length>3) parts.splice(parts.length-1,1);
+  if (L.agent && decision==='counter' && parts.length<3 && Math.random()<0.25) parts.push(sayOne(AGENT_LINES,N));
   const holdNow = decision==='counter' && counter>=N.lastAsk-5000;
-  parts.push(sayOne(holdNow ? CLOSE.hold : CLOSE[decision][tone], N));
+  if (!(qa && !offer && decision==='talk' && Math.random()<0.5)) parts.push(sayOne(holdNow ? CLOSE.hold : CLOSE[decision][tone], N));
   const reply = parts.filter(Boolean).join(' ');
   return {reply, mood, persuade:pers/1.2, decision, counter};
 }
@@ -902,7 +1018,7 @@ function dealAgreed(L, price){
 function showAgreed(L, price){
   const md=$('#md');
   const f = document.createElement('div'); f.className='note'; f.style.marginTop='12px';
-  f.innerHTML = `<b>價格談妥：${W(price)} 萬</b>（比開價少 ${W(L.ask-price)} 萬，${((1-price/L.ask)*100).toFixed(1)}%）。接下來要安排資金：找銀行談房貸，或全額付現。<div class="foot"><button class="btn red" id="toBank">安排房貸 ▶</button></div>`;
+  f.innerHTML = `<b>✓ Step 3 完成，價格談妥：${W(price)} 萬</b>（比開價少 ${W(L.ask-price)} 萬，${((1-price/L.ask)*100).toFixed(1)}%）。<br>下一步要安排資金：找銀行談房貸，或全額付現。<div class="foot"><button class="btn red" id="toBank">Step 4 申請房貸 ▶</button></div>`;
   md.querySelector('.nego').after(f);
   md.querySelector('#send').disabled=true; md.querySelector('#acceptAsk').disabled=true;
   f.querySelector('#toBank').onclick=()=>openBanks(DEALS[L.id] && DEALS[L.id].price===price ? DEALS[L.id] : (DEALS[L.id]={L, price, offers:{}}));
@@ -926,7 +1042,7 @@ function buyCosts(price, loanAmt, L, extra=0){
 function openBanks(deal){
   const {L, price} = deal;
   const C = loanCase(price, L);
-  const md = modal(`<h2>安排房貸</h2><p class="sub">${esc(titleOf(L))}・成交價 ${W(price)} 萬</p>
+  const md = modal(`${stepper(4)}<h2>安排房貸</h2><p class="sub">${esc(titleOf(L))}・成交價 ${W(price)} 萬</p>
     <div class="note"><b>本案適用：${C.label}</b><br>依 ${C.era}與銀行實務：本案成數上限 <b>${Math.round(C.cap*100)}%</b>、${C.grace?'可申請寬限期（最長 3 年）':'<b>不得</b>給寬限期'}、年限最長 ${C.maxY} 年。銀行會以「成交價與鑑價取低者」計算貸款，並檢視負債比（月付約不超過家庭月收入 6 成）。<br>每諮詢一家銀行就會查一次聯徵，近 3 個月查詢太多次會被加碼利率。目前近 3 個月查詢：<b>${jcicCount()} 次</b>。</div>
     <h3 style="margin:14px 0 8px">選擇銀行</h3>
     <div class="banks">${BANKS.map(b=>`<button class="bank" data-bank="${b.id}"><span class="k">${b.kind}</span><b>${b.name}</b><p>${b.style}</p>${deal.offers[b.id]?`<p style="color:var(--ink)">已開條件：${deal.offers[b.id].ltv}%・${deal.offers[b.id].rate.toFixed(2)}%</p>`:''}</button>`).join('')}</div>
@@ -956,7 +1072,7 @@ function openBankChat(deal, bank){
     deal.bankState = {...(deal.bankState||{}), [bank.id]:B};
   }
   const base = () => Math.min(price, B.appraisal);
-  const md = modal(`<h2>${bank.name}・房貸面談</h2><p class="sub">${bank.kind}・${esc(C.label)}・${aiOn?'AI 對談模式':'經典對談模式'}</p>
+  const md = modal(`${stepper(4,false)}<h2>${bank.name}・房貸面談</h2><p class="sub">${bank.kind}・${esc(C.label)}・${aiOn?'AI 對談模式':'經典對談模式'}</p>
   <div class="nego"><div class="side">
     <div class="terms">
       <div>銀行鑑價<b class="n" id="tAppr"></b></div><div>核貸成數<b class="n" id="tLtv"></b></div>
@@ -1000,6 +1116,7 @@ function openBankChat(deal, bank){
   upd();
   md.querySelectorAll('.tact button').forEach(b=>b.onclick=()=>{ const ta=md.querySelector('#say'); const t=BANK_T.find(x=>x.id===b.dataset.t); ta.value=(ta.value?ta.value+'\n':'')+t.text; ta.focus(); });
   md.querySelector('#back').onclick=()=>openBanks(deal);
+  md.querySelector('#acceptLoan').textContent='接受方案，前往 Step 5 簽約';
   md.querySelector('#acceptLoan').onclick=()=>{
     const amt = Math.round(base()*B.ltv/100/10000)*10000;
     openClosing(deal, {bank:bank.name, amt, rate:B.rate, years:B.years, grace:B.grace, fee:B.fee+B.conds.reduce((s,c)=>s+(c.cost||0),0), conds:B.conds.map(c=>c.text)});
@@ -1038,31 +1155,110 @@ async function bankAI(deal,bank,B,C,text){
 【對話紀錄】
 ${B.hist.slice(-8).map(h=>`${h.who==='me'?'客戶':'專員'}：${h.text}`).join('\n')}
 
-像真實的銀行專員一樣回應：合理的財力證明、薪轉往來、真實的比價能小幅改善條件；搭配房貸壽險或理財商品可以換成數但要列為附加條件並寫出一次性費用；客戶提到的財力、收入或他行條件都要請對方提供文件佐證，沒有文件就不調整；違反規定的要求要委婉拒絕並說明是央行規定或內規。每次調整幅度要小（成數最多 ±5 個百分點、利率最多 ±0.15%）。
+像真實的銀行專員一樣回應，語氣自然、每次說法不同，不要重複對話紀錄裡說過的句子；客戶問到利率型態、違約金、鑑價、撥款時程、負債比等問題時要具體回答。合理的財力證明、薪轉往來、真實的比價能小幅改善條件；搭配房貸壽險或理財商品可以換成數但要列為附加條件並寫出一次性費用；客戶提到的財力、收入或他行條件都要請對方提供文件佐證，沒有文件就不調整；違反規定的要求要委婉拒絕並說明是央行規定或內規。每次調整幅度要小（成數最多 ±5 個百分點、利率最多 ±0.15%）。
 只輸出 JSON：{"reply":"1到3句台灣銀行職場口語","ltv":百分比數字如75,"rate":數字如2.35,"years":整數,"grace_years":整數,"fee":整數元,"conditions":[{"text":"條件說明","cost":一次性費用元整數}],"trust_change":-20到10的整數}`;
   const r = await ai(prompt);
   if (!r || typeof r.reply!=='string') return null;
   return {reply:r.reply, ltv:+r.ltv, rate:+r.rate, years:parseInt(r.years), grace:parseInt(r.grace_years)||0, fee:parseInt(r.fee), conds:Array.isArray(r.conditions)?r.conditions:null, trust:parseInt(r.trust_change)||0};
 }
+const BANK_SAY = {
+  stable:['工作年資穩定是加分，我幫您在利率上爭取一點。','科技業雙薪，在我們的評分系統裡是很好的條件。','收入穩定的客戶我們最歡迎，我往上呈報看看。','您的職業類別屬於優良客群，利率可以再漂亮一點。'],
+  assetsOk:['財力證明充足的話，我可以往上呈報提高成數。','存款這麼穩，風險評估會好看很多。','有這些資產佐證，主管那邊比較好說話。'],
+  assetsNo:['財力證明的部分，存款金額可能不太夠支撐更好的條件。','這些存款扣掉自備款就不多了，我們會比較保守。'],
+  payroll:['薪轉加信用卡往來，這個我們很歡迎，利率可以再減碼。','如果薪轉到本行，我可以套用往來客戶的優惠利率。','我們有薪轉戶專案，利率可以再降一點。'],
+  compareOk:['您說的條件我了解，{bank}那邊確實不錯，我盡量跟上。','{bank}開這樣喔？我跟主管爭取看看能不能比照。','好，既然{bank}有這個條件，我們也不想失去您這位客戶。'],
+  compareNo:['可以請您提供他行的核貸通知嗎？沒有書面我們比較難調整。','口頭說的條件我們沒辦法比照，要看到核貸書喔。','每位客戶都說別家比較好，但我需要書面資料才能呈報。'],
+  insurance:['搭配房貸壽險的話，成數我可以再往上申請，保費是一次繳清。','房貸壽險也是保障家人，萬一有狀況可以清償貸款。','有保險的話風險低很多，成數比較好拉。'],
+  graceOk:['首購自住可以申請寬限期，先給您 {g} 年，這段期間只繳利息。','寬限期 {g} 年沒問題，不過寬限期後月付會變高，要先規劃喔。'],
+  graceNo:['不好意思，依照央行規定，這個案件不能給寬限期。','這個案件在管制範圍內，寬限期沒辦法給。'],
+  longerOk:['首購自住可以到 40 年，不過總利息會多付不少喔。','40 年月付會輕很多，但建議有餘力時提前還款。'],
+  longerNo:['第二戶以上最長只能到 30 年，這是規定。','年限我最多只能給到 30 年，再長系統不會過。'],
+  guarantor:['有保證人的話，負債比我們可以放寬評估。','父母有不動產當後盾，審核會順利很多。'],
+  repeat:['這部分您剛才提過了，我們已經有評估進去。','這點已經算進條件裡了喔。','同樣的條件我沒辦法再加分了。']
+};
+const BANK_QA = [
+  {kw:['固定','機動','浮動','利率會變','升息'], a:()=>['我們的房貸是機動利率，會跟著指標利率調整，央行升息就會跟著變。','機動利率是「指標利率加碼」，指標跟著定儲利率走。','也有分段式利率，不過一般客戶多半選一段式機動。']},
+  {kw:['提前還','違約金','綁約','清償'], a:()=>['前 2 年提前清償會有違約金，第一年 1%、第二年 0.5%，之後就沒有。','部分還款也算喔，綁約期過後再還比較划算。','如果之後可能賣房，綁約期要特別注意。']},
+  {kw:['鑑價','估價','鑑定'], a:(B)=>[`這間我們鑑價是 ${W(B.appraisal)} 萬，貸款以成交價和鑑價取低的來算。`,'鑑價由合作的估價單位做，通常會比市價保守一點。','鑑價低於成交價很常見，差額就要用自備款補。']},
+  {kw:['手續費','開辦費','費用','規費'], a:(B)=>[`開辦費是 ${NT(B.fee)} 元，另外還有抵押權設定規費跟代書費。`,'開辦費可以再談，但設定規費是政府收的，省不了。']},
+  {kw:['多久','時間','撥款','對保','審核','送件'], a:()=>['資料齊全的話，大約 7 到 10 個工作天可以核貸。','核貸後安排對保，再配合代書的時程撥款。','如果需要補件，時間會再往後延一點。']},
+  {kw:['負債比','月付','還款能力','收入夠'], a:(B)=>[`我們看的是月付金不要超過家庭月收入的 ${B.guarantor?7:6} 成左右。`,'負債比會把信貸、車貸、卡費分期都算進去喔。','月付壓力建議抓在收入的三分之一以內，生活會比較輕鬆。']},
+  {kw:['聯徵','信用分數','信用評分','查詢次數'], a:()=>[`您近三個月聯徵查了 ${jcicCount()} 次，太多次銀行會覺得您四處在借錢。`,'信用卡準時繳、沒有遲繳紀錄，信用評分就會比較好。']},
+  {kw:['成數','可以貸多少','最多貸','貸幾成','能貸'], a:(B,C)=>[`依規定這個案件最高 ${Math.round(C.cap*100)}%，目前給您 ${B.ltv}%。`,'成數主要看鑑價、負債比和您的信用狀況。','成數拉高的話，利率通常也會跟著調整喔。']},
+  {kw:['寬限期是什麼','寬限期要注意','只繳利息會怎樣'], a:()=>['寬限期只繳利息，本金沒有減少，期滿後月付會一下子變高。','寬限期適合前幾年資金比較緊的人，但總利息會變多。']}
+];
+const BANK_IDLE = {
+  gov:['了解。公股行庫比較重視財力與信用，您有相關資料可以提供。','好的，我照本行規定幫您評估。','有其他問題都可以提出來，我一項一項幫您確認。','我們的條件比較穩健，利率在市場上算是低的。'],
+  priv:['我們這個月剛好有房貸專案，條件可以再談喔！','您考慮看看薪轉或信用卡，我可以幫您多爭取一點。','有任何需求都可以跟我說，我們很彈性。','我們審核速度很快，資料齊全一週內就有結果。'],
+  ins:['我們壽險房貸年限比較彈性，月付壓力可以降低。','搭配保障型保單的話，條件還有空間。','您可以比較一下，我們的成數算是很有競爭力的。','很多首購族選我們，就是看中年限跟成數的彈性。']
+};
+const BANK_SAY_MORE = {
+  stable:['年資超過五年，在我們這邊是加分項目。','雙薪家庭的還款來源比較分散，風險低。'],
+  assetsOk:['存款證明加上投資部位，條件可以再好一點。','您的財力很漂亮，我會在簽呈裡特別註明。'],
+  assetsNo:['這部分可能還要補一些資料，才能談更好的條件。'],
+  payroll:['薪轉加信用卡消費門檻達成的話，利率還能再減。','往來越深，我們給的條件就越好。'],
+  compareOk:['好，我把您的狀況跟主管報告，盡量比照{bank}。','我們不想輸給{bank}，我來想辦法。'],
+  compareNo:['沒有書面的話，我只能照標準條件幫您送件。'],
+  insurance:['保費可以一次繳或分期，一次繳通常比較划算。','有了房貸壽險，主管看案子也比較安心。'],
+  graceOk:['寬限期 {g} 年幫您申請，期滿前我們會再通知您。'],
+  graceNo:['規定是死的，這部分我真的沒辦法通融。'],
+  longerOk:['40 年的話，月付可以降不少，但要確認年齡加年限不超過規定。'],
+  longerNo:['依規定這個案件最長就是 30 年。'],
+  guarantor:['保證人要一起來對保簽名，責任跟借款人一樣喔。'],
+  repeat:['這個條件剛剛已經談過了，我們看看其他部分吧。']
+};
+for (const k in BANK_SAY_MORE) BANK_SAY[k].push(...BANK_SAY_MORE[k]);
+const BANK_IDLE_MORE = {gov:['公股銀行的好處是利率穩、流程透明。','有任何不清楚的地方，我都可以說明。','資料準備齊全，審核會很順利。'],priv:['我們客戶滿意度很高，很多都是轉介紹來的。','您今天決定的話，我可以優先幫您送件。','條件有任何想調整的，都可以跟我說。'],ins:['壽險房貸很適合想降低月付壓力的首購族。','我們也可以幫您做整體的財務規劃。','保障跟房貸一起規劃，比較安心。']};
+for (const k in BANK_IDLE_MORE) BANK_IDLE[k].push(...BANK_IDLE_MORE[k]);
+const BANK_QA2 = [
+  {kw:['新青安','青年','首購優惠','政府補貼','優惠貸款'], a:()=>{ const a=absOf(S.t), A=(y,m)=>y*12+m-1; if (a>=A(2023,8) && a<A(2026,8)) return ['新青安最高可貸 1,000 萬、40 年、寬限期 5 年，有政府利息補貼，但額度要另外排隊，我們先用一般房貸評估。','政府優惠房貸要符合首購資格，審核時間比較長喔。']; if (a<A(2023,8)) return ['目前有青年安心成家貸款，條件跟一般房貸差不多，主要是年限跟寬限期比較長。']; return ['新青安已經結束了，現在以一般房貸條件為主。']; }},
+  {kw:['理財型','循環','備用金'], a:()=>['理財型房貸是把還掉的本金變成可以動用的額度，用多少算多少利息。','理財型利率會比一般房貸高一點，適合需要周轉的人。']},
+  {kw:['轉貸','換銀行'], a:()=>['之後想轉貸也可以，但要注意原銀行的違約金和新的設定費用。','轉貸通常要利率差 0.2% 以上才划算。']},
+  {kw:['增貸','加貸'], a:()=>['房價有上漲、還款紀錄良好的話，之後可以申請增貸。','增貸要重新鑑價，也要看當時的信用管制規定。']},
+  {kw:['共同借款','夫妻一起','兩個人一起','配偶'], a:()=>['夫妻可以一起當借款人，收入合併計算，負債比會比較好看。','共同借款人跟借款人責任一樣，要一起負責還款。']},
+  {kw:['保證人責任','保證人要負責','當保證人'], a:()=>['連帶保證人在借款人沒還錢時要負責清償，責任很重。','保證人的信用也會被查，之後他自己借錢也會受影響。']},
+  {kw:['火險','地震險','保險一定要'], a:()=>['住宅火險加地震險是房貸必保的，一年大概幾千元。','房貸壽險不是強制的，但搭配的話條件比較好談。']},
+  {kw:['加碼','為什麼利率','利率怎麼'], a:(B)=>[`您的利率是指標利率加碼，加碼多少會看信用、成數和往來狀況，目前是 ${B.rate.toFixed(2)}%。`,'成數越高、屋齡越老，加碼通常也會比較多。']},
+  {kw:['年齡','退休','幾歲'], a:()=>['一般會看借款人年齡加貸款年限，原則上不超過 75 歲。','您 35 歲，年限拉到 40 年也還在範圍內。']},
+  {kw:['自營','老闆','接案','沒有扣繳'], a:()=>['自營商的收入要看報稅資料或營業帳戶往來，審核會比較嚴。','接案收入需要穩定的入帳紀錄，我們才好認列。']},
+  {kw:['信貸','車貸','卡債','分期'], a:()=>['其他貸款都會算進負債比，建議先把高利率的卡債還掉。','信用卡分期也算負債喔，送件前可以先整理一下。']},
+  {kw:['撥款給誰','錢撥去哪','履約保證','履保'], a:()=>['撥款會進履約保證專戶，等過戶完成再撥給賣方，很安全。','我們會配合代書跟履保公司的時程撥款。']}
+];
+BANK_QA.push(...BANK_QA2);
+const BANK_SOCIAL = {
+  greet:{kw:['你好','您好','午安','早安','打擾'], say:['您好，請坐，今天想了解哪方面的房貸條件呢？','您好，我先幫您倒杯水，我們慢慢談。','歡迎，有什麼想法都可以直接跟我說。'], trust:2},
+  thanks:{kw:['謝謝','感謝','辛苦'], say:['不客氣，這是我應該做的。','有任何問題隨時打電話給我。','能幫上忙我也很開心。'], trust:2},
+  think:{kw:['考慮','想一下','比較看看','回去想'], say:['好的，這份試算我先給您參考，有效期大約一個月。','沒問題，多比較是對的，有疑問隨時找我。','好，您考慮好再通知我，我先幫您保留這個條件。'], trust:0}
+};
+const BANK_PITCH = {gov:['另外提醒您，火險跟地震險是房貸必保的喔。'],priv:['順便跟您介紹，我們的信用卡現在辦有首刷禮。','您有興趣的話，我們也有理財帳戶可以搭配。'],ins:['順便問一下，您目前的家庭保障規劃夠嗎？','我們也有醫療險可以一起規劃，之後再跟您介紹。']};
+const TRUST_PRE = {low:['（語氣有點保留）','（翻了翻您的資料）'],high:['（面帶笑容）','（語氣輕鬆）','']};
 function bankLocal(deal,bank,B,C,text){
   const hits = detect(text, KW_BANK); const out = {ltv:B.ltv, rate:B.rate, years:B.years, grace:B.grace, fee:B.fee, conds:null, trust:0}; const said=[];
+  const say = (k, rep={}) => { let t = sayOne(BANK_SAY[k], B); for (const x in rep) t=t.replace('{'+x+'}', rep[x]); said.push(t); };
   const addCond = (t,cost)=>{ const c=[...B.conds]; if(!c.some(x=>x.text===t)) c.push({text:t,cost}); out.conds=c; };
+  if (B.trust<35 && Math.random()<0.6) said.push(sayOne(TRUST_PRE.low,B)); else if (B.trust>75 && Math.random()<0.4) said.push(sayOne(TRUST_PRE.high,B));
   for (const h of hits){
-    if (B.used[h]){ out.trust-=2; said.push('這部分您剛才提過了，我們已經有評估進去。'); continue; }
+    if (B.used[h]){ out.trust-=2; say('repeat'); continue; }
     B.used[h]=true;
-    if (h==='stable'){ out.rate-=0.03; out.trust+=5; if (!S.props.length) out.ltv+=2; said.push('工作年資穩定是加分，我幫您在利率上爭取一點。'); }
-    if (h==='assets'){ if (S.cash > deal.price*0.25){ out.ltv+=3; out.rate-=0.03; out.trust+=5; said.push('財力證明充足的話，我可以往上呈報提高成數。'); } else { out.trust-=3; said.push('財力證明的部分，存款金額可能不太夠支撐更好的條件。'); } }
-    if (h==='payroll'){ out.rate-=0.06; addCond('夫妻薪轉帳戶與信用卡轉至本行',0); said.push('薪轉加信用卡往來，這個我們很歡迎，利率可以再減碼。'); }
-    if (h==='compare'){ const o = otherOffers(deal,bank.id); if (o.length){ const best = o.reduce((a,b)=>a.rate<b.rate?a:b); out.rate = Math.min(out.rate, best.rate+0.03); out.ltv = Math.max(out.ltv, Math.max(...o.map(x=>x.ltv))-2); said.push(`您說的條件我了解，${best.name}那邊確實不錯，我盡量跟上。`); } else { out.trust-=6; said.push('可以請您提供他行的核貸通知嗎？沒有書面我們比較難調整。'); } }
-    if (h==='insurance'){ out.ltv+=5; addCond('投保房貸壽險（躉繳）', Math.round(Math.min(deal.price,B.appraisal)*B.ltv/100*0.012)); said.push('搭配房貸壽險的話，成數我可以再往上申請，保費是一次繳清。'); }
-    if (h==='grace'){ if (C.grace){ out.grace = B.trust>60?3:2; said.push(`首購自住可以申請寬限期，先給您 ${out.grace} 年，這段期間只繳利息。`); } else said.push('不好意思，依照央行規定，這個案件不能給寬限期。'); }
-    if (h==='longer'){ if (C.maxY>=40){ out.years=40; said.push('首購自住可以到 40 年，不過總利息會多付不少喔。'); } else said.push('第二戶以上最長只能到 30 年，這是規定。'); }
-    if (h==='guarantor'){ B.guarantor=true; out.ltv+=3; out.trust+=3; addCond('父母擔任連帶保證人',0); said.push('有保證人的話，負債比我們可以放寬評估。'); }
+    if (h==='stable'){ out.rate-=0.03; out.trust+=5; if (!S.props.length) out.ltv+=2; say('stable'); }
+    if (h==='assets'){ if (S.cash > deal.price*0.25){ out.ltv+=3; out.rate-=0.03; out.trust+=5; say('assetsOk'); } else { out.trust-=3; say('assetsNo'); } }
+    if (h==='payroll'){ out.rate-=0.06; addCond('夫妻薪轉帳戶與信用卡轉至本行',0); say('payroll'); }
+    if (h==='compare'){ const o = otherOffers(deal,bank.id); if (o.length){ const best = o.reduce((a,b)=>a.rate<b.rate?a:b); out.rate = Math.min(out.rate, best.rate+0.03); out.ltv = Math.max(out.ltv, Math.max(...o.map(x=>x.ltv))-2); say('compareOk',{bank:best.name}); } else { out.trust-=6; say('compareNo'); } }
+    if (h==='insurance'){ out.ltv+=5; addCond('投保房貸壽險（躉繳）', Math.round(Math.min(deal.price,B.appraisal)*B.ltv/100*0.012)); say('insurance'); }
+    if (h==='grace'){ if (C.grace){ out.grace = B.trust>60?3:2; say('graceOk',{g:out.grace}); } else say('graceNo'); }
+    if (h==='longer'){ if (C.maxY>=40){ out.years=40; say('longerOk'); } else say('longerNo'); }
+    if (h==='guarantor'){ B.guarantor=true; out.ltv+=3; out.trust+=3; addCond('父母擔任連帶保證人',0); say('guarantor'); }
   }
-  if (!hits.length) said.push(pick(['了解，還有其他條件想談的嗎？例如薪轉、財力證明，都可以幫您爭取。','這個我記下來了。您如果有他行的核貸條件也可以提供給我參考。','嗯，目前這樣的條件在市場上算是合理的，您可以再考慮看看。']));
-  out.reply = said.join('');
+  const social = Object.values(BANK_SOCIAL).find(v=>v.kw.some(w=>text.includes(w)));
+  if (social){ said.unshift(sayOne(social.say,B)); out.trust += social.trust; }
+  const qa = BANK_QA.find(q=>q.kw.some(w=>text.includes(w)));
+  if (qa) said.push(sayOne(qa.a(B,C),B));
+  if (!hits.length && !qa && !social) said.push(sayOne(BANK_IDLE[bank.id],B));
+  if (Math.random()<0.18 && BANK_PITCH[bank.id]) said.push(sayOne(BANK_PITCH[bank.id],B));
+  out.reply = said.filter(Boolean).join('');
   return out;
 }
+
 function applyBank(deal,bank,B,C,r){
   const base = Math.min(deal.price, B.appraisal);
   let ltv = isFinite(r.ltv)?r.ltv:B.ltv; ltv = clamp(ltv, B.ltv-5, B.ltv+5);
@@ -1088,14 +1284,14 @@ function openClosing(deal, loan){
   const costs = items.reduce((s,x)=>s+x[1],0);
   const need = price - amt + costs;
   const ok = need <= S.cash;
-  const md = modal(`<h2>簽約與交屋確認</h2><p class="sub">${esc(titleOf(L))}</p>
+  const md = modal(`${stepper(5)}<h2>簽約與交屋確認</h2><p class="sub">${esc(titleOf(L))}</p>
     <div class="two"><div><table class="t"><tr><td>成交價</td><td>${W(price)} 萬</td></tr>${loan?`<tr><td>${esc(loan.bank)} 房貸</td><td>−${W(amt)} 萬</td></tr><tr><td>自備款</td><td>${W(price-amt)} 萬</td></tr>`:'<tr><td>全額付現</td><td>—</td></tr>'}
       ${items.map(i=>`<tr><td>${i[0]}</td><td>${NT(i[1])} 元</td></tr>`).join('')}
       <tr class="total"><td>需準備現金</td><td>${W(need)} 萬</td></tr></table></div>
     <div>${loan?`<div class="terms"><div>利率<b class="n">${loan.rate.toFixed(2)}%</b></div><div>年限<b class="n">${loan.years} 年</b></div><div>寬限期<b class="n">${loan.grace?loan.grace+' 年':'無'}</b></div><div>月付<b class="n">${W1(loan.grace?amt*loan.rate/100/12:pmt(amt,loan.rate,loan.years))} 萬</b></div></div>${loan.conds.length?`<p class="note">附加條件：${loan.conds.map(esc).join('；')}</p>`:''}`:''}
       <p class="note">交屋流程：簽約用印 → 完稅 → 過戶與設定 → 銀行撥款 → 點交。遊戲中一次完成。<br>成交後持有未滿 2 年出售，房地合一稅率 45%；2～5 年 35%。</p>
       ${ok?'':`<p class="warn">現金不足 ${W(need-S.cash)} 萬，無法完成交易。</p>`}</div></div>
-    <div class="foot"><button class="btn ghost" id="back">返回</button><button class="btn red" id="confirm" ${ok?'':'disabled'}>確認購買</button></div>`);
+    <div class="foot"><button class="btn ghost" id="back">返回</button><button class="btn red" id="confirm" ${ok?'':'disabled'}>確認簽約交屋</button></div>`);
   md.querySelector('#back').onclick=()=> loan?openBanks(deal):openBanks(deal);
   md.querySelector('#confirm').onclick=()=>{
     S.cash -= need;
