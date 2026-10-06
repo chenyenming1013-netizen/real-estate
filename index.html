@@ -906,7 +906,7 @@ const TYPES = {
 const PERS = {
   rush:{label:'急售',desc:'資金周轉需要，想盡快脫手',concede:0.55,res:[0.90,0.95],mood:75,likes:['cash','deposit','deadline','patience'],dislikes:[]},
   stubborn:{label:'固執老屋主',desc:'住了幾十年很有感情，覺得自己房子最好',concede:0.18,res:[0.98,1.03],mood:60,likes:['praise'],dislikes:['flaws','lowball','deadline']},
-  investor:{label:'投資客',desc:'精打細算，只看數字與效率',concede:0.3,res:[0.95,1.0],mood:70,likes:['data','cash','market'],dislikes:['praise','lowball']},
+  investor:{label:'投資客',desc:'精打細算，只看數字與效率',concede:0.3,res:[0.95,1.0],mood:70,likes:['data','cash','market','checklist'],dislikes:['praise','lowball']},
   emotional:{label:'情緒化',desc:'心情好什麼都好談，心情差就翻臉',concede:0.35,res:[0.94,0.99],mood:65,likes:['praise'],dislikes:['flaws','lowball','deadline','compare']},
   heir:{label:'繼承出售',desc:'兄弟姊妹共同繼承，想早點賣掉分錢',concede:0.42,res:[0.92,0.97],mood:70,likes:['issue','data','cash','patience'],dislikes:['lowball']}
 };
@@ -942,12 +942,17 @@ const PRESSURE = {
   renovated:{label:'裝潢價值灌水',why:'強調裝潢花了很多錢，但裝潢會折舊，銀行鑑價通常也不太算進去。'},
   school:{label:'學區光環',why:'用熱門學區撐高價格，記得確認學區劃分與實際距離。'},
   agentpush:{label:'仲介催加價',why:'仲介說「再加一點我就能幫你談」，目的是先拉高你的出價。'},
+  nightview:{label:'限定看屋時段',why:'只能晚上看屋，可能是在避開採光或噪音問題。建議白天、晚上、雨天各看一次。'},
+  backstory:{label:'美化屋主背景',why:'用感人的屋主故事讓你覺得物超所值。回到現實檢查建材和屋況，故事真假其實不影響房子本身。'},
+  walktime:{label:'步行時間美化',why:'「走到車站只要幾分鐘」最好自己實際走一次確認。'},
+  govquota:{label:'政策額度壓力',why:'用優惠貸款額度快用完來催你決定。額度是否吃緊可以直接問銀行。'},
+  gapfee:{label:'價差在服務費',why:'仲介說差的幾萬元可以從服務費調整，代表雙方價差其實不大，可以趁機談服務費。'},
   sunk:{label:'成本錨定',why:'用自己當初的買價當理由，但市場價格跟屋主的成本無關。'},
   monthend:{label:'設定截止時間',why:'給你一個期限逼你決定，問清楚是否真有其他買方。'},
   compareup:{label:'拿更貴的比',why:'只挑開價更高的物件來比，記得看成交價而不是開價。'},
   agentfee:{label:'服務費換價格',why:'仲介用服務費打折換你加價，要算總支出而不是只看單一項目。'},
   agentcompete:{label:'同業競爭',why:'仲介說別家也有客戶在談，目的是讓你盡快出價。'},
-  agentsecret:{label:'仲介給內線',why:'仲介私下透露屋主底線，可能是真的，也可能是拉近價差的手法。'}
+  agentsecret:{label:'仲介給內線',why:'仲介私下透露屋主底線，可能是真的，也可能是拉近價差的手法。仲介對委託人的資訊本來就有保密責任，隨意透露的「內線」更要保留判斷。'}
 };
 const BANK_T = [
   {id:'stable',label:'強調工作穩定',text:'我在科技業工作八年，另一半也是正職，雙薪收入很穩定。'},
@@ -966,10 +971,11 @@ const BANK_T = [
   {id:'rushapprove',label:'請求加快審核',text:'交屋時間比較趕，審核可以加快嗎？'},
   {id:'shorter',label:'縮短年限換利率',text:'年限縮短到 20 年的話，利率能不能再低一點？'},
   {id:'lowltv',label:'低成數換利率',text:'我自備款比較多，只貸五成就好，利率可以優惠一點嗎？'},
-  {id:'autopay',label:'扣款帳戶設在貴行',text:'房貸扣款帳戶可以設在貴行，每月自動扣款。'}
+  {id:'autopay',label:'扣款帳戶設在貴行',text:'房貸扣款帳戶可以設在貴行，每月自動扣款。'},
+  {id:'profession',label:'強調職業類別',text:'我任職於上市的科技公司，職業類別應該算不錯。'}
 ];
-const KW_SELLER = {history:['掛了一陣子','降過價','賣很久','掛很久'],trust:['實在的人','很安心','信任您','談得很愉快'],payterms:['簽約款','尾款','付款方式','分期付'],walkbluff:['不打擾','先走了','那就算了','沒辦法了'],rentback:['租回','先租','回租'],asis:['現況點交','現況交屋','我自己來修','照現況'],needhome:['自住','剛需','小孩要上學','房東要收回'],terms:['價格不動','留下冷氣','家具留','附贈','換條件','不能動','都留下來'],fees:['仲介費','代書費','各付一半','分擔','規費'],flexmove:['慢慢搬','配合你搬','交屋時間配合','交屋時間我可以配合','找到新家再搬','住到找到','不急著交屋'],inspect:['驗屋','驗屋師','檢查報告','專業檢查'],appraisal:['鑑價','銀行估','貸款不夠','估不到'],reno:['裝潢預算','重新裝潢','翻修費','要裝潢'],split:['各退一步','中間價','取中間','一人一半'],data:['實價','行情','成交價','登錄','附近成交'],issue:['漏水','壁癌','管線','整修','修繕','屋況','違建'],cash:['現金','付現','預審','自備','快速交屋','很快交屋'],deposit:['斡旋金','訂金','付斡旋'],budget:['預算有限','預算就只有','極限','負擔不了'],compare:['別間','另一間','比較','其他物件','另一個社區','別的社區'],praise:['喜歡','照顧','溫馨','漂亮','感情','用心'],flaws:['屋況老舊','有點舊','公設','缺點','採光也有點差','採光不好','很吵','屋齡'],deadline:['今天就簽','今天簽','馬上就簽','限時','現在就簽','過了今天'],lowball:['七折','六折','打折','砍一半','砍三成'],market:['景氣','市場不好','行情不好','不考慮','封頂','高於'],patience:['不急','慢慢等','等下一間','隨緣','可以等'],callbluff:['斡旋書','要約書','證明','真的有人','拿出來'],insult:['爛','垃圾','鬼屋','騙','坑人','白痴','凶宅']};
-const KW_BANK = {shorter:['縮短','20 年','20年','二十年'],lowltv:['只貸','貸少一點','自備款比較多','低成數'],autopay:['扣款帳戶','自動扣款','扣款設在'],relation:['定存','老客戶','好幾年的客戶'],noinsure:['不想綁','不要保險','不綁保險','不想買保險','不想搭配保險'],feewaive:['減免','免開辦','免手續','開辦費可以'],coborrow:['共同借款','一起借','另一半一起','太太一起','先生一起'],rushapprove:['加快','很趕','急件','快一點審'],stable:['穩定','年資','工作','雙薪','公務員','正職'],assets:['存款','財力','資產','股票','投資'],payroll:['薪轉','信用卡','往來','存在'],compare:['其他銀行','別家','他行','比較好','比價'],insurance:['保險','壽險','基金'],grace:['寬限','只繳利息','繳息'],longer:['40年','四十年','拉長','延長'],guarantor:['保證人','父母','爸媽']};
+const KW_SELLER = {history:['掛了一陣子','降過價','賣很久','掛很久'],trust:['實在的人','很安心','信任您','談得很愉快'],payterms:['簽約款','尾款','付款方式','分期付'],walkbluff:['不打擾','先走了','那就算了','沒辦法了'],rentback:['租回','先租','回租'],asis:['現況點交','現況交屋','我自己來修','照現況'],needhome:['自住','剛需','小孩要上學','房東要收回'],terms:['價格不動','留下冷氣','家具留','附贈','換條件','不能動','都留下來'],fees:['仲介費','代書費','各付一半','分擔','規費'],flexmove:['慢慢搬','配合你搬','交屋時間配合','交屋時間我可以配合','找到新家再搬','住到找到','不急著交屋'],inspect:['驗屋','驗屋師','檢查報告','專業檢查'],appraisal:['鑑價','銀行估','貸款不夠','估不到'],reno:['裝潢預算','重新裝潢','翻修費','要裝潢'],split:['各退一步','中間價','取中間','一人一半'],data:['實價','行情','成交價','登錄','附近成交'],issue:['漏水','壁癌','管線','整修','修繕','屋況','違建'],cash:['現金','付現','預審','自備','快速交屋','很快交屋'],deposit:['斡旋金','訂金','付斡旋'],budget:['預算有限','預算就只有','極限','負擔不了'],compare:['別間','另一間','比較','其他物件','另一個社區','別的社區'],praise:['喜歡','照顧','溫馨','漂亮','感情','用心','感覺不錯','很棒'],flaws:['屋況老舊','有點舊','公設','缺點','採光也有點差','採光不好','很吵','屋齡'],deadline:['今天就簽','今天簽','馬上就簽','限時','現在就簽','過了今天'],lowball:['七折','六折','打折','砍一半','砍三成'],market:['景氣','市場不好','行情不好','不考慮','封頂','高於'],patience:['不急','慢慢等','等下一間','隨緣','可以等'],callbluff:['斡旋書','要約書','證明','真的有人','拿出來'],insult:['爛','垃圾','鬼屋','騙','坑人','白痴','凶宅']};
+const KW_BANK = {profession:['上市的','上市公司','上櫃公司','公教','醫師','律師','會計師'],shorter:['縮短','20 年','20年','二十年'],lowltv:['只貸','貸少一點','自備款比較多','低成數'],autopay:['扣款帳戶','自動扣款','扣款設在'],relation:['定存','老客戶','好幾年的客戶'],noinsure:['不想綁','不要保險','不綁保險','不想買保險','不想搭配保險'],feewaive:['減免','免開辦','免手續','開辦費可以'],coborrow:['共同借款','一起借','另一半一起','太太一起','先生一起'],rushapprove:['加快','很趕','急件','快一點審'],stable:['穩定','年資','工作','雙薪','公務員','正職'],assets:['存款','財力','資產','股票','投資'],payroll:['薪轉','信用卡','往來','存在'],compare:['其他銀行','別家','他行','比較好','比價'],insurance:['保險','壽險','基金'],grace:['寬限','只繳利息','繳息'],longer:['40年','四十年','拉長','延長'],guarantor:['保證人','父母','爸媽']};
 
 // ======================= HELPERS =======================
 const $ = s => document.querySelector(s);
@@ -1203,7 +1209,7 @@ function initMap(id, ck, di, clickable, road){
   tryRoad(0);
 }
 // 道路資料：OpenStreetMap Overpass API（只在玩家打開物件時查詢一次；同一次查詢取得標的道路與區內主要道路；結果快取在瀏覽器；間隔至少一秒；主伺服器失敗時改用其他公開鏡像）
-const OVERPASS = ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];
+const OVERPASS = ['https://overpass-api.de/api/interpreter','https://overpass.private.coffee/api/interpreter'];
 let roadLast = 0;
 async function overpass(q){
   let detail = '';
@@ -1558,6 +1564,11 @@ function pressureLine(L,code){
     agentpush:'您再加 20 萬，我就有把握去幫您說服屋主。',
     agentsecret:'我私下跟您說，屋主其實急著換屋，再加一點點應該就成了。',
     sunk:'我當初買的價格就比這個高了，再低真的不行。',
+    nightview:'屋主白天要上班，看屋只能約晚上喔。',
+    backstory:'屋主當初是買給兒子結婚用的，裝潢都很用心，後來小倆口想住別區才要賣。',
+    walktime:'從這裡走到捷運站只要五分鐘，通勤超方便。',
+    govquota:'政府優惠房貸的額度大家都在搶，現在不決定可能就排不到了。',
+    gapfee:'屋主那邊只看實拿，差的這幾萬我們服務費這邊想辦法。',
     monthend:'我月底前一定要決定賣給誰。',
     compareup:'你去看隔壁那間，開得還比我貴呢。',
     agentfee:'買方服務費我可以幫您打折，但價格這邊您要再加一點。',
@@ -1590,7 +1601,7 @@ ${bluffNote?`【剛剛發生】${bluffNote}\n`:''}${N.rival?`【你們先前說�
 5. reply 用台灣口語繁體中文，1 到 3 句，貼合個性，不要提到遊戲、AI 或底價數字。
 6. 不要重複你在對話紀錄裡說過的句子或開頭，語氣要自然有變化；可以回應買方話中的細節、反問、帶點情緒或生活感。
 7. 買方問到管理費、鄰居、學區、交通、屋況、賣屋原因、交屋時間、家具家電等問題時，依你的個性回答（誠實、含糊帶過或避重就輕都可以），但不能捏造與上面設定矛盾的事實。
-只輸出 JSON：{"reply":"...","mood_change":-30到15的整數,"persuaded":0到2的整數,"decision":"accept或counter或talk或walkaway","counter_price":數字或null,"pressure":"rival或emigrate或scarce或notneedy或future或multiview或firmprice或priceup或renovated或school或agentpush或agentsecret或sunk或monthend或compareup或agentfee或agentcompete或none"}`;
+只輸出 JSON：{"reply":"...","mood_change":-30到15的整數,"persuaded":0到2的整數,"decision":"accept或counter或talk或walkaway","counter_price":數字或null,"pressure":"rival或emigrate或scarce或notneedy或future或multiview或firmprice或priceup或renovated或school或agentpush或agentsecret或sunk或monthend或compareup或agentfee或agentcompete或nightview或backstory或walktime或govquota或gapfee或none"}`;
   const r = await ai(prompt);
   if (!r || typeof r.reply!=='string') return null;
   return {reply:r.reply, mood:clamp(parseInt(r.mood_change)||0,-30,15), persuade:clamp(parseInt(r.persuaded)||0,0,2), decision:r.decision, counter: r.counter_price? Math.round(parseFloat(r.counter_price)*10000):0, pressure: PRESSURE[r.pressure]?r.pressure:null, pressureInReply:true};
@@ -1719,6 +1730,90 @@ const AGENT_LINES = ['【仲介】價格差一點點，我們看看付款條件�
 const OFFER_TREND = {up:['你加了 {d} 萬，我感受到誠意了。','有往上加，這樣比較好談。','嗯，這次比較像樣了。'], big:['一下加這麼多？好，我們認真談。'], same:['你剛剛就出這個價了耶。','同一個數字再講一次，我還是一樣的答案。','價格沒動，我很難跟著動喔。'], down:['怎麼越出越低？這樣我很難談下去。','你上次出得比較高耶，這樣不太對吧。']};
 const FATIGUE = ['我們已經談很久了，給個痛快吧。','談了這麼多回，你到底想不想買？','我等一下還有事，我們快點決定好嗎？','說真的，我有點累了。'];
 function sayOne(pool, N){ N.said = N.said||{}; const fresh = pool.filter(x=>!N.said[x]); const c = pick(fresh.length?fresh:pool); N.said[c]=1; return c; }
+// ======================= 角色背景與記憶：讓對話依人物設定變化 =======================
+const REASON_TALK = {
+  '生意周轉需要現金':['最近生意不太好做，手頭需要一筆錢周轉。','說真的，資金卡著讓我晚上都睡不好。'],
+  '要移民了，想盡快處理':['我們全家下半年就要出國了，很多事要處理。','簽證已經下來了，房子是最後一件大事。'],
+  '投資失利要還款':['之前投資踩到雷，現在只想趕快把帳還清。'],
+  '年紀大了要搬去跟兒子住':['兒子一直叫我搬過去住，方便照顧。','年紀大了，一個人住小孩不放心。'],
+  '想換有電梯的房子':['爬樓梯越來越吃力，想換有電梯的地方。','膝蓋不好，每天上下樓梯真的很辛苦。'],
+  '小孩都搬出去了':['小孩都成家了，兩個老的住這麼大太空了。','以前一家五口很熱鬧，現在安靜得有點寂寞。'],
+  '資金要轉到其他案子':['我有新的案子要進場，資金需要回籠。'],
+  '這間已經持有好幾年，想獲利了結':['這間放了好幾年，差不多是該處理的時候。'],
+  '手上物件太多要調整':['手上的房子太多，管理起來很累，想精簡一下。'],
+  '跟另一半要分開，不想再住這裡':['這裡有太多回憶了，想換個環境重新開始。','……有些事情不太想多說，總之想早點處理。'],
+  '換工作要搬到外縣市':['新工作在外縣市，通勤太遠了只好賣掉。'],
+  '想換大一點的房子':['家裡小孩長大了，空間不夠用才想換。'],
+  '父母留下來的，兄弟姊妹要分':['爸媽走了以後，我們幾個兄弟姊妹決定把房子處理掉。','大家都有自己的家了，這間就沒人住。'],
+  '繼承後一直空著，大家決定賣掉':['房子空著也是浪費，還要繳稅，不如賣掉。']
+};
+function sellerBgLines(L){
+  const sl=L.seller, out=[...(REASON_TALK[sl.reason]||[])];
+  const dist=CITIES[L.ck].dists[L.di];
+  if (sl.age>=65){ out.push('我年紀大了，只希望把房子交給會好好住的人。'); if (L.type==='公寓' && L.floor>=3) out.push(`住在 ${L.floor} 樓，這幾年爬樓梯膝蓋真的有點吃不消。`); }
+  else if (sl.age<45) out.push('我平常工作很忙，只有假日才有空處理這些事。');
+  if (L.age>30) out.push('房子雖然有點年紀，但當初蓋得很紮實。'); else if (L.age<10) out.push('房子還很新，住起來很舒服。');
+  if (L.parking) out.push('有車位真的方便很多，下雨天不用淋雨找停車位。');
+  if (L.type==='電梯大樓' && L.floor>L.total*0.6) out.push('晚上從客廳看出去，視野很開闊。');
+  if (L.type==='公寓' && L.floor===1) out.push('一樓進出很方便，長輩住也適合。');
+  if (L.type==='透天') out.push('透天自己一整棟，想怎麼規劃都可以。');
+  out.push(`${dist[0]}這一帶的特色是「${dist[3]}」，住久了真的會習慣。`);
+  const m=dateOf(S.t).m;
+  if (m===1||m===2) out.push('快過年了，我希望年前能把事情處理好。');
+  else if (m===12) out.push('年底了，大家都想把事情做個了結。');
+  else if (m>=6&&m<=8) out.push('夏天這間通風很好，不太需要一直開冷氣。');
+  return out;
+}
+const MEM_KW = {kids:['小孩','孩子','寶寶','兒子','女兒','小朋友'],pet:['狗','貓','寵物','毛孩'],elder:['爸媽','父母','長輩','爺爺','奶奶','阿公','阿嬤'],work:['上班','通勤','公司在'],newly:['結婚','新婚','未婚妻','未婚夫'],car:['開車','有車','停車']};
+function rememberPlayer(mem, text){ for (const k in MEM_KW) if (!mem[k] && MEM_KW[k].some(w=>text.includes(w))) mem[k]='new'; }
+function memLineSeller(L, mem){
+  const opt=[];
+  if (mem.kids==='new') opt.push(['kids','你說家裡有小孩，這附近有國小，上學很方便。']);
+  if (mem.pet==='new') opt.push(['pet', L.type==='電梯大樓'?'你有養毛孩的話，記得看一下社區規約，我們這棟是可以養的。':'有養寵物的話，附近有公園可以散步。']);
+  if (mem.elder==='new') opt.push(['elder', (L.type==='公寓'&&L.floor>=3)?'跟長輩一起住的話，樓梯可能要考慮一下。':'跟長輩一起住很好，這裡進出很方便。']);
+  if (mem.work==='new') opt.push(['work','通勤的話，這裡到大眾運輸還算方便。']);
+  if (mem.newly==='new') opt.push(['newly','新婚很好啊，這間當新房很適合。']);
+  if (mem.car==='new') opt.push(['car', L.parking?'有開車的話，車位就很重要，這間剛好有。':'開車的話要租月租車位，這點要先想好。']);
+  if (!opt.length) return null; const [k,line]=pick(opt); mem[k]='done'; return line;
+}
+const BUYER_BG = {
+  first:['我們存了好幾年才存到頭期款。','這是我們第一次買房，什麼都很緊張。','我們兩個都是上班族，預算真的很有限。'],
+  investor:['我手上還有幾間在出租，這種產品我很熟。','我買房只看報酬率，不太談感情。','我習慣先算好每坪成本再出價。'],
+  family:['老大明年就要上小學了，所以想找學區好的。','現在住的地方太小，小孩都沒有自己的房間。','我們舊房子也正在賣，要兩邊一起安排。'],
+  expat:['我在國外待了好幾年，這次是調回台灣。','家人先回來了，我希望越快安頓越好。','時差還沒調好，不過看房很重要（笑）。']
+};
+function buyerBgLines(B, p){
+  const out=[...BUYER_BG[B.type]]; const L=p.L;
+  if (B.type==='family'){ const r=parseInt(L.rooms); out.push(r>=3?'三房剛好小孩一人一間。':'房間數有點少，我們要再想想怎麼規劃。'); }
+  if (B.type==='expat') out.push(L.parking?'有車位很好，我回來要先買車。':'沒有車位的話，我得另外找停車的地方。');
+  if (B.type==='first') out.push(`總價 ${W(p.sale.ask)} 萬對我們來說壓力不小。`);
+  if (B.type==='investor') out.push(`這區租金行情我也有在看，報酬率大概是 ${(CITIES[L.ck].yield*100).toFixed(1)}% 上下。`);
+  return out;
+}
+function memLineBuyer(B, mem){
+  const opt=[];
+  if (mem.kids==='new') opt.push(['kids','你說你家小孩也在這附近上學，那學區應該真的不錯。']);
+  if (mem.pet==='new') opt.push(['pet','你也有養寵物喔？那這裡應該很適合養。']);
+  if (mem.elder==='new') opt.push(['elder','你跟長輩一起住過這裡，表示生活機能應該很方便。']);
+  if (mem.work==='new') opt.push(['work','你說通勤方便，那對我們上班族很加分。']);
+  if (!opt.length) return null; const [k,line]=pick(opt); mem[k]='done'; return line;
+}
+const OFFICER = {gov:{name:'劉襄理',bg:['我在分行做房貸快十五年了，看過很多首購族。','我們公股作業比較嚴謹，但利率穩定。']},priv:{name:'陳專員',bg:['這個月業績壓力有點大，所以我會盡量幫您爭取（笑）。','我們審核速度很快，這是我們的強項。']},ins:{name:'吳經理',bg:['我原本是做保險規劃的，所以會從整體財務幫您看。','很多首購族選我們，是看中年限比較彈性。']}};
+function officerBgLines(bank, B){
+  const out=[...OFFICER[bank.id].bg];
+  if (!S.props.length) out.push('您 35 歲首購，年限拉長在審核上比較沒問題。'); else out.push('您名下已經有房子，這次在規定上會比較嚴格一點。');
+  out.push(`以您家庭月收入 ${W1(S.income)} 萬來看，還款能力算是不錯的。`);
+  if (S.cash > 20000000) out.push('您的存款很充裕，這在審核上很加分。');
+  return out;
+}
+function memLineBank(mem){
+  const opt=[];
+  if (mem.kids==='new') opt.push(['kids','有小孩的話，建議保留半年以上的生活緊急預備金，月付不要抓太緊。']);
+  if (mem.newly==='new') opt.push(['newly','新婚買房很常見，夫妻可以一起當借款人，收入合併計算。']);
+  if (mem.elder==='new') opt.push(['elder','如果有奉養長輩的支出，也要算進每月負擔裡。']);
+  if (mem.car==='new') opt.push(['car','如果有車貸，記得也會算進負債比喔。']);
+  if (!opt.length) return null; const [k,line]=pick(opt); mem[k]='done'; return line;
+}
 // ======================= 自由對話理解 =======================
 const CN_D = {零:0,〇:0,一:1,二:2,兩:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9};
 function cnNum(t){ // 支援「兩千八百」「三千五」「一千二百五十」「八百」等
@@ -1760,6 +1855,13 @@ const FREE_SELLER = {
   smalltalk:{kw:['天氣','好熱','下雨','颱風','吃飯','午餐','咖啡','狗','貓','寵物','犬','狗狗','貓咪','養了'], say:['對啊，最近天氣真的很誇張。','哈哈，說到這個我就想到附近有家很好吃的店。','我也很喜歡小動物，這棟很多人有養。','聊得很開心，我們回來看看房子吧。']},
   pricy:{kw:['太貴','好貴','貴死','離譜','太扯','開玩笑嗎','坑'], say:{rush:['貴嗎？我已經開得很實在了，你出個價吧。'],stubborn:['一分錢一分貨，這房子值這個價。','嫌貴的話可以去看別的，我不勉強。'],investor:['貴不貴要看數字，你覺得合理的價格是多少？'],emotional:['你這樣講我有點受傷耶……'],heir:['我們也是參考行情開的，你覺得差多少？']}, mood:-3},
   polite:{kw:['請問','麻煩您','可以請','不好意思打擾','謝謝您的時間'], mood:1},
+  revisitReq:{kw:['白天再來','晚上再來','雨天','再看一次','白天看','晚上看'], say:(L)=> L.issues.includes('採光不佳') ? ['白天我要上班，晚上比較方便耶……','白天喔……要看我的時間，晚上比較好約。'] : ['隨時歡迎，白天晚上都可以來看。','當然可以，多看幾次比較安心。','雨天來看也好，可以順便看有沒有滲水。']},
+  fixtures:{kw:['點交清單','熱水器','冰箱','洗衣機','寫進合約','非固定物'], say:['可以，冷氣熱水器這些簽約時都逐項寫在點交清單裡。','要留的東西我們列清楚，交屋時就不會有爭議。','冰箱洗衣機我要帶走，其他的都可以寫進去。']},
+  loanbal:{kw:['還有多少貸款','設定多少','貸了多少','房貸還有'], say:['這個比較私人啦，反正交屋時會塗銷，你放心。','貸款的事走履約保證會處理好，不影響你。']},
+  warranty:{kw:['漏水保固','保固','瑕疵保障'], say:(L)=> L.agent ? ['【仲介】我們公司有提供漏水保固，細節簽約時會寫清楚。','【仲介】保固範圍和期限可以寫進合約附件。'] : ['我是自己賣的，沒有保固，但屋況我會據實寫在現況說明書。','保固的話你可以考慮另外請驗屋公司評估。']},
+  process:{kw:['履約保證','代書','要約書','簽約時間','定金','簽約流程'], say:['走履約保證最安心，代書我這邊有熟的，也可以用你的。','簽約時間我都可以配合，平日晚上也行。','定金照一般行情付總價一成就好。','要約書或斡旋金都可以，看你方便。']},
+  area:{kw:['周邊','環境','附近有什麼','這一帶'], say:['這一帶住宅為主，生活很單純。','附近店家很多，日常採買都很方便。','這區住久了真的會喜歡。']},
+  remodel:{kw:['改格局','打掉','可以改','重新隔間'], say:['格局要改應該可以，不過記得先問管委會和建築師。','隔間牆可以打，承重牆就不行喔。','你想怎麼改都可以，交屋後就是你的了。']},
   vague:['你的意思是……？可以講清楚一點嗎？','嗯，我不太懂你想表達什麼。','你說的我聽不太明白，是想談價格嗎？'],
   offtopic:{rush:['我們還是回到房子吧，我時間不多。','這個先不談，你對價格有什麼想法？'],stubborn:['年輕人，我們談正事。','這些跟房子沒什麼關係吧。'],investor:['我們聚焦在交易條件上好嗎？','時間寶貴，先談數字吧。'],emotional:['哈哈，你很有趣，不過我們還是聊聊房子吧。','這個話題很好玩，那房子你覺得怎麼樣？'],heir:['我們家人還在等我回報，先講房子的事吧。','這個我不太懂，我們先談價格好嗎？']},
   shortReply:['嗯？你在想什麼？','你覺得怎麼樣，可以直接說。','好……那你打算怎麼出價？','沒關係，你慢慢想。'],
@@ -1831,6 +1933,13 @@ function sellerLocal(L,N,text,offer){
       if (prevMe && prevMe.text && prevMe.text.trim()===t && t.length>1) parts.push(sayOne(FREE_SELLER.repeat,N));
       else if (pricy){ parts.push(sayOne(FREE_SELLER.pricy.say[tone],N)); }
       else if (FREE_SELLER.small2.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.small2.say[tone],N));
+      else if (FREE_SELLER.revisitReq.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.revisitReq.say(L),N));
+      else if (FREE_SELLER.fixtures.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.fixtures.say,N));
+      else if (FREE_SELLER.loanbal.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.loanbal.say,N));
+      else if (FREE_SELLER.warranty.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.warranty.say(L),N));
+      else if (FREE_SELLER.process.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.process.say,N));
+      else if (FREE_SELLER.remodel.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.remodel.say,N));
+      else if (FREE_SELLER.area.kw.some(w=>t.includes(w))) parts.push(sayOne(FREE_SELLER.area.say,N));
       else if (room) parts.push(sayOne(room.say,N));
       else if (pers2) parts.push(sayOne(FREE_SELLER.personal.say[tone],N));
       else if (small) parts.push(sayOne(FREE_SELLER.smalltalk.say,N));
@@ -1851,6 +1960,8 @@ function sellerLocal(L,N,text,offer){
   if (N.round>8 && decision!=='accept' && parts.length<3 && Math.random()<0.5) parts.push(sayOne(FATIGUE,N));
   while (parts.length>3) parts.splice(parts.length-1,1);
   if (L.agent && decision==='counter' && parts.length<3 && Math.random()<0.25) parts.push(sayOne(AGENT_LINES,N));
+  N.mem = N.mem || {}; rememberPlayer(N.mem, text);
+  if (decision!=='walkaway' && parts.length<3){ const ml = memLineSeller(L, N.mem); if (ml) parts.push(ml); else if (N.mood>35 && Math.random()<0.35){ const bg=sellerBgLines(L).filter(x=>!(N.said||{})[x]); if (bg.length) parts.push(sayOne(bg,N)); } }
   const holdNow = decision==='counter' && counter>=N.lastAsk-5000;
   if (!(qa && !offer && decision==='talk' && Math.random()<0.5)) parts.push(sayOne(holdNow ? CLOSE.hold : CLOSE[decision][tone], N));
   const reply = parts.filter(Boolean).join(' ');
@@ -1880,7 +1991,7 @@ function applySeller(L,N,r,offer,bubble){
   if ((d==='counter'||d==='talk') && !N.done){
     N.usedP = N.usedP || {};
     let code = r.pressure && !N.usedP[r.pressure] && PRESSURE[r.pressure] ? r.pressure : null;
-    if (!code && !r.pressureInReply && Math.random()<0.3){ const left = Object.keys(PRESSURE).filter(k=>!N.usedP[k] && !(k==='rival'&&N.rival) && (L.agent || !k.startsWith('agent'))); if (left.length) code = pick(left); }
+    if (!code && !r.pressureInReply && Math.random()<0.3){ const left = Object.keys(PRESSURE).filter(k=>!N.usedP[k] && !(k==='rival'&&N.rival) && (L.agent || !(k.startsWith('agent')||['nightview','govquota','gapfee'].includes(k)))); if (left.length) code = pick(left); }
     if (code){
       N.usedP[code]=true;
       if (!r.pressureInReply) bubble('them', pressureLine(L,code));
@@ -2003,7 +2114,7 @@ function openBankChat(deal, bank){
     deal.offers[bank.id] = {ltv:B.ltv, rate:B.rate, amt};
   };
   if (!B.hist.length){
-    const open = `您好，我是${bank.name}的房貸專員。這件${L.type}我們鑑價是 ${W(B.appraisal)} 萬${B.appraisal<price?'，比成交價低一些，貸款會以鑑價計算':''}。以您的狀況，目前可以先給到 ${B.ltv}%，利率 ${B.rate.toFixed(2)}%，30 年期${jcicCount()>2?'。另外您近期聯徵查詢次數偏多，利率有稍微加碼':''}。您有什麼想談的嗎？`;
+    const open = `您好，我是${bank.name}的${OFFICER[bank.id].name}，負責房貸業務。這件${L.type}我們鑑價是 ${W(B.appraisal)} 萬${B.appraisal<price?'，比成交價低一些，貸款會以鑑價計算':''}。以您的狀況，目前可以先給到 ${B.ltv}%，利率 ${B.rate.toFixed(2)}%，30 年期${jcicCount()>2?'。另外您近期聯徵查詢次數偏多，利率有稍微加碼':''}。您有什麼想談的嗎？`;
     B.hist.push({who:'them',text:open});
   }
   B.hist.forEach(h=>bubble(h.who,h.text));
@@ -2076,7 +2187,7 @@ const BANK_QA = [
   {kw:['鑑價','估價','鑑定'], a:(B)=>[`這間我們鑑價是 ${W(B.appraisal)} 萬，貸款以成交價和鑑價取低的來算。`,'鑑價由合作的估價單位做，通常會比市價保守一點。','鑑價低於成交價很常見，差額就要用自備款補。']},
   {kw:['手續費','開辦費','費用','規費'], a:(B)=>[`開辦費是 ${NT(B.fee)} 元，另外還有抵押權設定規費跟代書費。`,'開辦費可以再談，但設定規費是政府收的，省不了。']},
   {kw:['多久','時間','撥款','對保','審核','送件'], a:()=>['資料齊全的話，大約 7 到 10 個工作天可以核貸。','核貸後安排對保，再配合代書的時程撥款。','如果需要補件，時間會再往後延一點。']},
-  {kw:['負債比','月付','還款能力','收入夠'], a:(B)=>[`我們看的是月付金不要超過家庭月收入的 ${B.guarantor?7:6} 成左右。`,'負債比會把信貸、車貸、卡費分期都算進去喔。','月付壓力建議抓在收入的三分之一以內，生活會比較輕鬆。']},
+  {kw:['負債比','還款能力','收入夠'], a:(B)=>[`我們看的是月付金不要超過家庭月收入的 ${B.guarantor?7:6} 成左右。`,'負債比會把信貸、車貸、卡費分期都算進去喔。','月付壓力建議抓在收入的三分之一以內，生活會比較輕鬆。']},
   {kw:['聯徵','信用分數','信用評分','查詢次數'], a:()=>[`您近三個月聯徵查了 ${jcicCount()} 次，太多次銀行會覺得您四處在借錢。`,'信用卡準時繳、沒有遲繳紀錄，信用評分就會比較好。']},
   {kw:['成數','可以貸多少','最多貸','貸幾成','能貸'], a:(B,C)=>[`依規定這個案件最高 ${Math.round(C.cap*100)}%，目前給您 ${B.ltv}%。`,'成數主要看鑑價、負債比和您的信用狀況。','成數拉高的話，利率通常也會跟著調整喔。']},
   {kw:['寬限期是什麼','寬限期要注意','只繳利息會怎樣'], a:()=>['寬限期只繳利息，本金沒有減少，期滿後月付會一下子變高。','寬限期適合前幾年資金比較緊的人，但總利息會變多。']}
@@ -2090,6 +2201,7 @@ Object.assign(BANK_SAY, {
   shorter:['年限縮短風險比較低，利率我可以再幫您降一點。','20 年月付會比較重，但總利息省很多。'],
   shorterNo:['年限已經不長了，再縮短利率也不會差太多。'],
   lowltv:['成數低對銀行風險小，利率可以給您比較好的。','只貸五成的話，條件可以再漂亮一些。'],
+  profession:['上市公司的員工收入穩定，是我們很歡迎的客群。','職業類別很好，利率可以爭取比較優惠的。'],
   autopay:['扣款帳戶設在本行，可以小幅減碼。','自動扣款不怕忘記繳，對信用也好。'],
   relation:['您是本行的老客戶，條件我一定盡量幫您爭取。','有定存往來的老客戶，這在評分上很加分。'],
   noinsureOk:['不搭保險也可以，只是成數就沒辦法再往上拉了。','保險是自由選擇，不買不影響基本條件。'],
@@ -2127,13 +2239,19 @@ const BANK_QA2 = [
   {kw:['增貸','加貸'], a:()=>['房價有上漲、還款紀錄良好的話，之後可以申請增貸。','增貸要重新鑑價，也要看當時的信用管制規定。']},
   {kw:['共同借款','夫妻一起','兩個人一起','配偶'], a:()=>['夫妻可以一起當借款人，收入合併計算，負債比會比較好看。','共同借款人跟借款人責任一樣，要一起負責還款。']},
   {kw:['保證人責任','保證人要負責','當保證人'], a:()=>['連帶保證人在借款人沒還錢時要負責清償，責任很重。','保證人的信用也會被查，之後他自己借錢也會受影響。']},
-  {kw:['火險','地震險','保險一定要'], a:()=>['住宅火險加地震險是房貸必保的，一年大概幾千元。','房貸壽險不是強制的，但搭配的話條件比較好談。']},
+  {kw:['火險','地震險','保險一定要'], a:()=>['銀行通常會要求投保住宅火險加地震險，一年大概幾千元。','房貸壽險不是強制的，但搭配的話條件比較好談。']},
   {kw:['加碼','為什麼利率','利率怎麼'], a:(B)=>[`您的利率是指標利率加碼，加碼多少會看信用、成數和往來狀況，目前是 ${B.rate.toFixed(2)}%。`,'成數越高、屋齡越老，加碼通常也會比較多。']},
   {kw:['年齡','退休','幾歲'], a:()=>['一般會看借款人年齡加貸款年限，原則上不超過 75 歲。','您 35 歲，年限拉到 40 年也還在範圍內。']},
   {kw:['自營','老闆','接案','沒有扣繳'], a:()=>['自營商的收入要看報稅資料或營業帳戶往來，審核會比較嚴。','接案收入需要穩定的入帳紀錄，我們才好認列。']},
   {kw:['信貸','車貸','卡債','分期'], a:()=>['其他貸款都會算進負債比，建議先把高利率的卡債還掉。','信用卡分期也算負債喔，送件前可以先整理一下。']},
   {kw:['撥款給誰','錢撥去哪','履約保證','履保'], a:()=>['撥款會進履約保證專戶，等過戶完成再撥給賣方，很安全。','我們會配合代書跟履保公司的時程撥款。']}
 ];
+BANK_QA2.push(
+  {kw:['要準備什麼','需要什麼文件','準備哪些','文件有哪些'], a:()=>['基本要雙證件和印章、買賣契約書影本，還有土地建物謄本或權狀。','財力證明的話，扣繳憑單、薪轉存摺或銀行對帳單都可以。']},
+  {kw:['抵利型','存款抵','抵利'], a:()=>['抵利型房貸是指定帳戶的存款可以按日抵扣房貸利息，適合有固定存款的人。','抵利型利率通常會比一般房貸高一點，要看你的存款習慣划不划算。']},
+  {kw:['流程','步驟','怎麼辦理'], a:()=>['流程是申請、銀行估價、聯徵審核、照會對保、抵押權設定，最後撥款。','送件後我們會先估價和查聯徵，核准後再約對保。']},
+  {kw:['貢獻度','怎樣利率比較低','怎麼拿到好利率'], a:()=>['利率會看信用、職業收入、往來貢獻度，還有房子的地段和條件。','跟銀行往來越深、繳款紀錄越好，越有機會拿到好利率。']}
+);
 BANK_QA.push(...BANK_QA2);
 const BANK_SOCIAL = {
   greet:{kw:['你好','您好','午安','早安','打擾'], say:['您好，請坐，今天想了解哪方面的房貸條件呢？','您好，我先幫您倒杯水，我們慢慢談。','歡迎，有什麼想法都可以直接跟我說。'], trust:2},
@@ -2141,7 +2259,7 @@ const BANK_SOCIAL = {
   think:{kw:['考慮','想一下','比較看看','回去想'], say:['好的，這份試算我先給您參考，有效期大約一個月。','沒問題，多比較是對的，有疑問隨時找我。','好，您考慮好再通知我，我先幫您保留這個條件。'], trust:0}
 };
 const BANK_TACTIC = {
-  insmust:{say:{gov:'沒有搭配保險的話，成數可能沒辦法給這麼高。',priv:'沒搭保險的話，這個條件可能過不了件喔。',ins:'我們的方案原則上都要搭配保單。'},why:'房貸壽險不是法律強制的。可以請行員說明不買會影響哪一項條件，再和其他銀行比較。'},
+  insmust:{say:{gov:'沒有搭配保險的話，成數可能沒辦法給這麼高。',priv:'沒搭保險的話，這個條件可能過不了件喔。',ins:'我們的方案原則上都要搭配保單。'},why:'房貸壽險不是法律強制投保的。可以請行員說明不買會影響哪一項條件、改向其他銀行比較；若覺得被強迫搭售，也可以向金管會反映。'},
   quota:{say:{gov:'今年房貸額度比較緊，撥款可能要排隊。',priv:'最近房貸額度很搶手，越早送件越好。',ins:'我們這季的房貸額度快用完了。'},why:'額度吃緊在信用管制期間確實可能發生，但也可能是促使你盡快接受條件，可同時詢問其他銀行。'},
   fastsign:{say:{gov:'您今天先簽申請書，我幫您排進審核。',priv:'今天先簽申請書，我馬上幫您優先送件！',ins:'先填申請書，我幫您卡位。'},why:'送出申請通常就會查聯徵。條件還沒談清楚前，不必急著簽。'},
   promo:{say:{gov:'這個月剛好有優惠利率方案，月底就結束了。',priv:'我們這波專案利率只到月底，錯過就沒有了喔！',ins:'這期保單搭配房貸的專案名額有限，要快一點決定。'},why:'製造期限壓力。實際上銀行常常會有類似方案，可以多比較幾家再決定。'},
@@ -2149,7 +2267,7 @@ const BANK_TACTIC = {
   crosssell:{say:{gov:'辦一張本行信用卡，往來紀錄會更好看。',priv:'加辦信用卡和理財帳戶，利率可以再優惠一點。',ins:'搭配我們的醫療險，整體條件會更好。'},why:'搭售商品。要計算額外的保費或年費，是否真的比利率省下的錢划算。'},
   teaser:{say:{gov:'前兩年利率比較低，之後再回到一般利率。',priv:'前一年有超低優惠利率，很划算！',ins:'前兩年有優惠利率，之後再依指標調整。'},why:'前低後高的分段利率。要看整體貸款期間的平均利率，不要只看前幾年。'}
 };
-const BANK_PITCH = {gov:['另外提醒您，火險跟地震險是房貸必保的喔。'],priv:['順便跟您介紹，我們的信用卡現在辦有首刷禮。','您有興趣的話，我們也有理財帳戶可以搭配。'],ins:['順便問一下，您目前的家庭保障規劃夠嗎？','我們也有醫療險可以一起規劃，之後再跟您介紹。']};
+const BANK_PITCH = {gov:['另外提醒您，辦房貸通常要投保火險跟地震險喔。'],priv:['順便跟您介紹，我們的信用卡現在辦有首刷禮。','您有興趣的話，我們也有理財帳戶可以搭配。'],ins:['順便問一下，您目前的家庭保障規劃夠嗎？','我們也有醫療險可以一起規劃，之後再跟您介紹。']};
 const TRUST_PRE = {low:['（語氣有點保留）','（翻了翻您的資料）'],high:['（面帶笑容）','（語氣輕鬆）','']};
 const FREE_BANK = {
   pricy:{kw:['太高','太貴','不划算','好高','很高耶'], say:{gov:['利率是依您的條件評估的，我們可以看看哪些地方能再調整。'],priv:['我懂，我幫您看看有沒有其他專案可以套用。'],ins:['如果覺得利率高，可以考慮年限或保單搭配的組合。']}},
@@ -2192,6 +2310,7 @@ function bankLocal(deal,bank,B,C,text){
     if (h==='shorter'){ if (B.years>20){ out.years=20; out.rate-=0.05; say('shorter'); } else say('shorterNo'); }
     if (h==='lowltv'){ if (B.ltv>55){ out.ltv=50; out.rate-=0.08; out.trust+=3; say('lowltv'); } else { out.rate-=0.03; say('lowltv'); } }
     if (h==='autopay'){ out.rate-=0.02; say('autopay'); }
+    if (h==='profession'){ out.rate-=0.04; out.trust+=4; say('profession'); }
     if (h==='guarantor'){ B.guarantor=true; out.ltv+=3; out.trust+=3; addCond('父母擔任連帶保證人',0); say('guarantor'); }
   }
   const social = Object.values(BANK_SOCIAL).find(v=>v.kw.some(w=>text.includes(w)));
@@ -2210,8 +2329,12 @@ function bankLocal(deal,bank,B,C,text){
     else { out.rate=Math.max(req.rate, B.rate-(B.trust>=55?0.06:0.03)); said.push(`我盡量幫您往 ${req.rate}% 靠近，先調到 ${out.rate.toFixed(2)}%。`); } }
   if (req.years){ if (req.years>C.maxY) said.push(`年限最長只能到 ${C.maxY} 年。`); else { out.years=req.years; said.push(`年限改成 ${req.years} 年沒問題。`); } }
   const t=text.trim(); const prevMe=B.hist.filter(x=>x.who==='me').slice(-2,-1)[0];
+  const amtNow = Math.round(base*(out.ltv||B.ltv)/100/10000)*10000, rNow = out.rate||B.rate, yNow = out.years||B.years, gNow = out.grace??B.grace;
+  if (/月付|每個月要繳|每月繳|月繳|每個月繳/.test(t)){ const full=pmt(amtNow,rNow,yNow-gNow); said.push(gNow ? `以目前條件，寬限期內每月只繳利息約 ${W1(amtNow*rNow/100/12)} 萬，寬限期後每月約 ${W1(full)} 萬。` : `以目前條件貸 ${W(amtNow)} 萬、${yNow} 年，每月本息約 ${W1(full)} 萬。`); }
+  if (/總利息|利息總共|總共要付多少利息/.test(t)){ const full=pmt(amtNow,rNow,yNow-gNow); const tot=full*(yNow-gNow)*12 + amtNow*rNow/100/12*gNow*12 - amtNow; said.push(`若利率不變，${yNow} 年下來總利息大約 ${W(tot)} 萬。`); }
+  if (/負擔得起|還得起|壓力大嗎/.test(t)){ const full=pmt(amtNow,rNow,yNow-gNow); const ratio=(full+existingPayments())/S.income; said.push(`月付加上既有貸款，大約占家庭收入的 ${Math.round(ratio*100)}%。${ratio>0.5?'比例偏高，建議保守一點。':ratio>0.35?'在可接受範圍，但要預留生活緊急金。':'壓力算是適中。'}`); }
   const anyReq = req.ltv||req.rate||req.years;
-  if (!anyReq){
+  if (!anyReq && !/月付|每個月要繳|每月繳|月繳|每個月繳|總利息|利息總共|負擔得起|還得起|壓力大嗎/.test(t)){
     if (prevMe && prevMe.text.trim()===t && t.length>1) said.push(sayOne(FREE_BANK.repeat,B));
     else if (FREE_BANK.pricy.kw.some(w=>t.includes(w))) said.push(sayOne(FREE_BANK.pricy.say[bank.id],B));
     else if (FREE_BANK.leave.kw.some(w=>t.includes(w))){ said.push(sayOne(FREE_BANK.leave.say,B)); out.trust-=1; }
@@ -2225,6 +2348,8 @@ function bankLocal(deal,bank,B,C,text){
   if (Math.random()<0.15 && said.length<2 && BANK_PITCH[bank.id]) said.push(sayOne(BANK_PITCH[bank.id],B));
   B.usedT = B.usedT || {};
   if (Math.random()<0.15 && said.length<3){ const left = Object.keys(BANK_TACTIC).filter(k=>!B.usedT[k]); if (left.length){ const k=pick(left); B.usedT[k]=1; said.push(BANK_TACTIC[k].say[bank.id]); out.sys = `💡 銀行話術識別：${BANK_TACTIC[k].why}`; } }
+  B.mem = B.mem || {}; rememberPlayer(B.mem, text);
+  if (said.length<3){ const ml = memLineBank(B.mem); if (ml) said.push(ml); else if (Math.random()<0.25){ const bg=officerBgLines(bank,B).filter(x=>!(B.said||{})[x]); if (bg.length) said.push(sayOne(bg,B)); } }
   const parts = said.filter(Boolean); while (parts.length>3) parts.splice(parts.length-2,1);
   out.reply = parts.join('');
   return out;
@@ -2334,7 +2459,7 @@ function openReno(pid){
 // ======================= SELLING =======================
 const SALE_MODES = {
   self:{label:'自售',desc:'自己刊登在售屋平台、自己帶看。免仲介費，但曝光少、成交慢。',exp:0.32,fee:[0,0]},
-  general:{label:'一般委託',desc:'可同時委託多家仲介、也能自售。賣方服務費依法上限 4%，只付給成交的那家。',exp:0.55,fee:[2,4]},
+  general:{label:'一般委託',desc:'可同時委託多家仲介、也能自售。依內政部規定，仲介向買賣雙方收取的服務費合計不得超過成交價 6%，業界慣例賣方最多約 4%，只付給成交的那家。',exp:0.55,fee:[2,4]},
   exclusive:{label:'專任委託',desc:'委託期間只給一家仲介、不能自售。仲介會投入較多廣告與帶看。',exp:0.72,fee:[2,4]},
   joint:{label:'專任＋聯賣',desc:'簽專任並開放同業聯合銷售，曝光最大、買方來源最多，服務費通常收滿 4%。',exp:0.9,fee:[3,4]}
 };
@@ -2422,45 +2547,251 @@ const BUYER_NPC = [
   {say:'今天價格可以的話，我馬上簽。',why:'用快速成交換取讓價，要評估是否真的值得少收。'},
   {say:'銀行鑑價估得比較保守，太高我貸不到。',why:'以貸款成數為由壓價，屬於常見且合理的理由。'}
 ];
+// ======================= 賣方議價（你是屋主，與買方談價） =======================
+const BUYER_TYPES = {
+  first:{label:'首購小資族',names:['王小姐','林先生','吳小姐'],desc:'預算有限、很在意總價，也怕買到有問題的房子',conc:0.35,maxF:[0.95,1.0],mood:70,likes:['condition','giveaway','honest','flexpay','emotion','docs','revisit','quiet','checklist','anytime'],dislikes:['rival','deadline','future','firm','rentyield']},
+  investor:{label:'精算投資客',names:['李先生','周老闆','許先生'],desc:'只看數字和租金報酬，不吃感情牌',conc:0.25,maxF:[0.93,0.99],mood:65,likes:['data','honest','flexpay','rentyield','parking','docs'],dislikes:['emotion','future','reno','sunk','revisit']},
+  family:{label:'換屋家庭',names:['張先生夫婦','黃太太','陳先生一家'],desc:'重視學區、空間和生活機能，願意為好房子多付一點',conc:0.45,maxF:[0.98,1.05],mood:72,likes:['location','condition','reno','flexpay','honest','quiet','community','parking','revisit','checklist','anytime'],dislikes:['firm','sunk','rentyield']},
+  expat:{label:'外派回國族',names:['蔡先生','鄭小姐','謝先生'],desc:'時間緊迫，重視快速交屋和產權清楚',conc:0.55,maxF:[0.99,1.06],mood:70,likes:['flexpay','deadline','condition','honest','giveaway','docs','community','parking','checklist'],dislikes:['emotion','revisit']}
+};
+const SELL_T = [
+  {id:'condition',label:'強調屋況保養'},{id:'reno',label:'強調裝潢價值'},{id:'location',label:'強調學區生活機能'},{id:'data',label:'開價有行情依據'},
+  {id:'honest',label:'主動揭露屋況'},{id:'flexpay',label:'交屋付款彈性'},{id:'giveaway',label:'以價換條件'},{id:'rival',label:'製造競爭'},
+  {id:'deadline',label:'設定期限'},{id:'firm',label:'推給家人決定'},{id:'sunk',label:'成本錨定'},{id:'future',label:'未來建設題材'},{id:'emotion',label:'打感情牌'},
+  {id:'rentyield',label:'強調出租報酬'},{id:'parking',label:'強調車位價值'},{id:'quiet',label:'強調安靜環境'},{id:'community',label:'強調社區管理'},
+  {id:'pricecut',label:'已經降過價'},{id:'docs',label:'產權文件齊全'},{id:'revisit',label:'邀請再看一次'},
+  {id:'checklist',label:'點交清單寫清楚'},{id:'anytime',label:'歡迎任何時段看屋'}
+];
+const KW_SELL = {checklist:['點交清單','逐項寫'],anytime:['白天晚上','雨天也','任何時段'],rentyield:['租金','報酬率','出租'],parking:['車位'],quiet:['安靜','巷內'],community:['管委會','公設都有'],pricecut:['降過一次','已經降過'],docs:['產權清楚','文件都準備'],revisit:['再來看','帶家人來'],condition:['保養','屋況很好','不用再花錢','狀況很好','定期整理'],reno:['裝潢','用料'],location:['學校','學區','市場','生活機能','公園'],data:['行情','實價','近期成交','參考附近'],
+  honest:['老實跟你說','據實','現況說明','坦白說'],flexpay:['交屋時間','配合你','付款節奏','付款方式'],giveaway:['全部留','家具家電','冷氣'],rival:['其他買方','別人在看','有人在談'],
+  deadline:['月底','期限','這週決定','下週前'],firm:['家人一起','家裡決定','討論決定'],sunk:['成本','當初買'],future:['建設','潛力','未來'],emotion:['感情','住了很多年','捨不得','對的人']};
+function sellText(id, p){
+  const iss = p.L.issues.filter(x=>SELL_DEFECTS.includes(x));
+  return {condition:'這間我保養得很好，水電和防水都定期整理，住進來不用再花錢。',
+    reno:'裝潢是近幾年做的，用料都不錯，等於幫你省下一筆裝潢費。',
+    location:'附近走路就到學校和市場，生活機能非常方便。',
+    data:'我開價是參考附近近期成交行情，沒有亂開。',
+    honest: iss.length ? `老實跟你說，這間有${iss.join('、')}的狀況，我在價格上已經考慮進去了。` : '老實跟你說，屋況都可以據實說明，簽約時也會附上現況說明書。',
+    flexpay:'交屋時間和付款節奏我都可以配合你。',
+    giveaway:'價格如果照我的來，冷氣和家具家電都可以全部留給你。',
+    rival:'老實說這週還有其他買方在看，也有人在談價格。',
+    deadline:'我希望這個月底前能決定賣給誰。',
+    firm:'價格是我們家人一起討論決定的，我一個人沒辦法再降太多。',
+    sunk:'我當初買的成本就不低了，這個價格真的已經很實在。',
+    future:'這附近未來還有建設計畫，長期來看很有潛力。',
+    emotion:'這是我們住了很多年的家，真的是有感情才希望交給對的人。',
+    rentyield:`這區出租一個月租金大約 ${W1(valueOf(p.L)*CITIES[p.L.ck].yield/12)} 萬，拿來出租報酬率也不錯。`,
+    parking: p.L.parking ? '這間含坡道平面車位，光是單買一個車位就要一兩百萬。' : '雖然沒有車位，但附近月租車位很好找，省下買車位的錢。',
+    quiet:'這裡在巷內，晚上很安靜，睡眠品質很好。',
+    community: (p.L.type==='電梯大樓'||p.L.type==='華廈') ? '管委會運作得很好，公設都有定期維護，住起來很省心。' : '這棟住戶都很單純，鄰居會一起維護樓梯間，公設都有人整理。',
+    pricecut:'我已經降過一次價了，現在的價格誠意很足。',
+    docs:'產權清楚，權狀和相關文件都準備好了，隨時可以簽約。',
+    revisit:'如果還在考慮，歡迎你再帶家人來看一次，慢慢看沒關係。',
+    checklist:'要留下的設備，簽約時會逐項寫進點交清單，交屋時不會有爭議。',
+    anytime:'看屋時間白天晚上都可以，雨天也歡迎來看，屋況你可以看得很清楚。'}[id];
+}
+const BUYER_REACT = {
+  like:['這點我很在意，聽你這樣說我比較放心。','嗯，這個確實是加分。','好，這個條件不錯。','聽起來很合理，我會考慮進去。'],
+  neutral:['了解，不過我還是比較在意價格。','嗯，這個我知道了。','這點還好，主要還是看總價。'],
+  dislike:['你這樣講，感覺是在給我壓力。','這種說法我聽很多了。','老實說這對我沒什麼吸引力。','我不太喜歡被催。']
+};
+const BUYER_SAY = {
+  raise:['好，我再加 {d} 萬，出到 {o} 萬。','看在你這麼有誠意，我加到 {o} 萬。','我跟家人商量一下……好，{o} 萬。','我盡量了，{o} 萬，這真的接近我的極限。'],
+  hold:['{o} 萬已經是我能出的了。','我的預算真的只有這樣，{o} 萬。','價格我沒辦法再動，還是 {o} 萬。'],
+  accept:['好，就照你說的價格，我們成交吧！','可以，這個價格我接受。','行，就這樣說定了。'],
+  leave:['差距太大了，我們還是再看看別間好了。','抱歉，這樣我沒辦法，我先離開了。','我覺得我們談不攏，謝謝你的時間。'],
+  tired:['我們已經談很久了，給個最後的數字吧。','再談下去我也累了，你決定吧。'],
+  high:['這個價格比行情高太多了吧？','你這樣開我很難接受。']
+};
+const BUYER_Q = [
+  {id:'leak',q:'請問這間有沒有漏水或壁癌的狀況？'},{id:'why',q:'方便問一下為什麼要賣嗎？'},{id:'fee',q:'管理費一個月大概多少？'},
+  {id:'neighbor',q:'鄰居好相處嗎？會不會很吵？'},{id:'move',q:'最快什麼時候可以交屋？'},{id:'stay',q:'冷氣和家具會留下來嗎？'},
+  {id:'daytime',q:'可以白天或下雨天再來看一次嗎？'},{id:'loanbal',q:'方便問一下您房子還有貸款嗎？'}
+];
+const BUYER_PRESS = [
+  {say:'附近同社區上個月才成交，單價比你低不少。',why:'用實價登錄定錨壓價。可以確認那筆成交的樓層、屋況是否真的可比。'},
+  {say:'我們預算真的只有這樣，家人也不讓我再加了。',why:'悲情牌與預算封頂，測試你的讓價空間。'},
+  {say:'我也在看隔壁另一間，條件差不多。',why:'分散焦點，暗示你不讓價他就轉身離開。'},
+  {say:'屋況要整理的地方不少，我得預留裝潢費。',why:'嫌貨才是買貨人，把整修成本當砍價籌碼。'},
+  {say:'今天價格可以的話，我馬上簽。',why:'用快速成交換取讓價，評估是否真的值得少收。'},
+  {say:'銀行鑑價估得比較保守，太高我貸不到。',why:'以貸款成數為由壓價，屬於常見且合理的理由。'},
+  {say:'那我們再考慮看看好了……',why:'買方假裝要走，測試你會不會挽留讓價。不一定真的會走。'},
+  {say:'我同時有好幾個仲介在幫我找這一區的房子。',why:'暗示買方有很多選擇，給你讓價壓力。'},
+  {say:'我們先把總價談定，家具家電的事之後再說。',why:'價格切分：先鎖定總價，之後再爭取附加條件。可以提前把點交項目一起談清楚。'},
+  {say:'我們是帶著孩子一起來看的，真的很想給孩子一個家。',why:'哀兵策略，用情感爭取讓價。'}
+];
+const AGENT_SELL = ['【仲介】買方真的很有誠意，您要不要再讓一點，我們今天就能成交。','【仲介】現在看屋的人變少了，這組買方條件最好。','【仲介】我幫兩位抓個中間價，您覺得如何？','【仲介】價格之外，交屋時間也可以當成條件來談。'];
+const SELL_DEFECTS = ['漏水','壁癌','管線老舊','頂樓加蓋（違建）'];
+const FREE_BUYER = {
+  room:[
+    {kw:['廚房'], say:['廚房我很在意，聽起來不錯。','我太太最在意廚房，回去會跟她說。','廚房大小剛好，可以接受。']},
+    {kw:['陽台'], say:['有陽台可以曬衣服，很實用。','陽台這點加分。']},
+    {kw:['浴室','衛浴','廁所'], say:['浴室有對外窗很重要，謝謝你提醒。','衛浴看起來還要整理一下。']},
+    {kw:['主臥','臥室','房間'], say:['房間格局方正我很喜歡。','房間數剛好夠我們用。']},
+    {kw:['客廳'], say:['客廳採光真的不錯。','客廳空間比我想像的大。']},
+    {kw:['收納','儲藏','櫃子'], say:['收納多很加分，我東西很多。','系統櫃如果能留下來就太好了。']}
+  ],
+  askBuyer:{kw:['你預算','您的預算','幾個人住','什麼時候入住','什麼時候要搬','貸款辦好','自備款','為什麼想買','看了多久','你是自住','您是自住'], say:{
+    first:['我們是第一次買房，預算抓得很緊。','我們兩個人住，可能明年會有小孩。','貸款已經先去問過銀行了，自備款大概兩成多。','看了快半年，這間是目前最喜歡的。'],
+    investor:['我是買來出租的，報酬率要算得過來。','預算有彈性，但價格一定要合理。','資金都準備好了，貸款不是問題。','我看過很多間，比較重視數字。'],
+    family:['我們一家四口，小孩快上小學了。','想換大一點的房子，原本的房子也在賣。','希望今年暑假前可以搬進來。','預算要看舊房子賣多少。'],
+    expat:['我下個月就要回國上班，時間很趕。','自備款很充足，可以很快簽約。','家人先回來，我希望越快交屋越好。','我在國外看過照片，這次回來專程看房。']}},
+  rude:{kw:['愛買不買','不買拉倒','買不起','沒錢就','窮','別浪費我時間','你懂什麼'], say:['你這樣講話我很不舒服。','好，那我不打擾了。','我是來買房子的，不是來被羞辱的。'], mood:-22},
+  bottom:{kw:['最低','底價','不能再少','最多讓','只能讓','再降沒辦法'], say:['那你最低能接受多少？直接說個數字吧。','你說不能再少，那我們差距還有點大。','了解你的底線了，我再想想。']},
+  urge:{kw:['快點決定','考慮好了嗎','趕快決定','到底要不要買','要不要買'], say:{first:['我需要回家跟家人討論，不想被催。'],investor:['數字對了我就會決定，不用催。'],family:['我們會盡快討論，給我們一兩天。'],expat:['我也想快點決定，價格對就簽。']}, mood:{first:-6,investor:-3,family:-2,expat:1}},
+  greet:{kw:['你好','您好','歡迎','午安','早安'], say:['你好，打擾了。','你好，房子我看過了，很喜歡。'], mood:2},
+  thanks:{kw:['謝謝','感謝'], say:['不客氣，我也謝謝你。','哪裡，應該的。'], mood:2},
+  sorry:{kw:['抱歉','不好意思','對不起'], say:['沒關係，我們好好談。','說開就好。'], mood:5},
+  think:{kw:['考慮看看','你再想想','回去想想','不急'], say:['好，我回去跟家人討論一下。','謝謝你給我時間。'], mood:2},
+  smalltalk:{kw:['天氣','好熱','下雨','吃飯','咖啡','狗','貓','寵物'], say:['哈哈，對啊。那房子的部分……','聊得很愉快，我們回到價格吧。']},
+  shortReply:['嗯？所以你的意思是？','你可以說清楚一點嗎？','那價格方面呢？'],
+  longTalk:['你講得很詳細，謝謝你。','我大概懂你的想法了。'],
+  repeat:['這個你剛剛說過了。','我知道，我們談點別的吧。'],
+  unknownQ:['這個我不太確定，我回去想想。','嗯……這要問我家人。'],
+  offtopic:['我們還是回到房子吧。','這個先不談，價格你怎麼看？','嗯，那房子的價格呢？']
+};
+const LIE_KW = ['沒有漏水','沒漏水','沒有壁癌','完全沒問題','沒有任何問題','從來沒有','屋況完美','不會漏'];
 function saleOffer(p){
   const v = valueOf(p.L); const s = p.sale;
-  const offer = Math.round(Math.min(s.ask, v*R(0.88,1.0))/10000)*10000;
-  let buyerMax = Math.max(offer, Math.round(v*R(0.96,1.04)*(p.L.staging?1.02:1)/10000)*10000);
-  const md = modal(`<h2>有買方出價了！</h2><p class="sub">${esc(titleOf(p.L))}・${s.label}・開價 ${W(s.ask)} 萬</p>
-    <p style="font-size:15px">${s.mode==='self'?'一位看過房子的買方直接聯絡你：「我很有誠意，':`${s.agency}的經紀人帶來斡旋：「現在市場看屋的人變少了，這個買方是自住、自備款很足、誠意最高的一個，錯過可能要再等半年。`}出價 <b class="n" style="font-size:24px">${W(offer)} 萬</b>，已經付了斡旋金。」</p>
-    ${(()=>{ const bt=pick(BUYER_NPC); return `<p style="font-size:14px;margin:6px 0">買方補充：「${bt.say}」</p><p class="meta" style="margin:0 0 8px">💡 買方話術識別：${bt.why}</p>`; })()}
-    <div class="note">目前估值約 ${W(v)} 萬。你可以接受、還價，或拒絕等下一組買方。還價太高，買方可能直接放棄。</div>
-    <div class="field">還價（萬）<input type="number" id="ctr" value="${Math.round((offer+s.ask)/2/10000)}" step="5"></div>
-    <div class="field">還價時搭配的話術<select id="stac"><option value="">不用話術，就事論事</option><option value="rival">已經有其他人出價了（製造競爭）</option><option value="future">這裡未來有重大建設（畫大餅）</option><option value="notneedy">我不缺錢，價格不到寧願放著（定錨）</option><option value="emigrate">要不是換屋也捨不得賣（合理化）</option><option value="multiview">這週末還有其他人約看（製造人潮）</option><option value="firm">價格是家人開會決定的（推給家人）</option><option value="renovated">裝潢都是新的，等於送你（強調附加價值）</option><option value="gift">價格不動，家具家電全送（換條件）</option><option value="sunk">我當初買得比這貴（成本錨定）</option><option value="monthend">月底前要決定賣給誰（設定期限）</option></select></div>
-    <div class="foot"><button class="btn ghost" id="rej">拒絕</button><button class="btn" id="ctrBtn">還價</button><button class="btn red" id="acc">接受 ${W(offer)} 萬</button></div>`);
+  const tk = pick(Object.keys(BUYER_TYPES)), BT = BUYER_TYPES[tk];
+  const offer0 = Math.round(Math.min(s.ask, v*R(0.88,0.97))/10000)*10000;
+  const B = {type:tk, name:pick(BT.names), offer:offer0, base:Math.max(offer0, Math.round(v*R(BT.maxF[0],BT.maxF[1])*(p.L.staging?1.02:1)/10000)*10000),
+    persuade:0, mood:BT.mood, round:0, used:{}, said:{}, pendingQ:null, lied:false, liedReveal:false, warned:false, done:false, asked:{}};
+  const maxNow = () => Math.round(B.base*(1+Math.min(0.05, B.persuade*0.008))*(B.liedReveal?0.95:1)/10000)*10000;
+  const agent = s.mode!=='self';
+  const md = modal(`<h2>賣方議價：${esc(titleOf(p.L))}</h2><p class="sub">${s.label}・你的開價 ${W(s.ask)} 萬・目前估值約 ${W(v)} 萬</p>
+  <div class="nego"><div class="side">
+    <div class="who"><div class="avatar" style="background:#2f5bd3">${B.name[0]}</div><div><b>${B.name}</b><div class="meta">${BT.label}</div></div></div>
+    <div class="note">${BT.desc}</div>
+    <div><div class="meta">買方情緒</div><div class="meter"><i id="bMood"></i></div></div>
+    <div><div class="meta">買方目前出價</div><div class="bigprice n" id="bOffer"></div></div>
+    <div class="note" style="font-size:12px">練習重點：用屋況、條件和時機說服買方，而不是誇大或隱瞞。已知的瑕疵在現實中必須據實告知。</div>
+    <details class="note"><summary><b>賣方話術小抄</b></summary>
+      強調屋況、裝潢、生活機能：適合重視居住品質的買方<br>開價有行情依據：對投資客最有效<br>交屋付款彈性、以價換條件：用條件代替降價<br>製造競爭、設定期限：有效但容易惹毛首購族<br>主動揭露屋況：建立信任，也是賣方的法律責任
+    </details>
+  </div>
+  <div><div class="chat" id="chat" aria-live="polite"></div>
+    <div class="tact" id="tact">${SELL_T.map(t=>`<button data-t="${t.id}">${t.label}</button>`).join('')}</div>
+    <div class="inrow"><textarea id="say" placeholder="跟買方說點什麼……（可以自由打字，也可以點上面的話術）"></textarea>
+      <div class="offer">還價（萬，可留空）<input id="ctr" type="number" inputmode="numeric" min="0" step="10"></div></div>
+    <div class="foot" style="margin-top:10px"><button class="btn ghost" id="rej">拒絕這位買方</button><button class="btn yel" id="acc"></button><button class="btn red" id="send">送出</button></div>
+  </div></div>`, true);
   md.dataset.lock='1';
-  const done = () => { delete md.dataset.lock; closeModal(); };
-  md.querySelector('#rej').onclick=()=>{ addLog(`拒絕了 ${W(offer)} 萬的出價。`); done(); };
-  md.querySelector('#acc').onclick=()=>{ delete md.dataset.lock; completeSale(p, offer); };
-  let tacUsed = false, buyerLeft = false;
-  md.querySelector('#ctrBtn').onclick=()=>{
-    const c = Math.round((parseFloat(md.querySelector('#ctr').value)||0)*10000);
-    const tac = md.querySelector('#stac').value;
-    if (tac && !tacUsed){ tacUsed = true; const r=Math.random();
-      if (tac==='rival'){ if (r<0.45) buyerMax*=1.03; else if (r<0.7) buyerLeft=true; }
-      if (tac==='future') buyerMax *= S.idx[p.L.ck]>=1 ? 1.015 : 1.005;
-      if (tac==='notneedy'){ if (r<0.6) buyerMax*=1.02; else if (r<0.8) buyerLeft=true; }
-      if (tac==='emigrate') buyerMax *= 1.01;
-      if (tac==='multiview'){ if (r<0.5) buyerMax*=1.02; else if (r<0.65) buyerLeft=true; }
-      if (tac==='firm'){ if (r<0.55) buyerMax*=1.015; }
-      if (tac==='renovated') buyerMax *= p.L.cond>75 ? 1.02 : 1.0;
-      if (tac==='gift'){ buyerMax*=1.02; p._giftAll=true; }
-      if (tac==='sunk'){ if (r<0.35) buyerMax*=1.01; else if (r<0.5) buyerLeft=true; }
-      if (tac==='monthend'){ if (r<0.5) buyerMax*=1.015; else if (r<0.65) buyerLeft=true; }
-      buyerMax = Math.round(buyerMax/10000)*10000;
+  const chat = md.querySelector('#chat');
+  const bubble = (who, text, off) => { const d=document.createElement('div'); d.className='msg '+who; d.textContent=text; if (off){ const o=document.createElement('div'); o.className='off'; o.textContent=`還價 ${W(off)} 萬`; d.appendChild(document.createElement('br')); d.appendChild(o);} chat.appendChild(d); chat.scrollTop=chat.scrollHeight; };
+  const say1 = pool => { const f=pool.filter(x=>!B.said[x]); const c=pick(f.length?f:pool); B.said[c]=1; return c; };
+  const upd = () => { const mb=md.querySelector('#bMood'); mb.style.width=clamp(B.mood,0,100)+'%'; mb.style.background=B.mood>55?'var(--green)':B.mood>30?'#e0a31a':'var(--red)'; md.querySelector('#bOffer').textContent=W(B.offer)+' 萬'; md.querySelector('#acc').textContent=`接受 ${W(B.offer)} 萬成交`; };
+  const end = (msg) => { B.done=true; delete md.dataset.lock; ['#send','#acc'].forEach(q=>md.querySelector(q).disabled=true); md.querySelector('#rej').textContent='離開'; if (msg) bubble('sys',msg); };
+  // opening
+  bubble('them', agent ? `【仲介】${s.agency}帶來一組買方，出價 ${W(B.offer)} 萬，已經付了斡旋金。` : `你好，我看過房子了，想出價 ${W(B.offer)} 萬。`);
+  if (agent) bubble('them', '【仲介】現在看屋的人變少了，這組買方自備款充足、誠意很高，錯過可能要再等一陣子。');
+  const bp0 = pick(BUYER_PRESS.slice(0,6)); bubble('them', bp0.say); bubble('sys', `💡 買方話術識別：${bp0.why}`);
+  upd();
+  md.querySelectorAll('#tact button').forEach(b=>b.onclick=()=>{ const ta=md.querySelector('#say'); ta.value=(ta.value?ta.value+'\n':'')+sellText(b.dataset.t,p); ta.focus(); });
+  md.querySelector('#rej').onclick=()=>{ if (!B.done) addLog(`拒絕了${B.name}的 ${W(B.offer)} 萬出價。`); delete md.dataset.lock; closeModal(); };
+  md.querySelector('#acc').onclick=()=>{ if (B.done) return; B.done=true; delete md.dataset.lock; bubble('me','好，就這個價格。'); setTimeout(()=>completeSale(p, B.offer), 300); };
+  const send = () => {
+    if (B.done) return;
+    const text = md.querySelector('#say').value.trim(); const cv = parseFloat(md.querySelector('#ctr').value);
+    let ctr = cv>0 ? Math.round(cv*10000) : 0;
+    if (!ctr && text){ const am = amountsIn(text).filter(a=>a.v>B.offer*0.8 && a.v<s.ask*1.3); if (am.length && !/行情|成本|裝潢|管理費/.test(text)) ctr = am[am.length-1].v; }
+    if (!text && !ctr){ toast('說點什麼或輸入還價吧'); return; }
+    bubble('me', text||'（還價）', ctr); md.querySelector('#say').value=''; md.querySelector('#ctr').value='';
+    B.round++;
+    const T = BUYER_TYPES[B.type]; const hits = detect(text, KW_SELL); const out=[];
+    // 回答買方問題
+    if (B.pendingQ){
+      const q=B.pendingQ; B.pendingQ=null; const iss=p.L.issues.filter(x=>SELL_DEFECTS.includes(x));
+      if (q==='leak'){
+        if (iss.length && LIE_KW.concat(['沒有','不會']).some(w=>text.includes(w)) && !/有.*(漏|壁癌)|處理過/.test(text)){ B.lied=true; }
+        else if (iss.length && /有|之前|處理|漏|壁癌/.test(text)){ B.mood+=8; B.persuade+=1; out.push(say1(['謝謝你這麼坦白，我反而比較安心。','你願意說實話，我很感謝。'])); }
+        else if (!iss.length){ B.mood+=2; out.push('好，屋況沒問題就好。'); }
+      } else if (q==='move' && /隨時|馬上|一個月|下個月|很快|配合/.test(text)){ B.mood+=4; if (B.type==='expat') B.persuade+=1.5; out.push(say1(['太好了，交屋快對我很重要。','可以這麼快？那很理想。'])); }
+      else if (q==='stay' && /留|送|不帶走/.test(text) && !/不留|帶走/.test(text)){ B.mood+=4; if (B.type==='first'||B.type==='expat') B.persuade+=1; out.push(say1(['家具家電留下來幫我省很多錢，謝謝。','冷氣能留下就太好了。'])); }
+      else if (q==='stay' && /不留|帶走/.test(text)){ B.mood-=1; out.push('了解，那我得再準備一筆家電的錢。'); }
+      else if (q==='neighbor' && p.L.issues.includes('鄰居嘈雜') && /安靜|不吵|沒聲音/.test(text)){ B.mood+=1; bubble('sys','💡 提醒：鄰居噪音雖然不一定是法律上的瑕疵，但說得太絕對，買方入住後發現落差容易引起糾紛，建議如實描述。'); out.push('好，安靜就好。'); }
+      else if (q==='daytime' && /可以|歡迎|沒問題|隨時/.test(text)){ B.mood+=5; B.persuade+=0.6; out.push(say1(['謝謝，多看幾次我比較安心。','好，那我們週末白天再來。'])); }
+      else if (q==='daytime' && /不行|沒辦法|只能晚上/.test(text)){ B.mood-=6; out.push('只能晚上看……是不是採光有問題？'); }
+      else if (q==='loanbal' && text.length>3){ B.mood+=2; out.push(say1(['了解，交屋前塗銷就好。','好，走履約保證我就放心。'])); }
+      else if (q==='fee' && /\d|元|塊|沒有管理費/.test(text)){ B.mood+=3; out.push(say1(['好，管理費在預算內。','了解，這個金額可以接受。'])); }
+      else if (text.length>3){ B.mood+=2; out.push(say1(['了解，謝謝你的說明。','好，這樣我清楚了。','嗯，聽起來沒問題。'])); }
+      else { B.mood-=2; out.push('你好像不太想回答……'); }
     }
-    if (buyerLeft){ addLog('買方覺得被話術施壓，決定放棄。'); md.querySelector('.note').innerHTML = '買方回覆：「既然有人出更高，那你賣給他吧。」買方放棄了。'; md.querySelector('#acc').disabled=true; md.querySelector('#ctrBtn').disabled=true; md.querySelector('#rej').textContent='關閉'; return; }
-    if (c<=offer){ delete md.dataset.lock; completeSale(p, offer); return; }
-    if (c<=buyerMax){ delete md.dataset.lock; toast('買方同意了你的價格！'); completeSale(p, c); }
-    else if (c<=buyerMax*1.04){ const mid = Math.round((buyerMax+offer)/2/10000)*10000; md.querySelector('.note').innerHTML = `買方回覆：「${W(c)} 萬太高了，最多 <b>${W(mid)} 萬</b>，這是底線。」`; md.querySelector('#acc').textContent = `接受 ${W(mid)} 萬`; md.querySelector('#acc').onclick=()=>{ delete md.dataset.lock; completeSale(p, mid); }; md.querySelector('#ctrBtn').disabled=true; }
-    else { addLog(`還價 ${W(c)} 萬，買方覺得差太多，放棄了。`); md.querySelector('.note').innerHTML = '買方覺得差距太大，已經放棄。'; md.querySelector('#acc').disabled=true; md.querySelector('#ctrBtn').disabled=true; md.querySelector('#rej').textContent='關閉'; }
+    // 隱瞞瑕疵
+    const iss = p.L.issues.filter(x=>SELL_DEFECTS.includes(x));
+    if (iss.length && (LIE_KW.some(w=>text.includes(w)) || hits.includes('condition'))) B.lied = true;
+    if (hits.includes('future') && !B.warnFuture){ B.warnFuture=true; bubble('sys','💡 提醒：向買方描述未來建設時應有公開依據。現實中捏造或誇大重大建設來促成交易，可能構成不實陳述甚至詐欺。'); }
+    if (hits.includes('rival') && !B.warnRival){ B.warnRival=true; bubble('sys','💡 提醒：表達「還有其他人在看」是常見說法，但若捏造他人出價逼對方加價，事後被發現容易衍生糾紛。'); }
+    if (B.lied && !B.warned){ B.warned=true; bubble('sys', `⚠️ 現實提醒：這間房子實際有${iss.join('、')}。賣方明知瑕疵卻隱瞞或說沒有，買方事後可以依法主張瑕疵擔保責任，要求減少價金、解約或賠償。遊戲中買方也可能透過驗屋發現。`); }
+    // 話術效果
+    let used = 0;
+    for (const h of hits){
+      used++;
+      if (h==='honest'){ B.mood+=6; B.persuade+=iss.length?0.5:1; out.push(say1(BUYER_REACT.like)); continue; }
+      if (h==='parking' && !p.L.parking && T.likes.includes('parking')){ B.mood-=2; out.push('沒有車位對我來說還是扣分。'); B.used[h]=1; continue; }
+      if (B.used[h]){ B.mood-=3; out.push('這個你剛剛說過了。'); continue; }
+      B.used[h]=1;
+      if (T.likes.includes(h)){ B.persuade+=1.6; B.mood+=4; out.push(say1(BUYER_REACT.like)); }
+      else if (T.dislikes.includes(h)){ B.persuade+=0.2; B.mood-=9; out.push(say1(BUYER_REACT.dislike)); }
+      else { B.persuade+=0.7; B.mood-=1; out.push(say1(BUYER_REACT.neutral)); }
+      if (h==='rival' || h==='deadline'){ if (Math.random()<0.35) B.persuade+=1; }
+    }
+    // 自由對話材料庫
+    const FB = FREE_BUYER, t = text.trim(); const has = arr => arr.some(w=>t.includes(w));
+    if (t){
+      if (B.lastText && B.lastText===t && t.length>1) out.push(say1(FB.repeat));
+      else if (has(FB.rude.kw)){ B.mood += FB.rude.mood; out.push(say1(FB.rude.say)); }
+      else {
+        for (const k of ['greet','thanks','sorry','think']) if (has(FB[k].kw)){ B.mood += FB[k].mood; out.unshift(say1(FB[k].say)); break; }
+        if (has(FB.askBuyer.kw)){ out.push(say1(FB.askBuyer.say[B.type])); B.mood+=2; }
+        else if (has(FB.urge.kw)){ B.mood += FB.urge.mood[B.type]; out.push(say1(FB.urge.say[B.type])); }
+        else if (has(FB.bottom.kw) && !ctr) out.push(say1(FB.bottom.say));
+        else { const r = FB.room.find(x=>has(x.kw)); if (r) out.push(say1(r.say)); else if (has(FB.smalltalk.kw)) out.push(say1(FB.smalltalk.say));
+          else if (!used && !ctr && !out.length){
+            if (t.length<=3) out.push(say1(FB.shortReply));
+            else if (/[？?]|嗎|多少|如何|怎麼/.test(t)) out.push(say1(FB.unknownQ));
+            else if (t.length>80) out.push(say1(FB.longTalk));
+            else out.push(say1(Math.random()<0.5?FB.offtopic:['我聽到了，那價格可以再談嗎？','了解，你覺得多少比較合理？','好，所以你的意思是？']));
+          } }
+      }
+      B.lastText = t;
+    }
+    if (!out.length && !ctr) out.push('嗯……所以價格方面呢？');
+    // 驗屋揭穿
+    if (B.lied && !B.liedReveal && B.round>=2 && Math.random()<0.45){ B.liedReveal=true; B.mood-=25; out.push(`我請驗屋師看過了，發現有${iss[0]}，你之前說沒問題？這讓我很難信任你。`); bubble('sys','買方發現你隱瞞屋況，信任大幅下降，願意出的價格也降低了。'); }
+    // 價格判斷
+    const mx = maxNow();
+    let decided = false;
+    if (ctr){
+      if (ctr <= B.offer){ B.offer = ctr; out.push(say1(BUYER_SAY.accept)); bubble('them', out.join(' ')); upd(); end(); setTimeout(()=>completeSale(p, ctr), 600); return; }
+      if (ctr <= mx && B.mood>=35 && Math.random()<0.75){ B.offer = ctr; out.push(say1(BUYER_SAY.accept)); bubble('them', out.join(' ')); upd(); end(); setTimeout(()=>completeSale(p, ctr), 600); return; }
+      if (ctr > mx*1.06){ B.mood-=10; out.push(say1(BUYER_SAY.high)); }
+      const target = Math.min(ctr, mx);
+      const nOffer = Math.round((B.offer + (target-B.offer)*T.conc*(B.mood>50?1:0.6))/10000)*10000;
+      if (nOffer > B.offer){ const d=nOffer-B.offer; B.offer=nOffer; out.push(say1(BUYER_SAY.raise).replace('{d}',W(d)).replace('{o}',W(nOffer))); }
+      else out.push(say1(BUYER_SAY.hold).replace('{o}',W(B.offer)));
+      decided = true;
+    } else if (B.persuade>2 && B.offer < mx && Math.random()<0.4){
+      const nOffer = Math.round((B.offer + (mx-B.offer)*0.25)/10000)*10000;
+      if (nOffer>B.offer){ const d=nOffer-B.offer; B.offer=nOffer; out.push(say1(BUYER_SAY.raise).replace('{d}',W(d)).replace('{o}',W(nOffer))); decided=true; }
+    }
+    if (B.round>7){ B.mood-=4; if (!decided) out.push(say1(BUYER_SAY.tired)); }
+    B.mem = B.mem || {}; rememberPlayer(B.mem, text);
+    if (out.length<3){ const ml = memLineBuyer(B, B.mem); if (ml) out.push(ml); else if (B.mood>35 && Math.random()<0.3){ const bg=buyerBgLines(B,p).filter(x=>!B.said[x]); if (bg.length) out.push(say1(bg)); } }
+    B.mood = clamp(B.mood,-10,100);
+    while (out.length>3) out.splice(1,1);
+    bubble('them', out.join(' ') || say1(BUYER_SAY.hold).replace('{o}',W(B.offer)));
+    if (B.mood<=0){ end(); bubble('them', say1(BUYER_SAY.leave)); addLog(`${B.name}議價破局，離開了。`); upd(); return; }
+    // 買方追問或出招
+    if (!B.pendingQ && Math.random()<0.35){ const left=BUYER_Q.filter(q=>!B.asked[q.id]); if (left.length){ const q=pick(left); B.asked[q.id]=1; B.pendingQ=q.id; bubble('them', q.q); } }
+    else if (Math.random()<0.3){ const bp=pick(BUYER_PRESS); bubble('them', bp.say); bubble('sys', `💡 買方話術識別：${bp.why}`); }
+    if (agent && Math.random()<0.25) bubble('them', pick(AGENT_SELL));
+    upd();
   };
+  md.querySelector('#send').onclick = send;
+  md.querySelector('#say').addEventListener('keydown', e=>{ if (e.key==='Enter' && (e.ctrlKey||e.metaKey)) send(); });
 }
+
 function completeSale(p, price){
   const e = saleEstimate(p, price, p.sale?p.sale.feePct:0);
   S.cash += e.net;
@@ -2577,14 +2908,15 @@ $('#nextBtn').onclick = nextMonth;
 const DISC_HTML = `<h2>免責聲明與使用說明</h2><p class="sub">最後更新：2026 年 9 月</p>
 <div style="font-size:14px;line-height:1.75">
 <h3>一、軟體性質</h3><p>「房產新手村：買房小白實戰訓練」（以下稱本軟體）是一款免費的房地產知識學習與模擬遊戲，目的在於讓使用者認識購屋、貸款、議價、持有與出售的基本流程。本軟體不是房地產仲介、估價、金融或投資顧問服務，也不提供任何真實交易。</p>
+<p><b>本軟體為個人開發的非官方作品，與內政部、中央銀行、財政部等政府機關，以及任何金融機構、建設公司、不動產經紀業者皆無合作、授權或背書關係。</b></p>
 <h3>二、資料來源與時間點</h3><p>本軟體製作於 2026 年 9 月。遊戲中 2008 年至 2026 年 9 月的房價，是參考內政部不動產實價登錄、民間房價指數等公開資訊的整體走勢，經簡化整理而成的近似值，<b>並非逐筆實價登錄資料，也不代表任何特定社區或物件的實際成交價</b>。同一行政區內不同社區、樓層、屋況的價格差異可能很大。</p>
 <h3>三、未來為模擬推估</h3><p>遊戲時間進入 2026 年 10 月之後，房價、利率、政策與新聞事件皆由程式隨機模擬產生，<b>不是對真實未來的預測</b>。遊戲中的漲跌結果不代表房價未來一定會上漲或下跌，請勿依據本軟體的任何結果做出購屋、售屋、貸款或投資決定。</p>
 <h3>四、非專業建議</h3><p>本軟體的所有內容，包括房價、估值、貸款成數、利率、稅費試算、議價話術與裝修費用，均僅供學習參考，<b>不構成任何投資、財務、法律、稅務、估價或貸款建議</b>，也不能取代不動產估價師的正式估價報告。實際交易請以內政部實價登錄、銀行實際核貸條件、主管機關最新法規，並諮詢地政士、不動產估價師、律師、會計師或金融機構等專業人士為準。</p>
 <h3>五、法規與稅制已經簡化</h3><p>遊戲中的央行選擇性信用管制、房地合一稅、奢侈稅、房屋稅、地價稅、契稅與各項規費，都是依公開資訊簡化後的模擬計算，實際適用條件、稅率、減免與計算方式更為複雜，且可能隨時修正。本軟體不保證法規資訊的完整性與即時性。</p>
 <h3>六、虛構角色與機構</h3><p>遊戲中的待售物件、屋況問題（如漏水、壁癌、違建）、屋主與買方皆由程式隨機產生，地圖僅標示行政區範圍與整條道路，不標示任何特定建物，與該路段任何實際建物、住戶或社區無關。遊戲中的銀行（聯興銀行、晴川商業銀行、松柏人壽）、房仲品牌、對話內容與其經營方式均為虛構，如與真實人物、企業或機構名稱雷同，純屬巧合，不代表任何真實機構的產品、利率或立場。遊戲中提及的地名、路名與歷史新聞事件僅作為背景描述。</p>
 <h3>七、議價與貸款情境</h3><p>遊戲中的議價話術是為了讓使用者認識常見的談判方式與其背後的心理，並非鼓勵在真實交易中使用不實陳述。現實中向銀行或交易對象提供不實資料，可能涉及民事或刑事責任。</p>
-<h3>八、個人資料與存檔</h3><p>本軟體不設會員、不收集姓名或聯絡方式。遊戲進度只儲存在使用者自己裝置的瀏覽器中，開發者無法讀取；清除瀏覽器資料後存檔即會消失。本版本不使用 AI 服務，對話內容不會傳送到任何伺服器。地圖的道路資料會從 OpenStreetMap 的 Overpass 伺服器查詢（對方會依其隱私政策處理連線資訊）。</p>
-<h3>九、第三方資源與授權</h3><p>本軟體使用 Google Fonts 提供的 Noto Sans TC、Barlow Condensed 字型（SIL Open Font License），地圖使用 Leaflet（BSD-2 授權）繪製；行政區界線資料來源為內政部國土測繪中心「鄉鎮市區界線（TWD97經緯度）」，依政府資料開放授權條款－第1版（https://data.gov.tw/license）提供，經 taiwan-atlas 專案（MIT 授權）轉換並由本軟體簡化；道路線形資料 © OpenStreetMap 貢獻者（ODbL），透過 OpenStreetMap Overpass API（主伺服器忙碌時改用其他公開鏡像伺服器）查詢，查詢內容僅為路名與範圍，不含任何個人資料。地圖只繪製行政區界與道路，不顯示任何建物、門牌或標記點。其餘圖形與程式為本軟體自行製作。本軟體中的外部連結僅為方便使用者查詢，連結網站的內容、服務與隱私政策由該網站自行負責，與本軟體無關。</p>
+<h3>八、個人資料與存檔</h3><p>本軟體不設會員、不收集姓名或聯絡方式。遊戲進度只儲存在使用者自己裝置的瀏覽器中，開發者無法讀取；清除瀏覽器資料後存檔即會消失。本版本不使用 AI 服務，對話內容不會傳送到任何伺服器。地圖的道路資料會從上述 Overpass 伺服器查詢，這些第三方服務會依其各自的隱私政策處理連線資訊（例如 IP 位址）。</p>
+<h3>九、第三方資源與授權</h3><p>本軟體使用 Google Fonts 提供的 Noto Sans TC、Barlow Condensed 字型（SIL Open Font License），地圖使用 Leaflet（BSD-2 授權）繪製；行政區界線資料來源為內政部國土測繪中心「鄉鎮市區界線（TWD97經緯度）」，依政府資料開放授權條款－第1版（https://data.gov.tw/license）提供，經 taiwan-atlas 專案（MIT 授權）轉換並由本軟體簡化；道路線形資料 © OpenStreetMap 貢獻者（ODbL），透過 OpenStreetMap Overpass API 查詢（主伺服器為 overpass-api.de；忙碌時改用奧地利非營利組織 Private.coffee 提供、允許任何專案使用的公開伺服器 overpass.private.coffee），查詢內容僅為路名與範圍，不含任何個人資料。地圖只繪製行政區界與道路，不顯示任何建物、門牌或標記點。其餘圖形與程式為本軟體自行製作。本軟體中的外部連結僅為方便使用者查詢，連結網站的內容、服務與隱私政策由該網站自行負責，與本軟體無關。</p>
 <h3>十、關於贊助</h3><p>本軟體免費提供，玩家可自由選擇是否贊助。贊助屬自願性質，不會解鎖任何額外功能或內容，也不代表購買任何服務或建議。</p>
 <h3>十一、責任限制</h3><p>本軟體按現狀提供，不保證內容正確、完整或不中斷。使用者因使用或信賴本軟體內容所生之任何直接或間接損失，開發者在法律允許的範圍內不負賠償責任。使用本軟體即表示您已閱讀並同意本聲明。</p>
 </div>`;
