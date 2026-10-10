@@ -2142,6 +2142,39 @@ header .stat:not(.lvl){box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 3px 0 rg
 #lvsel .tile.empty .stand{pointer-events:none}
 #lvsel .tile .stand:hover .flag{border-color:#ff8a00;background:#fff8e1}
 #lvsel .tile .stand:hover .bimg{transform:translateY(-4px)}
+
+/* ===== 戰果橫幅 ===== */
+.gainbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 12px;margin:0 0 8px;padding:9px 14px;border-radius:14px;background:#eef1f7;color:#3a4258;font-size:16px;font-weight:800;text-align:center;border:2px dashed #c9d3e6}
+.gainbar b{font-size:22px;font-weight:900}
+.gainbar.on{background:linear-gradient(90deg,#e7f8ee,#fffbe6 60%,#e7f8ee);color:#0f6b45;border:2px solid #17805a;box-shadow:0 4px 0 rgba(23,128,90,.25)}
+.gainbar.on b{color:#0f6b45}
+.gainbar .gsave{font-size:13.5px;font-weight:700;color:#3a4258;background:rgba(255,255,255,.75);border-radius:999px;padding:2px 10px}
+.gainbar .gsave b{font-size:15px;color:#d7263d}
+.gainbar.bump{animation:gainBump .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes gainBump{0%{transform:scale(1)}35%{transform:scale(1.07)}100%{transform:scale(1)}}
+@media (max-width:700px){ .gainbar{font-size:13.5px;padding:6px 10px;margin-bottom:6px;border-radius:12px} .gainbar b{font-size:18px} .gainbar .gsave{font-size:11.5px} }
+/* ===== 對話銜接：回應選項 ===== */
+.qrow{display:flex;flex-direction:column;gap:6px;margin:6px 0 8px;padding:8px 10px;border-radius:12px;background:#fff7d6;border:2px solid #f0b400;animation:qIn .35s ease-out}
+.qrow[hidden]{display:none}
+.qrow .ql{font-size:13.5px;font-weight:800;color:#7a5200}
+.qrow .qc{display:flex;flex-wrap:wrap;gap:6px}
+.qrow .qc button{border:2px solid #1f2a44;background:#fff;color:#1f2a44;border-radius:999px;padding:5px 12px;font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 2px 0 rgba(31,42,68,.3)}
+.qrow .qc button:hover{background:#fff3c4}
+.qrow .qc button.sel{background:#1f2a44;color:#ffd23f}
+@keyframes qIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (max-width:700px){ .qrow{padding:6px 8px;margin:4px 0 6px} .qrow .ql{font-size:12px} .qrow .qc button{font-size:12.5px;padding:4px 10px} }
+/* hub 切換不閃 */
+.hub,#lvsel{animation:hubIn .28s ease-out!important}
+@keyframes hubIn{from{transform:translateY(8px)}to{transform:none}}
+
+.stage .gainbar{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:6;margin:0;max-width:min(560px,62%);width:max-content;padding:6px 14px;font-size:15px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.stage .gainbar b{font-size:19px}
+.stage .gainbar.bump{animation:gainBump2 .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes gainBump2{0%{transform:translateX(-50%) scale(1)}35%{transform:translateX(-50%) scale(1.08)}100%{transform:translateX(-50%) scale(1)}}
+.stage.hasgain .vs{opacity:0}
+@media (max-width:700px){ .stage .gainbar{max-width:calc(100% - 120px);padding:3px 8px;font-size:11.5px;bottom:4px;gap:0 6px;border-radius:10px} .stage .gainbar b{font-size:14px} .stage .gainbar .gsave{font-size:10px;padding:1px 6px} }
+
+@media (max-width:700px){ .stage .gainbar .gsave{display:none} .stage .gainbar{white-space:nowrap;max-width:calc(100% - 110px);overflow:hidden;text-overflow:ellipsis} }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
@@ -3335,7 +3368,7 @@ function openNego(id){
     </details>
   </div>
   <div><div class="chat" id="chat" aria-live="polite"></div>
-    <div class="tact" id="tact">${SELLER_T.filter(t=>tacAvail(t.id,L)).map(t=>`<button data-t="${t.id}" class="${N.used[t.id]?'used':''}">${t.label}</button>`).join('')}</div>
+    <div class="qrow" id="qRow" hidden></div><div class="tact" id="tact">${SELLER_T.filter(t=>tacAvail(t.id,L)).map(t=>`<button data-t="${t.id}" class="${N.used[t.id]?'used':''}">${t.label}</button>`).join('')}</div>
     <div id="issRow">${negoIssuesHTML(L)}</div><div class="hintbar" id="hint"></div>
     <div class="inrow"><textarea id="say" placeholder="${L.agent?'輸入你想對仲介說的話……（仲介會轉達給屋主）':'輸入你想對屋主說的話……（可以用上面的話術，也可以自由發揮）'}"></textarea>
       <div class="offer bigoff" id="offBox"><label for="off">💰 你的出價（萬）</label><input id="off" type="number" inputmode="numeric" min="0" step="10" placeholder="例：${Math.round(valueOf(L)*0.95/10000)}"><div class="qohint" id="offPct"></div></div></div>
@@ -3349,6 +3382,8 @@ function openNego(id){
     if (L.agent) renderFeeBox(md, L, N);
     { const cut = L.ask - N.lastAsk, el = md.querySelector('#askCut'); if (el) el.innerHTML = cut>0 ? `▼ 已降 <b>${W(cut)} 萬</b>（${(cut/L.ask*100).toFixed(1)}%）` : '尚未降價'; el && el.classList.toggle('on', cut>0); const o=md.querySelector('.pricebox .orig'); o && o.classList.toggle('struck', cut>0); }
     md.querySelector('#offNow').textContent = N.lastOffer ? W(N.lastOffer)+' 萬' : '—';
+    { const cut = L.ask - N.lastAsk; gainBar(md, cut>0 ? `🔻 已殺價 <b>${W(cut)} 萬</b><span class="gsave">${W(L.ask)} → ${W(N.lastAsk)} 萬（−${(cut/L.ask*100).toFixed(1)}%）</span>` : `🎯 屋主開價 <b>${W(L.ask)} 萬</b>・還沒降價`, cut>0); }
+    renderQRow(md, L, N);
     const sa=md.querySelector('#stAsk'); if (sa){ sa.innerHTML=(N.lastAsk<L.ask?`<s style="opacity:.55">${W(L.ask)}</s> → `:'')+W(N.lastAsk)+' 萬'+(N.lastAsk<L.ask?` <b style="color:#17805a">−${(100-N.lastAsk/L.ask*100).toFixed(1)}%</b>`:''); md.querySelector('#stOff').textContent = N.lastOffer?W(N.lastOffer)+' 萬':'—'; const sm=md.querySelector('#stMood'); sm.style.width=clamp(N.mood,0,100)+'%'; sm.style.background=N.mood>55?'var(--green)':N.mood>30?'#e0a31a':'var(--red)'; }
     const rb = md.querySelector('#rivalBox'); rb.style.display = N.rival&&!N.done ? '' : 'none';
     if (N.rival) rb.textContent = `⚠️ 對方聲稱已有其他買方下斡旋（真假未知），剩 ${N.rival.turns} 回合。可以加價、要求看斡旋書，或賭它是話術。`;
@@ -3375,6 +3410,7 @@ function openNego(id){
       if (!N.rival){ const code = pool[hashN(L.id+'op')%pool.length]; N.usedP[code]=true; N.hist.push({who:'them', text:pressureLine(L,code)}); N.hist.push({who:'sys', text:trickHint(L,code)}); } }
   }
   N.hist.forEach(h=>bubble(h.who,h.text,h.off));
+  if (N.q===undefined){ const lastT = [...N.hist].reverse().find(h=>h.who!=='sys'); N.q = lastT && lastT.who==='them' ? sellerQDetect(N.hist.filter(h=>h.who==='them').map(h=>h.text).join(' ')) : null; }
   upd();
   md.querySelectorAll('#tact button').forEach(b=>b.onclick=()=>pickTactic(md, b, negoTacText(b.dataset.t,L)));
   bindOfferBox(md, '#off', '#send', ()=>({ask:N.lastAsk, last:N.lastOffer, v:valueOf(L)}), '送出出價');
@@ -3403,8 +3439,14 @@ function openNego(id){
     if (!res) res = sellerLocal(L,N,text,offer);
     thinking.remove(); sendBtn.disabled=false;
     const pre = {ask:N.lastAsk, mood:N.mood};
+    if (N.q){ const qi = SELLER_QI.find(x=>x.k===N.q.k), hq = detect(text, KW_SELLER);
+      const ok = qi && ((qi.offer && offer) || (N.qChip && text===N.qChip) || hq.some(h=>qi.ans.includes(h)));
+      if (ok){ res.mood = (res.mood||0)+3; res.reply = sayOne(qi.ack, N)+' '+res.reply; N.qOk = (N.qOk||0)+1; }
+      else if (!offer){ res.mood = (res.mood||0)-1; res.reply = L.agent ? res.reply+' 【仲介】對了，屋主剛剛問的，您還沒回答喔。' : sayOne(['你還沒回答我剛剛的問題耶。','先回答我剛剛問的嘛。','欸，我剛剛問你的你還沒說。'], N)+' '+res.reply; }
+      N.q = null; N.qChip = null; }
     stageFx(md,'me','atkR');
     applySeller(L,N,res,offer,bubble);
+    N.q = N.done ? null : sellerQDetect(res.reply);
     setTimeout(()=>{
       if (N.agreed) { stageFx(md,'foe','happy','成交！','#17805a'); stageBanner(md,'🤝 價格談妥！'); }
       else if (N.done && !N.agreed && !S.listings.includes(L)) stageBanner(md,'😢 被其他買方搶先');
@@ -4119,6 +4161,7 @@ function openBankChat(deal, bank){
       hb.textContent = nd > S.cash ? `💸 現金還差 ${W(nd-S.cash)} 萬：試著爭取更高成數（財力證明、搭配保險、父母當保證人），或換一家銀行。`
         : B.trust<35 ? '😟 行員對你的信任度偏低，先說明工作與收入穩定，不要一直重複要求。'
         : '✅ 現金夠了！滿意就按「接受方案」前往簽約；想再壓低利率，可以用上面的話術或拿他行比價。'; } }
+    { const [gh, gg] = bankGainHTML(B, amt); gainBar(md, gh, gg); }
     md.querySelector('#tNeed').innerHTML = `自備款＋稅費約 <b>${W(need)} 萬</b>　你的現金 ${W(S.cash)} 萬 ${need>S.cash?'<br><b style="color:var(--red)">現金不足！需要更高成數或更便宜的物件。</b>':''}`;
     deal.offers[bank.id] = {ltv:B.ltv, rate:B.rate, amt};
   };
@@ -4200,6 +4243,98 @@ function bankCmpHTML(open){
     <div class="bkt"><div class="bkh"><span></span><b class="${rid==='gov'?'rec':''}">🏛️ 公股行庫<small>如：${g.name}</small></b><b class="${rid==='priv'?'rec':''}">🏢 民營銀行<small>如：${p.name}</small></b></div>
     ${BANK_CMP_ROWS.map(([k,a,b])=>`<div class="bkr"><span>${k}</span><div>${a}</div><div>${b}</div></div>`).join('')}</div>
     <p class="meta" style="margin:6px 0 0">另有壽險公司房貸（如：${BANKS[2].name}）：成數、年限較彈性，但利率較高、常要求搭房貸壽險。遊戲中的銀行皆為虛構，條件為簡化模擬，實際以各銀行規定為準。</p></details>`;
+}
+
+// ======================= 戰果橫幅：殺價／加價／房貸優惠 =======================
+function gainBar(md, html, good){
+  const st = md && md.querySelector('.stage'); if (!st) return;
+  let g = md.querySelector('.gainbar');
+  if (!g){ g = document.createElement('div'); g.className = 'gainbar'; g.setAttribute('aria-live','polite'); st.appendChild(g); st.classList.add('hasgain'); }
+  if (g.dataset.h === html) return;
+  const first = !g.dataset.h; g.dataset.h = html; const k = html.indexOf('<span class="gsave">'); g.innerHTML = k>0 ? `<span class="gm">${html.slice(0,k)}</span>${html.slice(k)}` : `<span class="gm">${html}</span>`; g.classList.toggle('on', !!good);
+  if (!first && good){ g.classList.remove('bump'); void g.offsetWidth; g.classList.add('bump'); }
+}
+function bankGainHTML(B, amt){
+  const I = B.init || B, dR = +(I.rate - B.rate).toFixed(3), dL = B.ltv - I.ltv, parts = [];
+  const tot = (r, y, g) => { const full = pmt(amt, r, y-g); return full*(y-g)*12 + amt*r/100/12*g*12 - amt; };
+  const saved = Math.round((tot(I.rate, B.years, B.grace) - tot(B.rate, B.years, B.grace))/10000);
+  if (dR>0.0001) parts.push(`利率 <b>−${dR.toFixed(2)}%</b>`);
+  if (dL>0) parts.push(`成數 <b>+${dL}%</b>`);
+  if (B.grace>(I.grace||0)) parts.push(`寬限期 <b>${B.grace} 年</b>`);
+  if (B.years>(I.years||30)) parts.push(`年限 <b>${B.years} 年</b>`);
+  if (B.fee<(I.fee||0)) parts.push(`開辦費 <b>−${NT((I.fee||0)-B.fee)} 元</b>`);
+  if (!parts.length) return ['🏦 還沒爭取到優惠：用話術把利率談低、成數拉高', false];
+  return [`🎉 已爭取：${parts.join('・')}${saved>0?`<span class="gsave">≈ 少付 <b>${saved.toLocaleString()} 萬</b> 利息</span>`:''}`, true];
+}
+
+// ======================= 對話銜接：對方問你問題時的回應選項 =======================
+const SELLER_QI = [
+  {k:'lowball', re:/七折|砍這麼多/, ack:['好，這樣才像在談。','嗯，這個數字比較實在。'], ans:['data','market'], offer:true,
+    opts:L=>{ const v=Math.round(valueOf(L)*0.94/10000)*10000; return [{l:`😅 認真出價 ${W(v)} 萬`, t:`抱歉剛剛太衝了，我認真出 ${W(v)} 萬。`, off:v},{l:'📊 說明為什麼砍',tac:'data'}]; }},
+  {k:'deposit', re:/斡旋金就想壓價/, ack:['好吧，誠意我感受到了。'], ans:['trust','needhome','cash'], opts:()=>[{l:'🙏 不是壓價，是誠意',t:'不是要壓價，是想讓您知道我們是很實在要買的。'},{l:'🏦 貸款已經預審',tac:'cash'}]},
+  {k:'issue', re:/哪裡有問題|怎麼不知道|來看過屋嗎|挑毛病|嫌東嫌西|哪間中古屋/, ack:['……好，你講得有根據。','嗯，這部分我確實沒注意到。'], ans:['issue','inspect','nofix','praise'], opts:()=>[{l:'🔍 拿驗屋報告說明',tac:'issue'},{l:'🛠️ 小毛病反映在價格就好',tac:'nofix'},{l:'💝 先肯定房子優點',tac:'praise'}]},
+  {k:'basis', re:/依據|網路查|低樓層|比過嗎/, ack:['好，你講得有道理。','嗯……你功課做得很足。'], ans:['data','sameblock','issue','inspect'], opts:()=>[{l:'📊 引用實價登錄',tac:'data'},{l:'🏢 同社區成交行情',tac:'sameblock'},{l:'🔍 拿出驗屋報告',tac:'issue'}]},
+  {k:'compare', re:/那間|之前看的|條件真的一樣|比起來/, ack:['好吧，那間我也大概知道。','嗯，你有在比較，我懂。'], ans:['compare','praise','data'], opts:()=>[{l:'🏘️ 兩間都看過，條件差不多',t:'兩間我都實際看過，坪數屋齡都差不多，另一間單價確實比較低。'},{l:'💝 還是比較喜歡這間',tac:'praise'}]},
+  {k:'purpose', re:/自住還是投資/, ack:['自住的話，我比較放心交給你。'], ans:['needhome','kids','firsthome','elder'], opts:()=>[{l:'🏠 自住，第一間房',tac:'firsthome'},{l:'👶 自住，為了孩子上學',tac:'kids'},{l:'👴 自住，就近照顧爸媽',tac:'elder'}]},
+  {k:'budget', re:/預算/, ack:['了解，預算的事我會考慮進去。'], ans:['budget','loanlimit','appraisal'], opts:()=>[{l:'💸 預算真的到頂了',tac:'budget'},{l:'🏦 貸款成數有限',tac:'loanlimit'},{l:'🏛️ 銀行鑑價偏低',tac:'appraisal'}]},
+  {k:'time', re:/快點決定|想不想買|跟家人討論|跟家人商量/, ack:['好，我知道你的意思了。'], ans:['deadline','patience','lastoffer','walkbluff'], opts:()=>[{l:'⏰ 價格對，今天就簽',tac:'deadline'},{l:'🧘 我不急，慢慢談',tac:'patience'},{l:'🛑 這是最後出價',tac:'lastoffer'}]},
+  {k:'revisit', re:/再看一次/, ack:['好，那我再帶你看一次。'], ans:[], opts:()=>[{l:'👀 好，再帶我看一次',t:'好啊，可以再帶我看一次陽台和儲藏室嗎？'},{l:'🔍 想請驗屋師一起來',tac:'inspect'}]},
+  {k:'ask', re:/還有什麼想問|還有問題嗎/, ack:['好，你問。'], ans:['s_why','inspect'], opts:()=>[{l:'❓ 為什麼要賣？',tac:'s_why'},{l:'🔍 想請驗屋師看看',tac:'inspect'}]},
+  {k:'clarify', re:/講清楚|聽不太明白|換個方式|在想什麼|聚焦在交易/, ack:['好，這樣我懂了。'], ans:['data','market'], offer:true,
+    opts:L=>{ const v=Math.round(valueOf(L)*0.95/10000)*10000; return [{l:'📊 用實價登錄說明',tac:'data'},{l:`💰 直接出價 ${W(v)} 萬`, t:`我直接說，我想出 ${W(v)} 萬。`, off:v}]; }},
+  {k:'heat', re:/外面很熱/, ack:['哈哈，那我們進來坐。'], ans:[], opts:()=>[{l:'🙂 謝謝關心',t:'還好，謝謝您特地等我們，房子看起來很舒服。'}]},
+  {k:'like', re:/喜歡嗎|覺得怎麼樣|覺得這間|房子你覺得|覺得如何|吸引你/, ack:['你喜歡就好。','嗯，有看到重點。'], ans:['praise','flaws','cherish','story','neighborly','kids','firsthome'], opts:()=>[{l:'💝 很喜歡，照顧得很好',tac:'praise'},{l:'🏡 喜歡這裡的鄰里氣氛',tac:'neighborly'},{l:'🤝 會好好愛惜這間房子',tac:'cherish'},{l:'🧐 喜歡，但有些缺點',tac:'flaws'}]},
+  {k:'price', re:/多少|出個價|出價|價格|數字|評估|差多少|合理|乾脆一點|價.*怎麼樣|怎麼樣？$/, ack:['好，有數字我們就好談。','嗯，這個數字我聽到了。'], ans:['data','split','market','sameblock','budget'], offer:true,
+    opts:(L,N)=>{ const lo=Math.round(valueOf(L)*0.95/10000)*10000, o=[];
+      if (!N.lastOffer) o.push({l:`💰 出價 ${W(lo)} 萬（行情下緣）`, t:`我參考附近的實價登錄，出 ${W(lo)} 萬。`, off:lo});
+      else { const mid=Math.round((N.lastOffer+N.lastAsk)/2/10000)*10000; o.push({l:`🤝 各退一步：${W(mid)} 萬`, t:'我們都各退一步吧，取兩個價格的中間。', off:mid}); o.push({l:`➕ 小加到 ${W(N.lastOffer+100000)} 萬`, t:'好，我再加一點誠意。', off:N.lastOffer+100000}); }
+      o.push({l:'📊 先說明出價依據',tac:'data'}); return o; }}
+];
+function sellerQDetect(text){
+  if (!text) return null;
+  const sents = String(text).replace(/【仲介】/g,'').split(/(?<=[？?])/).map(x=>x.trim()).filter(x=>/[？?]$/.test(x));
+  for (let i=sents.length-1;i>=0;i--){ const q = sents[i].split(/[。！!]/).pop().trim(); const qi = SELLER_QI.find(x=>x.re.test(q)); if (qi) return {k:qi.k, q}; }
+  return null;
+}
+function renderQRow(md, L, N){
+  const row = md.querySelector('#qRow'); if (!row) return;
+  if (!N.q || N.done){ row.hidden = true; row.innerHTML = ''; return; }
+  const qi = SELLER_QI.find(x=>x.k===N.q.k); if (!qi){ row.hidden = true; return; }
+  let opts0 = qi.opts(L, N).filter(o=>!o.tac || tacAvail(o.tac, L)); const fresh = opts0.filter(o=>!o.tac || !(N.used||{})[o.tac]); if (fresh.length) opts0 = fresh;
+  const opts = opts0.map(o=>({...o, t:o.tac ? negoTacText(o.tac, L) : o.t}));
+  const key = N.q.k+'|'+N.q.q+'|'+(N.lastOffer||0); if (row.dataset.k===key && !row.hidden) return; row.dataset.k = key;
+  row.hidden = false;
+  row.innerHTML = `<span class="ql">💬 ${L.agent?'仲介轉述屋主的問題':'屋主問你'}：「${esc(N.q.q.length>26?N.q.q.slice(0,26)+'…':N.q.q)}」</span><span class="qc">${opts.map((o,i)=>`<button type="button" data-qi="${i}">${esc(o.l)}</button>`).join('')}</span>`;
+  row.querySelectorAll('[data-qi]').forEach(b=>b.onclick=()=>{ const o = opts[+b.dataset.qi]; sfx('click');
+    const ta = md.querySelector('#say'); ta.value = o.t; ta.dataset.tac = o.t; N.qChip = o.t;
+    row.querySelectorAll('button').forEach(x=>x.classList.toggle('sel', x===b));
+    const off = md.querySelector('#off'); if (off){ off.value = o.off ? Math.round(o.off/10000) : ''; off.dispatchEvent(new Event('input')); }
+    ta.focus(); });
+}
+// 賣屋：買方問你
+const SELLQ_RE = {leak:/漏|壁癌|屋況|狀況|問題|處理|沒有/, why:/換|工作|調|搬|家裡|因為|為了|退休|小孩/, fee:/\d|元|塊|管理費/, neighbor:/鄰居|安靜|吵|聲音|上班族/, move:/隨時|馬上|一個月|下個月|很快|配合|三個月|交屋/, stay:/留|送|帶走/, daytime:/可以|歡迎|沒問題|隨時|不行|沒辦法|只能晚上/, loanbal:/貸款|塗銷|房貸|履約/};
+function sellQOpts(q, p){
+  const L = p.L, iss = L.issues.filter(x=>SELL_DEFECTS.includes(x)), noisy = L.issues.includes('鄰居嘈雜');
+  const fee = L.type==='公寓'||L.type==='透天' ? 0 : Math.round(inPing(L)*(L.type==='電梯大樓'?70:50)/100)*100;
+  return ({
+    leak: iss.length ? [{l:'✅ 誠實說明瑕疵', t:`老實說有${iss.join('、')}的狀況，處理過的部分有紀錄，現況說明書也會寫清楚。`},{l:'🙈 說完全沒問題（隱瞞）', t:'沒有漏水也沒有壁癌，屋況完全沒問題。'}] : [{l:'✅ 屋況正常，歡迎驗屋', t:'目前沒有漏水或壁癌，你也可以請驗屋師來確認。'}],
+    why: [{l:'🏠 換大一點的房子', t:'因為家裡人口變多，想換大一點的房子，不是房子有問題。'},{l:'💼 工作調到外縣市', t:'因為工作調到外縣市，才決定要賣。'}],
+    fee: [{l:'💵 說明管理費', t: fee ? `管理費每月大約 ${fee.toLocaleString()} 元，包含垃圾代收和公設清潔。` : '這棟沒有管理費，樓梯是住戶輪流打掃。'}],
+    neighbor: noisy ? [{l:'🙂 如實描述', t:'鄰居大多是上班族，晚上偶爾有點聲音，你可以晚上再來聽聽看。'},{l:'🤐 說完全不吵', t:'這裡非常安靜，完全不吵。'}] : [{l:'🙂 鄰居好相處', t:'鄰居大多是上班族，平常都很安靜，你也可以晚上再來看看。'}],
+    move: [{l:'⚡ 一個月內交屋', t:'交屋時間可以配合您，簽約後一個月內就能交屋。'},{l:'📅 三個月後才能交屋', t:'我要等新家裝潢好，大概三個月後才能交屋。'}],
+    stay: [{l:'🎁 冷氣廚具留下來', t:'冷氣、廚具和窗簾都可以留下來送你。'},{l:'📦 全部帶走', t:'家具家電我都會帶走，清空交屋。'}],
+    daytime: [{l:'✅ 歡迎再來看', t:'當然可以，白天、晚上或下雨天都歡迎再來看。'},{l:'🚫 只能晚上看', t:'我白天要上班，只能晚上看喔。'}],
+    loanbal: [{l:'🏦 會用價金塗銷', t:'還有一些房貸，交屋前會用價金塗銷，全程走履約保證。'}]
+  })[q] || [];
+}
+function renderSellQ(md, p, B){
+  const row = md.querySelector('#qRow'); if (!row) return;
+  if (!B.pendingQ || B.done){ row.hidden = true; row.innerHTML=''; row.dataset.k=''; return; }
+  if (row.dataset.k===B.pendingQ && !row.hidden) return; row.dataset.k = B.pendingQ;
+  const q = BUYER_Q.find(x=>x.id===B.pendingQ), opts = sellQOpts(B.pendingQ, p);
+  row.hidden = false;
+  row.innerHTML = `<span class="ql">💬 買方問你：「${esc(q?q.q:'')}」</span><span class="qc">${opts.map((o,i)=>`<button type="button" data-qi="${i}">${esc(o.l)}</button>`).join('')}</span>`;
+  row.querySelectorAll('[data-qi]').forEach(b=>b.onclick=()=>{ const o = opts[+b.dataset.qi]; sfx('click'); const ta = md.querySelector('#say'); ta.value = o.t; ta.dataset.tac = o.t; row.querySelectorAll('button').forEach(x=>x.classList.toggle('sel', x===b)); ta.focus(); });
 }
 function bankFloor(bank, B){ return (B&&B.flAdj||0) + (bank.bundle && B && !(B.conds||[]).some(c=>/壽險|理財/.test(c.text)) ? bank.bundle : 0) + histRate(absOf(S.t)) + (bank.floor-2.25) + S.rateAdj; }
 function otherOffers(deal, bankId){ return Object.entries(deal.offers).filter(([k])=>k!==bankId).map(([k,o])=>({name:BANKS.find(b=>b.id===k).name,...o})); }
@@ -4839,7 +4974,7 @@ function saleOffer(p){
     </details>
   </div>
   <div><div class="chat" id="chat" aria-live="polite"></div>
-    <div class="tact" id="tact">${SELL_T.map(t=>`<button data-t="${t.id}">${t.label}</button>`).join('')}</div>
+    <div class="qrow" id="qRow" hidden></div><div class="tact" id="tact">${SELL_T.map(t=>`<button data-t="${t.id}">${t.label}</button>`).join('')}</div>
     <div class="hintbar" id="hint"></div>
     <div class="inrow"><textarea id="say" placeholder="跟買方說點什麼……（可以自由打字，也可以點上面的話術）"></textarea>
       <div class="offer bigoff"><label for="ctr">💰 你的還價（萬）</label><input id="ctr" type="number" inputmode="numeric" min="0" step="10" placeholder="例：${Math.round(s.ask/10000)}"><div class="qo">${[['開價','r1'],['開價97折','r0.97'],['−10萬','-10'],['＋10萬','+10']].map(([t,q])=>`<button type="button" data-q="${q}">${t}</button>`).join('')}</div></div></div>
@@ -4849,9 +4984,10 @@ function saleOffer(p){
   const chat = md.querySelector('#chat');
   const bubble = (who, text, off) => { const d=document.createElement('div'); d.className='msg '+who; d.textContent=text; if (off){ const o=document.createElement('div'); o.className='off'; o.textContent=`還價 ${W(off)} 萬`; d.appendChild(document.createElement('br')); d.appendChild(o);} chat.appendChild(d); chat.scrollTop=chat.scrollHeight; };
   const say1 = pool => { const f=pool.filter(x=>!B.said[x]); const c=pick(f.length?f:pool); B.said[c]=1; return c; };
-  const upd = () => { const mb=md.querySelector('#bMood'); mb.style.width=clamp(B.mood,0,100)+'%'; mb.style.background=B.mood>55?'var(--green)':B.mood>30?'#e0a31a':'var(--red)'; md.querySelector('#bOffer').textContent=W(B.offer)+' 萬'; { const so=md.querySelector('#stBo'); if (so){ so.textContent=W(B.offer)+' 萬'; const bm=md.querySelector('#stBm'); bm.style.width=clamp(B.mood,0,100)+'%'; bm.style.background=B.mood>55?'var(--green)':B.mood>30?'#e0a31a':'var(--red)'; } } md.querySelector('#acc').textContent=`接受 ${W(B.offer)} 萬成交`;
+  const upd = () => { { const add = B.offer - offer0; gainBar(md, add>0 ? `🔺 買方已加價 <b>${W(add)} 萬</b><span class="gsave">${W(offer0)} → ${W(B.offer)} 萬（+${(add/offer0*100).toFixed(1)}%）</span>` : `🎯 買方出價 <b>${W(B.offer)} 萬</b>・還沒加價`, add>0); renderSellQ(md, p, B); }
+    const mb=md.querySelector('#bMood'); mb.style.width=clamp(B.mood,0,100)+'%'; mb.style.background=B.mood>55?'var(--green)':B.mood>30?'#e0a31a':'var(--red)'; md.querySelector('#bOffer').textContent=W(B.offer)+' 萬'; { const so=md.querySelector('#stBo'); if (so){ so.textContent=W(B.offer)+' 萬'; const bm=md.querySelector('#stBm'); bm.style.width=clamp(B.mood,0,100)+'%'; bm.style.background=B.mood>55?'var(--green)':B.mood>30?'#e0a31a':'var(--red)'; } } md.querySelector('#acc').textContent=`接受 ${W(B.offer)} 萬成交`;
     const hb=md.querySelector('#hint'); if (hb){ const gap=s.ask-B.offer; let t='';
-      if (B.done) t=''; else if (B.pendingQ) t='❓ 買方剛問了你問題，先在左邊輸入框回答，誠實回答會加分。';
+      if (B.done) t=''; else if (B.pendingQ) t='❓ 買方剛問了你問題：點上方「💬 買方問你」的回應選項接話，誠實回答會加分。';
       else if (B.mood<=30) t='😠 買方快沒耐心了！說明屋況優點或給點條件，不要一直重複同一句。';
       else if (!B.round) t=`👉 買方出價 ${W(B.offer)} 萬。可以用上面的話術說服他加價，或在右邊黃色框填「還價」金額送出。`;
       else t=`🔁 你開 ${W(s.ask)} 萬、買方出 ${W(B.offer)} 萬，差 ${W(gap)} 萬。可以還價、繼續說服，或按「接受」成交。`;
@@ -4879,7 +5015,8 @@ function saleOffer(p){
     // 回答買方問題
     if (B.pendingQ){
       const q=B.pendingQ; B.pendingQ=null; const iss=p.L.issues.filter(x=>SELL_DEFECTS.includes(x));
-      if (q==='leak'){
+      if (SELLQ_RE[q] && !SELLQ_RE[q].test(text) && !ctr && !B.qNag){ B.qNag=1; B.pendingQ=q; B.mood-=1; out.push(say1(['嗯……你還沒回答我剛剛的問題耶。','先回答我剛剛問的嘛，這對我很重要。'])); }
+      else if (q==='leak'){
         if (iss.length && LIE_KW.concat(['沒有','不會']).some(w=>text.includes(w)) && !/有.*(漏|壁癌)|處理過/.test(text)){ B.lied=true; }
         else if (iss.length && /有|之前|處理|漏|壁癌/.test(text)){ B.mood+=8; B.persuade+=1; out.push(say1(['謝謝你這麼坦白，我反而比較安心。','你願意說實話，我很感謝。'])); }
         else if (!iss.length){ B.mood+=2; out.push('好，屋況沒問題就好。'); }
@@ -4960,7 +5097,7 @@ function saleOffer(p){
     bubble('them', out.join(' ') || say1(BUYER_SAY.hold).replace('{o}',W(B.offer)));
     if (B.mood<=0){ end(); bubble('them', say1(BUYER_SAY.leave)); addLog(`${B.name}議價破局，離開了。`); upd(); if (p.level) levelSellFail(p); return; }
     // 買方追問或出招
-    if (!B.pendingQ && Math.random()<0.35){ const left=BUYER_Q.filter(q=>!B.asked[q.id]); if (left.length){ const q=pick(left); B.asked[q.id]=1; B.pendingQ=q.id; bubble('them', q.q); } }
+    if (!B.pendingQ && Math.random()<0.35){ const left=BUYER_Q.filter(q=>!B.asked[q.id]); if (left.length){ const q=pick(left); B.asked[q.id]=1; B.pendingQ=q.id; B.qNag=0; bubble('them', q.q); } }
     else if (Math.random()<0.3){ const bp=pick(BUYER_PRESS); bubble('them', bp.say); bubble('sys', `💡 買方話術識別：${bp.why}`); }
     if (agent && Math.random()<0.25) bubble('them', pick(AGENT_SELL));
     upd();
@@ -5837,7 +5974,7 @@ function titleScreen(){
     </div>
     <p class="tfoot">免費學習模擬遊戲・製作於 2026 年 9 月・人物與機構皆為虛構　<button type="button" id="tsSfx">${SFX.on?'🔊 音效開':'🔇 音效關'}</button><button type="button" class="bgmTog" aria-pressed="${BGM.on}">${BGM.on?'🎵 音樂開':'🎵 音樂關'}</button></p>`;
   document.body.appendChild(d);
-  const close = (fn) => { sfx('good'); d.classList.add('out'); setTimeout(()=>{ d.remove(); fn && fn(); }, 450); };
+  const close = (fn) => { sfx('good'); if (fn){ fn(); d.remove(); return; } d.classList.add('out'); setTimeout(()=>{ d.remove(); }, 450); };
   d.querySelector('#tsNew').onclick = () => close(()=>levelSelect());
   d.querySelector('#tsEra').onclick = () => close(()=>eraSelect());
   d.querySelector('#tsSetup').onclick = () => close(()=>setup(!S.intro));
