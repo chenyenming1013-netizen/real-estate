@@ -3015,6 +3015,73 @@ html.lite #sharebox,html.lite .quiz .qzsay{box-shadow:none}
 @media (max-width:700px){ .hub .hubtop{gap:5px;padding-left:8px;padding-right:8px} .hub .hubback[style*="hidden"]{display:none} .hub .hubsw{margin:0;flex:1;min-width:0;justify-content:space-between} .hub .hubsw button{font-size:13px!important;padding:5px 6px!important;flex:1;min-width:0} .hub .hubsw button small{font-size:9.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis} }
 
 @media (max-width:700px){ .cxbadges{grid-template-columns:repeat(3,1fr);gap:6px} .cxb{padding:6px 4px;border-radius:12px} .cxb i{font-size:22px} .cxb b{font-size:12px} .cxb small{font-size:10px;line-height:1.3} .cxlist{grid-template-columns:1fr 1fr;gap:6px} .cxi b{font-size:12.5px} .cxi small{font-size:11px} }
+
+/* ===== 一頁式：不用拖拉 ===== */
+#lvsel .board.tiny .flag b{font-size:0!important;padding:0!important}
+#lvsel .board.tiny .flag b i{font-size:11px!important;margin:0!important}
+#lvsel .board.tiny .flag .fl2 small{display:none!important}
+#lvsel .board.tiny .flag .df{font-size:8.5px!important}
+#lvsel .board.tiny .flag{padding:2px 5px!important;min-width:0!important}
+.cxpop{text-align:center;padding:4px 0}.cxpop i{display:block;font-style:normal;font-size:44px}.cxpop b{display:block;font-size:19px;margin:4px 0}.cxpop p{margin:4px 0 0;line-height:1.7;font-size:15px}
+#cxsel{display:flex;flex-direction:column;overflow:hidden}
+#cxsel .cxbody{flex:1;min-height:0;width:100%;margin:8px auto 0;display:flex;flex-direction:column}
+#cxsel .cxsec{flex:1;min-height:0;display:flex;flex-direction:column;margin-bottom:max(10px,env(safe-area-inset-bottom))}
+.cxbars{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.cxbars>span{display:flex;flex-direction:column;gap:3px;font-size:12px}.cxbars>span b{font-size:13px;color:#ffd23f}
+.cxbars .cxbar{display:block;margin:0}
+.cxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:7px;align-content:start}
+.cxgrid.sm{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.cxt{height:54px;display:flex;flex-direction:column;justify-content:center;gap:1px;text-align:left;border-radius:12px;padding:4px 10px;background:rgba(255,255,255,.05);border:1.5px dashed rgba(255,255,255,.22);color:#fff;cursor:pointer;font-family:inherit;min-width:0}
+.cxgrid.sm .cxt{height:36px}
+.cxt b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cxt small{font-size:11px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cxt.on{background:rgba(255,210,63,.13);border:1.5px solid rgba(255,210,63,.75)}
+.cxt.on.kc{background:#fff8dc;color:#1f2a44;border-color:#ffd23f}
+.cxgrid.sm .cxt.on{background:linear-gradient(#ffe27a,#ffc93c);color:#1f2a44;border-color:#fff}
+.cxpager{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:8px}
+.cxpager button{width:46px;height:36px;border-radius:12px;border:2px solid #ffd23f;background:rgba(255,210,63,.15);color:#ffd23f;font-weight:900;font-size:16px;cursor:pointer}
+.cxpager span{font-weight:800;font-size:14px;min-width:54px;text-align:center}
+.hub.fit .lvdet{position:relative!important}
+@media (max-width:700px){
+  #cxsel .cxtop{margin-top:8px;gap:6px}
+  #cxsel .cxme{flex:1 1 100%;padding:5px 10px;gap:8px;border-radius:14px}#cxsel .cxme i{font-size:26px}#cxsel .cxme b{font-size:16px}#cxsel .cxme small{display:none}#cxsel .cxme em{font-size:11px}
+  #cxsel .cxstat{flex:1 1 100%;gap:4px}#cxsel .cxstat span{flex-direction:row;gap:4px;padding:4px 2px;font-size:10.5px}#cxsel .cxstat b{font-size:15px}
+  #cxsel .lvtabs{padding:8px 6px 0;gap:5px}#cxsel .lvtabs button{font-size:12.5px;padding:5px 8px}
+  .cxgrid{grid-template-columns:1fr 1fr;gap:6px}.cxgrid.sm{grid-template-columns:1fr 1fr}
+  .cxt{height:48px;padding:3px 8px}.cxt b{font-size:12px}.cxt small{font-size:10px}
+  .cxbars{gap:5px}.cxbars>span b{font-size:11.5px}
+  .storywrap{margin:8px auto 10px;padding:0 8px}
+  .storywrap .sthead{padding:6px 10px;margin-bottom:8px}.storywrap .sthead p{font-size:12px;line-height:1.5}.storywrap .sthead p b{font-size:15px}
+  .storypath{grid-template-columns:1fr 1fr;gap:5px}
+  .stnode{padding:5px 7px;gap:6px;border-radius:11px}.stnode i{width:24px;height:24px;font-size:12px}.stnode b{font-size:12.5px}.stnode small{font-size:10px}
+}
+@media (max-height:720px){
+  .popcard .lvbrief p{font-size:13.5px;line-height:1.5;margin:4px 0}
+  .popcard .lvtips{margin:4px 0;padding-left:20px;font-size:13px}.popcard .lvtips li{margin:1px 0}
+  .popcard .lvstar{margin:4px 0}
+  .lvstars i{font-size:40px}
+  .popcard{padding-top:12px}
+}
+
+@media (max-width:700px) and (max-height:760px){
+  #lvsel .lvdet{flex-wrap:nowrap;padding:8px 10px;gap:8px}
+  #lvsel .lvdet .ldi{font-size:24px}#lvsel .lvdet .ldt span{display:none}#lvsel .lvdet .ldt b{font-size:13.5px}#lvsel .lvdet .ldt small{font-size:10.5px}
+  #lvsel .lvdet .btn{width:auto;padding:10px 12px;font-size:15px}
+  #lvsel .lvextra{margin-top:6px}
+}
+
+@media (max-height:720px){
+  .popov{padding:8px}
+  .popcard .lvdef{padding:5px 8px!important;margin:4px 0!important;gap:4px!important}
+  .popcard .lvdef span{padding:2px 8px!important;font-size:12px!important}
+  .popcard .lvstar span{padding:2px 8px!important;font-size:12px!important}
+  .popcard .lvbrief>.meta{font-size:11px;line-height:1.4}
+  .popcard>.foot{padding:8px 20px 10px;margin-top:6px}
+}
+
+#lvsel.hub.fit{display:flex;flex-direction:column}
+#lvsel.hub.fit .boardwrap{flex:1 0 auto;align-items:flex-start}
+#lvsel.hub.fit>*{flex-shrink:0}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
@@ -8730,11 +8797,13 @@ function levelResult(L, st, headHTML, debHTML){
   const btns = [['🔁 再玩一次','ghost',()=>{ startLevel(D.n); }],[inStory?'📖 劇情選單':'🗺️ 關卡選單','ghost',()=>{ if (inStory){ STORY_RUN = null; LV_TRACK = 'story'; } exitLevel(); }]];
   if (story!=null && STORY[story]) btns.push(['📖 繼續劇情 ▶','red',()=>{ storyPlay(story); }]);
   else if (!inStory && next && st) btns.push([`下一關 ▶`,'red',()=>{ startLevel(next.n); }]);
+  const tall = innerHeight >= 860 && innerWidth >= 700;
+  if (!tall && debHTML) debHTML = debHTML.replace(/<details class="deb" open>/g, '<details class="deb">');
   const daily = D.ch==='daily' ? `<p class="meta" style="text-align:center;margin:2px 0">📅 今日最佳 ${'⭐'.repeat(dailyBest())||'—'}・連續 ${dailyStreak()} 天</p>` : '';
   const ov = popPanel(`<div class="lvclear"><div class="lvtag">${st?(st===3?'🏆 完美過關！':'🎉 過關！'):'😅 沒有過關'}</div>
     <div class="lvstars">${[1,2,3].map(i=>`<i class="${i<=st?'on':''}" style="--i:${i}">★</i>`).join('')}</div>${headHTML}${daily}
     ${t1.i>t0.i?`<div class="newtitle">🎖️ 稱號升級：<b>${t1.ic} ${t1.t}</b></div>`:''}
-    ${kc?`<details class="kcard" ${st?'open':''}><summary>💡 知識小卡：${esc(kc[1][0])}</summary><p>${esc(kc[1][1])}</p></details>`:''}
+    ${kc?`<details class="kcard" ${st && innerHeight>=700?'open':''}><summary>💡 知識小卡：${esc(kc[1][0])}</summary><p>${esc(kc[1][1])}</p></details>`:''}
     ${debHTML}<div class="lvshare"><button type="button" class="btn sm" id="lvShare">📸 分享成績圖</button></div></div>`, btns);
   const sb = ov.querySelector('#lvShare'); if (sb) sb.onclick = () => { sfx('click'); shareCard(D, st, headHTML); };
   return ov;
@@ -9055,29 +9124,79 @@ function cxResult(D, st){
 }
 
 // ---- 圖鑑頁 ----
-let CX_TAB = 'tac';
+let CX_TAB = 'tac', CX_PG = 0;
+function cxPop(ic, t, body){ const ov = popPanel(`<div class="cxpop"><i>${ic}</i><b>${esc(t)}</b><p>${esc(body)}</p></div>`, [['知道了','red',()=>{}]]); ov.style.zIndex = 96; }
 function codexPage(tab){
-  hubClose(); if (tab) CX_TAB = tab;
+  hubClose(); if (tab && tab!==CX_TAB){ CX_TAB = tab; CX_PG = 0; }
   const o = cxGet(), T = cxTitle(), B = cxBadges();
-  const sec = (title, list, cat) => { const got = list.filter(x=>o.t[cat+':'+x.id]).length;
-    return `<div class="cxsec"><h4>${title}<small>${got} / ${list.length}</small></h4><div class="cxbar"><i style="width:${Math.round(got/list.length*100)}%"></i></div><div class="cxchips">${list.filter(x=>o.t[cat+':'+x.id]).map(x=>`<span class="on">${esc(x.label)}</span>`).join('')}${got<list.length?`<span>🔒 還有 ${list.length-got} 種未使用</span>`:''}</div></div>`; };
-  const combos = [...COMBOS.map(c=>['買',c]), ...SELL_COMBOS.map(c=>['賣',c])];
-  const nC = combos.filter(([,c])=>o.c[c.name]).length;
-  const kcs = Object.keys(KCARDS), nK = kcs.filter(k=>o.k[k]).length;
-  let body = '';
-  if (CX_TAB==='tac') body = sec('🏠 買屋話術', SELLER_T, 'b') + sec('💰 賣屋話術', SELL_T, 's') + sec('🏦 房貸話術', BANK_T, 'k');
-  else if (CX_TAB==='combo') body = `<div class="cxsec"><h4>🔗 隱藏連段<small>${nC} / ${combos.length}</small></h4><p class="cxhint">特定話術依序使用就會觸發連段會心一擊。發現過的連段會記錄在這裡。</p><div class="cxlist">${combos.map(([k,c])=>o.c[c.name]?`<div class="cxi on"><b>${k==='買'?'🏠':'💰'} ${esc(c.name)}<em>×${o.c[c.name]}</em></b><small>${esc(c.desc)}</small></div>`:`<div class="cxi"><b>${k==='買'?'🏠':'💰'} ？？？</b><small>尚未發現</small></div>`).join('')}</div></div>`;
-  else if (CX_TAB==='card') body = `<div class="cxsec"><h4>💡 知識小卡<small>${nK} / ${kcs.length}</small></h4><p class="cxhint">每完成一關就會解鎖那一關的知識小卡。</p><div class="cxlist">${kcs.map(k=>{ const D = levelDef(+k); return o.k[k]?`<div class="cxi on kc"><b>${D.icon} ${esc(KCARDS[k][0])}</b><small>${esc(KCARDS[k][1])}</small></div>`:`<div class="cxi"><b>🔒 ${LV_CHS[D.ch]} ${lvIdx(D.n)}</b><small>完成「${esc(D.title)}」解鎖</small></div>`; }).join('')}</div></div>`;
-  else body = `<div class="cxsec"><h4>🎖️ 成就徽章<small>${B.filter(b=>b[3]).length} / ${B.length}</small></h4><div class="cxbadges">${B.map(b=>`<div class="cxb ${b[3]?'on':''}"><i>${b[3]?b[0]:'🔒'}</i><b>${esc(b[1])}</b><small>${esc(b[2])}</small></div>`).join('')}</div></div>
-    <div class="cxsec"><h4>👑 稱號之路</h4><div class="cxtitles">${CX_TITLES.map((t,i)=>`<span class="${i<=T.i?'on':''} ${i===T.i?'cur':''}">${t[2]} ${t[1]}<small>⭐ ${t[0]}</small></span>`).join('')}</div></div>`;
-  const d = document.createElement('div'); d.id = 'cxsel'; d.className = 'hub';
+  const combos = [...COMBOS.map(c=>['🏠',c]), ...SELL_COMBOS.map(c=>['💰',c])];
+  const nC = combos.filter(([,c])=>o.c[c.name]).length, kcs = Object.keys(KCARDS), nK = kcs.filter(k=>o.k[k]).length;
+  let head = '', items = [], cls = '';
+  if (CX_TAB==='tac'){
+    const cats = [['🏠 買屋',SELLER_T,'b'],['💰 賣屋',SELL_T,'s'],['🏦 房貸',BANK_T,'k']];
+    head = `<div class="cxbars">${cats.map(([t,l,c])=>{ const g = l.filter(x=>o.t[c+':'+x.id]).length; return `<span><b>${t}</b><i class="cxbar"><i style="width:${Math.round(g/l.length*100)}%"></i></i><small>${g}/${l.length}</small></span>`; }).join('')}</div>`;
+    cats.forEach(([t,l,c])=>l.filter(x=>o.t[c+':'+x.id]).forEach(x=>items.push({h:`<b>${t.slice(0,2)} ${esc(x.label)}</b>`, on:1})));
+    if (!items.length) items.push({h:'<b>還沒用過話術</b><small>去關卡裡出招吧！</small>'});
+    cls = 'sm';
+  } else if (CX_TAB==='combo'){
+    head = `<h4>🔗 隱藏連段<small>${nC} / ${combos.length}</small></h4>`;
+    items = combos.map(([ic,c])=>o.c[c.name] ? {h:`<b>${ic} ${esc(c.name)}</b><small>×${o.c[c.name]}</small>`, on:1, pop:[ic, c.name, c.desc]} : {h:`<b>${ic} ？？？</b><small>尚未發現</small>`, pop:['🔒','尚未發現的連段','特定話術依序使用就會觸發連段會心一擊，多試試不同的出招順序吧！']});
+  } else if (CX_TAB==='card'){
+    head = `<h4>💡 知識小卡<small>${nK} / ${kcs.length}</small></h4>`;
+    items = kcs.map(k=>{ const D = levelDef(+k); return o.k[k] ? {h:`<b>${D.icon} ${esc(KCARDS[k][0])}</b><small>${LV_CHS[D.ch]} ${lvIdx(D.n)}</small>`, on:1, kc:1, pop:[D.icon, KCARDS[k][0], KCARDS[k][1]]} : {h:`<b>🔒 ${LV_CHS[D.ch]} ${lvIdx(D.n)}</b><small>${esc(D.title)}</small>`, pop:['🔒','尚未解鎖',`完成「${D.title}」就能解鎖這張知識小卡。`]}; });
+  } else {
+    head = `<h4>🎖️ 成就徽章<small>${B.filter(b=>b[3]).length} / ${B.length}</small></h4>`;
+    items = B.map(b=>({h:`<b>${b[3]?b[0]:'🔒'} ${esc(b[1])}</b><small>${esc(b[2])}</small>`, on:b[3], pop:[b[3]?b[0]:'🔒', b[1], (b[3]?'已達成：':'達成條件：')+b[2]]}));
+  }
+  const d = document.createElement('div'); d.id = 'cxsel'; d.className = 'hub fit';
   d.innerHTML = `${hubTop('cx')}
     <div class="cxtop"><div class="cxme"><i>${T.ic}</i><span><small>目前稱號</small><b>${T.t}</b><em>${T.next!=null?`再 ${T.next-T.s} ⭐ 升級為「${T.nextT}」`:'已達最高稱號！'}</em></span></div>
-      <div class="cxstat"><span><b>${T.s}</b>關卡星星</span><span><b>${o.crit}</b>會心一擊</span><span><b>${nC}</b>連段</span><span><b>${dailyStreak()}</b>每日連續</span></div></div>
+      <div class="cxstat"><span><b>${T.s}</b>星星</span><span><b>${o.crit}</b>會心</span><span><b>${nC}</b>連段</span><span><b>${dailyStreak()}</b>連續天</span></div></div>
     <div class="lvtabs cxtabs" role="tablist">${[['tac','🗣️ 話術'],['combo','🔗 連段'],['card','💡 小卡'],['badge','🎖️ 成就']].map(([k,t])=>`<button type="button" role="tab" data-cx="${k}" aria-selected="${k===CX_TAB}">${t}</button>`).join('')}</div>
-    <div class="cxbody">${body}</div>`;
+    <div class="cxbody"><div class="cxsec">${head}<div class="cxgrid ${cls}"></div><div class="cxpager"><button type="button" data-pg="-1" aria-label="上一頁">◀</button><span></span><button type="button" data-pg="1" aria-label="下一頁">▶</button></div></div></div>`;
   document.body.appendChild(d); sfx('page'); hubBind(d);
   d.querySelectorAll('[data-cx]').forEach(b=>b.onclick=()=>{ sfx('click'); codexPage(b.dataset.cx); });
+  const grid = d.querySelector('.cxgrid'), pager = d.querySelector('.cxpager');
+  let per = items.length;
+  const draw = () => {
+    const pages = Math.max(1, Math.ceil(items.length/per)); CX_PG = Math.min(Math.max(0, CX_PG), pages-1);
+    grid.innerHTML = items.slice(CX_PG*per, CX_PG*per+per).map((x,i)=>`<button type="button" class="cxt ${x.on?'on':''} ${x.kc?'kc':''}" data-i="${CX_PG*per+i}">${x.h}</button>`).join('');
+    grid.querySelectorAll('.cxt').forEach(b=>b.onclick=()=>{ const x = items[+b.dataset.i]; if (x.pop){ sfx('click'); cxPop(...x.pop); } });
+    pager.style.visibility = pages>1 ? '' : 'hidden';
+    pager.querySelector('span').textContent = `${CX_PG+1} / ${pages}`;
+  };
+  const layout = () => {
+    per = items.length; draw();
+    const cols = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').length);
+    const t = grid.querySelector('.cxt'); if (!t) return;
+    const gap = parseFloat(getComputedStyle(grid).rowGap)||6, th = t.offsetHeight;
+    const avail = d.clientHeight - grid.getBoundingClientRect().top - pager.offsetHeight - 22;
+    const rows = Math.max(1, Math.floor((avail+gap)/(th+gap)));
+    if (rows*cols < items.length){ per = rows*cols; draw(); }
+  };
+  pager.querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{ sfx('click'); CX_PG += +b.dataset.pg; draw(); });
+  layout(); hubResize(d, layout);
+}
+function hubResize(d, fn){ let t = null; const h = () => { if (!d.isConnected){ removeEventListener('resize', h); return; } clearTimeout(t); t = setTimeout(fn, 120); }; addEventListener('resize', h); }
+// 關卡棋盤：自動縮放到一頁內
+function fitBoard(d){
+  const bw = d.querySelector('.boardwrap'); if (!bw) return;
+  bw.style.removeProperty('--t'); bw.style.removeProperty('padding-top');
+  const tinyChk = () => { const tile = bw.querySelector('.tile'); const b = bw.querySelector('.board'); if (tile && b) b.classList.toggle('tiny', tile.offsetWidth < 92); };
+  { const bd = bw.querySelector('.board'), cols = bd ? +bd.style.getPropertyValue('--cols') : 0; if (cols && innerWidth<=900 && innerHeight>innerWidth) bw.style.setProperty('--t', Math.floor((bw.clientWidth - 40)/cols) + 'px'); }
+  tinyChk();
+  for (let k=0;k<6;k++){ const bd = bw.querySelector('.board'), tile = bw.querySelector('.tile'); if (!bd || !tile) break;
+    const r = bd.getBoundingClientRect(), wr = bw.getBoundingClientRect(); let fl = 0; bd.querySelectorAll('.flag').forEach(f=>{ const q = f.getBoundingClientRect(); fl = Math.max(fl, -q.left + 4, q.right - innerWidth + 4); });
+    const over = Math.max(0, r.width - (wr.width - 24), (wr.left + 12 - r.left)*2, (r.right - wr.right + 12)*2) + fl*2; if (over<=2) break;
+    const t = tile.offsetWidth, nt = Math.max(58, Math.floor(t * (r.width - over) / r.width)); if (nt>=t) break; bw.style.setProperty('--t', nt+'px'); }
+  for (let k=0;k<7;k++){ tinyChk();
+    const over = d.scrollHeight - d.clientHeight; if (over<=2) return;
+    const tile = bw.querySelector('.tile'); if (!tile) return;
+    const t = tile.offsetWidth, h = bw.offsetHeight;
+    const nt = Math.max(58, Math.floor(t * Math.max(0.55, (h-over-6)/h)));
+    if (nt >= t){ const pt = parseFloat(getComputedStyle(bw).paddingTop); if (pt>60){ bw.style.paddingTop = Math.max(60, pt-over-4)+'px'; continue; } return; }
+    bw.style.setProperty('--t', nt+'px');
+  }
 }
 
 // ---- 主選單：實習關卡（3D 棋盤）／歷史實戰（年代） ----
@@ -9150,7 +9269,8 @@ function levelSelect(track){
   const P = lvProg(), list = lvChapterList(LV_TRACK);
   if (!LV_PICK || !list.some(x=>x.n===LV_PICK)) LV_PICK = (list.find(x=>(P[x.n]||0)<3) || list[0]).n;
   const mob = window.matchMedia && matchMedia('(max-width:700px)').matches;
-  const cols = mob ? 3 : (list.length>10 ? 5 : list.length>8 ? 5 : 4), rows = Math.ceil(list.length/cols);
+  const tabP = !mob && innerWidth<=900 && innerHeight>innerWidth*1.15;
+  const cols = mob ? (list.length>12 ? 4 : 3) : tabP ? (list.length>12 ? 4 : 3) : (list.length>10 ? 5 : list.length>8 ? 5 : 4), rows = Math.ceil(list.length/cols);
   const tiles = [];
   for (let i=0;i<rows*cols;i++){
     const r = Math.floor(i/cols), c = i%cols, D = list[i], dk = (r+c)%2 ? 'dk' : 'lt';
@@ -9180,6 +9300,7 @@ function levelSelect(track){
     LV_PICK = n; sfx('click'); d.querySelectorAll('.tile.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); det(); });
   d.querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>{ if (b.dataset.tr===LV_TRACK) return; LV_TRACK = b.dataset.tr; LV_PICK = null; levelSelect(LV_TRACK); });
   lvExtraBind(d);
+  d.classList.add('fit'); fitBoard(d); hubResize(d, ()=>fitBoard(d));
 }
 function lvTabsHTML(P){
   return `<div class="lvtabs" role="tablist">${LV_CHAPTERS.map(([ch,t])=>{ const l = lvChapterList(ch), got = l.reduce((a,x)=>a+(P[x.n]||0),0); return `<button type="button" role="tab" data-tr="${ch}" aria-selected="${ch===LV_TRACK}">${t}<small>${l.length} 關・⭐ ${got}/${l.length*3}</small></button>`; }).join('')}</div>`;
@@ -9201,6 +9322,7 @@ function storySelect(){
   document.body.appendChild(d); sfx('page'); hubBind(d);
   d.querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>{ if (b.dataset.tr===LV_TRACK) return; LV_TRACK = b.dataset.tr; LV_PICK = null; levelSelect(LV_TRACK); });
   d.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ sfx('click'); storyPlay(+b.dataset.st); });
+  d.classList.add('fit'); const fitS = () => { const w = d.querySelector('.storywrap'); w.style.zoom = ''; const over = d.scrollHeight - d.clientHeight; if (over>2){ const h = w.offsetHeight; w.style.zoom = Math.max(0.6, (h-over-8)/h).toFixed(3); } }; fitS(); hubResize(d, fitS);
 }
 const ERA_INFO = {2008:['#3a4a7a','金融海嘯後，房價在相對低點、利率快速下降，但銀行放款保守。'],2012:['#2f6f6b','實價登錄上路，行情變透明，房市還在多頭的中段。'],2016:['#7a4a2a','房地合一稅上路，交易量急凍，是議價空間最大的年代。'],2020:['#8a3a5a','疫情後資金寬鬆、利率創低，房價開始一路上漲。'],2026:['#1f2a44','央行信用管制下，成數與寬限期都受到限制。']};
 function eraSelect(){
